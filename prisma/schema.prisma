@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // 性別を表す列挙型
@@ -113,7 +114,7 @@ model Chat {
   id Int @id @default(autoincrement())
   babyId Int
   text String
-  created DateTime
+  created DateTime @default(now())
   createUser Int
   Baby Baby @relation(fields: [babyId], references: [id])
   CreatedByUser User @relation("CreatedByUser",fields: [createUser], references: [id])
@@ -162,6 +163,7 @@ model ActivityTime {
   id Int @id @default(autoincrement())
   babyId Int
   time DateTime
+  type Type
   created DateTime @default(now())
   updated DateTime @updatedAt
   createUser Int
