@@ -1,4 +1,5 @@
 import { Milestone } from "@prisma/client";
+import { ApiRequest } from "../../apiRequest";
 
 /**発達*/
 export interface Growth {
@@ -9,12 +10,7 @@ export interface Growth {
   createUser: number;
   changeUser: number;
 }
-export interface PostRequests {
-  method: string;
-  headers: {
-    "Content-Type": string;
-    Authorization: string;
-  };
+export interface PostRequests extends ApiRequest {
   body: {
     data: Growth[]; //Milestoneのかずだけ最初にPOSTする
   };

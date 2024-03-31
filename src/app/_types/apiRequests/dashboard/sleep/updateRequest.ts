@@ -1,3 +1,4 @@
+import { ApiRequest } from "../../apiRequest";
 /**bedTimeは記録しないことも想定してnullでもOK
  *bedTimeかwakeupかの登録でputするので
  *sleepは必ずデータが入る
@@ -9,12 +10,7 @@ interface SleepingSituation {
   wakeup: Date | null;
   createUser: number;
 }
-export interface updateRequests {
-  method: string;
-  headers: {
-    "Content-Type": string;
-    Authorization: string;
-  };
+export interface UpdateRequests extends ApiRequest {
   body: {
     id: number;
     data: SleepingSituation;

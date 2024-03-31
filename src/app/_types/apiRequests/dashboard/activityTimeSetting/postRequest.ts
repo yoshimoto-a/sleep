@@ -1,4 +1,5 @@
 import { Type } from "@prisma/client";
+import { ApiRequest } from "../../apiRequest";
 
 /**活動時間*/
 export interface ActivityTime {
@@ -16,12 +17,7 @@ export interface SleepPrepTime {
   changeUser: number;
 }
 
-export interface PostRequests {
-  method: string;
-  headers: {
-    "Content-Type": string;
-    Authorization: string;
-  };
+export interface PostRequests extends ApiRequest {
   body: {
     data: {
       activityTime: ActivityTime | ActivityTime[];

@@ -1,3 +1,5 @@
+import { ApiRequest } from "../apiRequest";
+
 enum Role {
   MAIN,
   SUB,
@@ -8,11 +10,6 @@ interface User {
   userName: String;
   role: Role;
 }
-export interface PostRequests {
-  method: string;
-  headers: {
-    "Content-Type": string;
-    Authorization: string;
-  };
+export interface PostRequests extends ApiRequest {
   body: User;
 }

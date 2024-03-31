@@ -1,4 +1,5 @@
 import { Gender } from "@prisma/client";
+import { ApiRequest } from "../../apiRequest";
 
 /**現在の月齢を表示*/
 interface Baby {
@@ -8,12 +9,7 @@ interface Baby {
   birthWeight: number;
   gender: Gender;
 }
-export interface updateRequests {
-  method: string;
-  headers: {
-    "Content-Type": string;
-    Authorization: string;
-  };
+export interface UpdateRequests extends ApiRequest {
   body: {
     id: number;
     data: Baby;
