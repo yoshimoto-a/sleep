@@ -46,13 +46,13 @@ enum Role {
 //ユーザーテーブル
 model User {
   id Int @id @default(autoincrement())
-  babyId Int
-  supabaseUserId Int
+  babyId Int?
+  supabaseUserId String
   userName String
   role Role
   created DateTime @default(now())
   updated DateTime @updatedAt
-  Baby Baby @relation(fields: [babyId], references: [id])
+  Baby Baby? @relation(fields: [babyId], references: [id])
   createdByWeights Weight[] @relation("CreatedByUser")
   changedByWeights Weight[] @relation("ChangedByUser")
   createdByActivityTimes ActivityTime[] @relation("CreatedByUser")

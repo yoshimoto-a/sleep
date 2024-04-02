@@ -1,13 +1,10 @@
 import { ApiRequest } from "../apiRequest";
+import { Role } from "@prisma/client";
 
-enum Role {
-  MAIN,
-  SUB,
-}
 interface User {
-  babyId: number;
-  supabaseUserId: number;
-  userName: String;
+  //babyId: number;ここでは赤ちゃんの登録まだしていない
+  supabaseUserId: string;
+  userName: string;
   role: Role;
 }
 export interface PostRequests extends ApiRequest {
