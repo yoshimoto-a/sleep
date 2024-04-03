@@ -6,14 +6,15 @@ import { Input } from "../_components/input";
 import { useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
+import { GetLoginUser } from "./utils/getLoginUser";
+import { PostUser } from "./utils/postUser";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
-import { PostRequests } from "@/app/_types/apiRequests/signup/postRequest";
 
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { session, isLoding, token } = useSupabaseSession();
+  const { token } = useSupabaseSession();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,10 +25,24 @@ export default function Page() {
     if (error) {
       alert("ログインに失敗しました");
     } else {
-      console.log(data.session);
       setEmail("");
       setPassword("");
-      router.replace("../dashboard/sleep/");
+      if (data.session) {
+        const {
+          access_token,
+          user: { id },
+        } = data.session;
+        if (token) {
+          const { isRegistered } = await GetLoginUser(access_token, id);
+          alert(isRegistered ? "初回ログインではない" : "初回ログイン");
+          if (!isRegistered) {
+            //レスポンス内のbabyIdの有無を元に第二引数の値は変更する
+            const resp = await PostUser(id, "MAIN", access_token);
+          }
+        }
+      }
+
+      //router.replace("../dashboard/sleep/");
     }
   };
   return (

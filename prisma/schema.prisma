@@ -48,7 +48,7 @@ model User {
   id Int @id @default(autoincrement())
   babyId Int?
   supabaseUserId String
-  userName String
+  userName String?
   role Role
   created DateTime @default(now())
   updated DateTime @updatedAt

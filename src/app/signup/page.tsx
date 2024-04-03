@@ -9,33 +9,12 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // const fetcher = async (userId: string, token: string) => {
-  //   const prams: PostRequests = {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: token,
-  //     },
-  //     body: {
-  //       supabaseUserId: userId,
-  //       userName: name,
-  //       role: "MAIN",
-  //     },
-  //   };
-  //   const resp = await fetch("/api/signup/", {
-  //     ...prams,
-  //     body: JSON.stringify(prams.body),
-  //   });
-  //   return resp;
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -45,17 +24,6 @@ export default function Page() {
     if (error) {
       alert("登録に失敗しました");
     } else {
-      // try {
-      //   console.log(data);
-      //   if (data.user && data.session) {
-      //     fetcher(data.user?.id, data.session?.access_token);
-      //   } else {
-      //     alert("例外発生");
-      //   }
-      // } catch (e) {
-      //   console.log(e);
-      // }
-      setName("");
       setEmail("");
       setPassword("");
       router.push("/signup/sentEmail/");
@@ -69,15 +37,6 @@ export default function Page() {
           onSubmit={handleSubmit}
           className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          <div className="mb-4">
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              placeholder="ユーザーネーム"
-              onChange={value => setName(value)}
-            />
-          </div>
           <div className="mb-4">
             <Input
               id="email"
