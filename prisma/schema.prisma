@@ -47,7 +47,7 @@ enum Role {
 model User {
   id Int @id @default(autoincrement())
   babyId Int?
-  supabaseUserId String
+  supabaseUserId String @unique
   userName String?
   role Role
   created DateTime @default(now())

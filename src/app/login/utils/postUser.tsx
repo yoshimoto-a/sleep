@@ -4,6 +4,7 @@ import { Role } from "@prisma/client";
 export const PostUser = async (
   supabaseUserId: string,
   role: Role,
+  userName: string,
   token: string
 ) => {
   const prams: PostRequests = {
@@ -15,6 +16,7 @@ export const PostUser = async (
     body: {
       supabaseUserId,
       role,
+      userName,
     },
   };
   const resp = await fetch("/api/login/", {

@@ -6,12 +6,13 @@ import { Input } from "../_components/input";
 import { useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
-import { GetLoginUser } from "./utils/getLoginUser";
+import { GetLoginUser } from "../../utils/getLoginUser";
 import { PostUser } from "./utils/postUser";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 
 export default function Page() {
   const router = useRouter();
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { token } = useSupabaseSession();
@@ -24,26 +25,32 @@ export default function Page() {
     });
     if (error) {
       alert("ログインに失敗しました");
-    } else {
-      setEmail("");
-      setPassword("");
-      if (data.session) {
-        const {
-          access_token,
-          user: { id },
-        } = data.session;
-        if (token) {
+      return;
+    }
+    setUserName("");
+    setEmail("");
+    setPassword("");
+    if (data.session) {
+      const {
+        access_token,
+        user: { id },
+      } = data.session;
+      if (token) {
+        try {
           const { isRegistered } = await GetLoginUser(access_token, id);
-          alert(isRegistered ? "初回ログインではない" : "初回ログイン");
           if (!isRegistered) {
             //レスポンス内のbabyIdの有無を元に第二引数の値は変更する
-            const resp = await PostUser(id, "MAIN", access_token);
+            const resp = await PostUser(id, "MAIN", userName, access_token);
           }
+        } catch (e) {
+          console.log(e);
+          alert("ユーザー情報の取得に失敗しました");
         }
       }
-
-      //router.replace("../dashboard/sleep/");
     }
+    //初期設定の状況を見て遷移する先を変える
+
+    router.replace("../dashboard/sleep");
   };
   return (
     <>
@@ -53,6 +60,15 @@ export default function Page() {
           onSubmit={handleSubmit}
           className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
+          <div className="mb-4">
+            <Input
+              id="userName"
+              type="text"
+              value={userName}
+              placeholder="ユーザーネーム"
+              onChange={value => setUserName(value)}
+            />
+          </div>
           <div className="mb-4">
             <Input
               id="email"

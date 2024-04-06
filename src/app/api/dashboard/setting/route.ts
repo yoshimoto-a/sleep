@@ -1,8 +1,9 @@
 import { supabase } from "@/utils/supabase";
 import { buildPrisma } from "@/utils/prisema";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/login";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
 import { type NextRequest } from "next/server";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
@@ -13,34 +14,21 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const body = await req.json();
-    const { supabaseUserId, role, userName } = body;
-    const userPostResp = await prisma.user.create({
+    const { name, birthday, expectedDateOfBirth, birthWeight, gender } = body;
+    const resp = await prisma.baby.create({
       data: {
-        supabaseUserId,
-        role,
-        userName,
+        name,
+        birthday,
+        expectedDateOfBirth,
+        birthWeight,
+        gender,
       },
     });
-    //BabyIdをUserテーブルに登録するためにcreate
-    const babyResp = await prisma.baby.create({
-      data: {
-        name: "ベビー",
-        birthday: new Date(),
-        birthWeight: 0,
-        expectedDateOfBirth: new Date(),
-        gender: "BOY",
-      },
+    return Response.json(<PostResponse>{
+      status: 200,
+      message: "success",
+      id: resp.id,
     });
-    //userのbabyIdを更新
-    await prisma.user.update({
-      where: {
-        id: userPostResp.id,
-      },
-      data: {
-        babyId: babyResp.id,
-      },
-    });
-    return Response.json(<ApiResponse>{ status: 200, message: "success" });
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
@@ -55,20 +43,29 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const supabaseUserId = req.nextUrl.searchParams.get("supabaseUserId");
-    if (!supabaseUserId)
+    const id = req.nextUrl.searchParams.get("id");
+    if (!id)
       return Response.json(<IndexResponse>{
         status: 400,
-        error: "Failed to obtain supabaseUserId",
+        error: "Failed to obtain Id",
       });
-    const getUser = await prisma.user.findUnique({
+    const getBaby = await prisma.baby.findUnique({
       where: {
-        supabaseUserId,
+        id: parseInt(id),
+      },
+      select: {
+        id: true,
+        name: true,
+        birthday: true,
+        expectedDateOfBirth: true,
+        birthWeight: true,
+        gender: true,
+        created: true,
+        updated: true,
       },
     });
-    return Response.json(<IndexResponse>{ status: 200, data: getUser });
+    return Response.json(<IndexResponse>{ status: 200, data: getBaby });
   } catch (e) {
-    console.log(e);
     if (e instanceof Error) {
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
@@ -81,27 +78,30 @@ export const PUT = async (req: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
+
   try {
     const body = await req.json();
-    const { id, babyId } = body;
-    if (!id)
-      return Response.json(<IndexResponse>{
-        status: 400,
-        error: "Failed to obtain id",
-      });
-    const putUser = await prisma.user.update({
+    const { babyId, name, birthday, expectedDateOfBirth, birthWeight, gender } =
+      body;
+    await prisma.baby.update({
       where: {
-        id: parseInt(id),
+        id: babyId,
       },
       data: {
-        babyId,
+        name,
+        birthday,
+        expectedDateOfBirth,
+        birthWeight,
+        gender,
       },
     });
-
-    return Response.json({ status: 200, data: putUser });
+    return Response.json(<ApiResponse>{
+      status: 200,
+      message: "success",
+    });
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json({ status: 400, error: e.message });
+      return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }
 };

@@ -1,38 +1,47 @@
 "use client";
 
 import React from "react";
-import { Header } from "../_components/header";
-import { Input } from "../_components/input";
+import { Header } from "@/app/_components/header";
+import { Input } from "@/app/_components/input";
 import { useState } from "react";
-import { supabase } from "@/utils/supabase";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { useRouter } from "next/navigation";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
+import { GetLoginUser } from "@/utils/getLoginUser";
 
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  console.log(email, password);
+  const { token, session } = useSupabaseSession();
+  //const { babyId}= GetLoginUser(token,null,session?.user.id)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `http://localhost:3000/login`,
-      },
-    });
-    if (error) {
-      if (error.status === 422) {
-        ("失敗しました。登録済のメールアドレスの可能性あります");
-      } else {
-        alert("登録に失敗しました");
-      }
-    } else {
-      setEmail("");
-      setPassword("");
-      router.push("/signup/sentEmail/");
-    }
+    // if(token) {const prams: PostRequests = {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: token,
+    //   },
+    //   body: {
+    //     email,
+    //     // babyId,
+    //   },
+    // };}
+
+    //   const resp = await fetch("/api/bashboard/subSignup", {
+    //     ...prams,
+    //     body: JSON.stringify(prams.body),
+    //   });
+    // }
+    // if (error) {
+    //   console.log(error);
+    //   alert("登録に失敗しました");
+    // } else {
+    //   setEmail("");
+    //   router.push("/signup/sentEmail/");
   };
+
   return (
     <>
       <Header />
@@ -48,15 +57,6 @@ export default function Page() {
               value={email}
               placeholder="メールアドレス"
               onChange={value => setEmail(value)}
-            />
-          </div>
-          <div className="mb-6">
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              placeholder="パスワード"
-              onChange={value => setPassword(value)}
             />
           </div>
           <div className="text-center">

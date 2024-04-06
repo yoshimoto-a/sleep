@@ -17,7 +17,7 @@ export const Input: React.FC<Props> = ({
 }) => {
   return (
     <input
-      className="bg-custom-gray py-2 px-3 text-gray-700 leading-tight"
+      className="bg-custom-gray py-2 px-3 text-gray-700 leading-tight w-full"
       id={id}
       type={type}
       value={value}

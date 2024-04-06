@@ -8,6 +8,8 @@ interface Baby {
   expectedDateOfBirth: Date;
   birthWeight: number;
   gender: Gender;
+  created: Date;
+  updated: Date;
 }
 export interface IndexSuccessResponse {
   status: number;

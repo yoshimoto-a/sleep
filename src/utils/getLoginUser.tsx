@@ -1,4 +1,4 @@
-import { IndexResponse } from "../../_types/apiRequests/login";
+import { IndexResponse } from "../app/_types/apiRequests/login";
 
 export const GetLoginUser = async (token: string, supabaseUserId: string) => {
   const resp = await fetch(`/api/login?supabaseUserId=${supabaseUserId}`, {
@@ -8,14 +8,16 @@ export const GetLoginUser = async (token: string, supabaseUserId: string) => {
       Authorization: token,
     },
   });
+  console.log(resp);
   const data: IndexResponse = await resp.json();
   if ("data" in data && data.data !== null) {
     return {
       isRegistered: true,
       babyId: data.data.babyId,
       userName: data.data.userName,
+      id: data.data.id,
     };
   } else {
-    return { isRegistered: false, babyId: null, userName: null };
+    return { isRegistered: false, babyId: null, userName: null, id: null };
   }
 };

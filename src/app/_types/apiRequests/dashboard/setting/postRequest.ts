@@ -10,7 +10,5 @@ interface Baby {
   gender: Gender;
 }
 export interface PostRequests extends ApiRequest {
-  body: {
-    data: Baby;
-  };
+  body: Baby;
 }
