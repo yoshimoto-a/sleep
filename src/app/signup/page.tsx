@@ -6,14 +6,45 @@ import { Input } from "../_components/input";
 import { useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
+import { ErrorMessage } from "../_components/ErrorMessage";
 
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(email, password);
+
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
+  const valid = () => {
+    let isValid = true;
+    let emailError = "";
+    let passwordError = "";
+
+    if (!email) {
+      emailError = "メールアドレスは必須です。";
+      isValid = false;
+    } else if (!email.match(/.+@.+\..+/)) {
+      emailError = "メールアドレスの形式が正しくありません。";
+      isValid = false;
+    }
+    if (!password) {
+      passwordError = "パスワードは必須です。";
+      isValid = false;
+    } else if (password.length < 6) {
+      passwordError = "パスワードは6文字以上で入力してください。";
+      isValid = false;
+    }
+
+    setEmailErrorMessage(emailError);
+    setPasswordErrorMessage(passwordError);
+
+    return isValid;
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!valid()) return;
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -23,7 +54,7 @@ export default function Page() {
     });
     if (error) {
       if (error.status === 422) {
-        ("失敗しました。登録済のメールアドレスの可能性あります");
+        alert("登録済のメールアドレスです");
       } else {
         alert("登録に失敗しました");
       }
@@ -36,6 +67,7 @@ export default function Page() {
   return (
     <>
       <Header />
+      <h1 className="text-center text-3xl font-bold mt-6">サインアップ</h1>
       <div className="absolute inset-0 flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
@@ -49,6 +81,7 @@ export default function Page() {
               placeholder="メールアドレス"
               onChange={value => setEmail(value)}
             />
+            <ErrorMessage message={emailErrorMessage} />
           </div>
           <div className="mb-6">
             <Input
@@ -58,6 +91,7 @@ export default function Page() {
               placeholder="パスワード"
               onChange={value => setPassword(value)}
             />
+            <ErrorMessage message={passwordErrorMessage} />
           </div>
           <div className="text-center">
             <button

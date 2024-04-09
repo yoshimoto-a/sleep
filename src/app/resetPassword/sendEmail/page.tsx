@@ -4,54 +4,28 @@ import React from "react";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
 import { useState } from "react";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { useRouter } from "next/navigation";
-import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
-import { UserContext } from "../layout";
-import { useContext } from "react";
+import { supabase } from "@/utils/supabase";
 
 export default function Page() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
-  const { token } = useSupabaseSession();
-  const [, babyId] = useContext(UserContext);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (token) {
-      const prams: PostRequests = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: {
-          email,
-          babyId,
-        },
-      };
-      const resp = await fetch("/api/dashboard/subSignup", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      console.log(resp);
-      if (resp.status === 200) {
-        //成功時の処理
-        setEmail("");
-        router.push("/signup/sentEmail/");
-      } else {
-        alert("サブアカウント招待に失敗しました");
-      }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "http://localhost:3000/resetPassword/setting",
+    });
+    if (error) {
+      alert("再設定メールの送信に失敗しました");
+    } else {
+      setEmail("");
+      alert("パスワード設定メールを確認してください");
     }
   };
-
   return (
     <>
       <Header />
-      <h1 className="text-center text-3xl font-bold mt-6">
-        サブアカウントの作成
-      </h1>
+      <h1 className="text-center text-3xl font-bold mt-6">パスワードの設定</h1>
       <p className="text-center mt-6">
-        招待したい人のメールアドレスを入力して送信してください
+        パスワードの設定用URLを下記アドレス宛に送信します
       </p>
       <div className="absolute inset-0 flex items-center justify-center">
         <form

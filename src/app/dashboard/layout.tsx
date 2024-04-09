@@ -17,7 +17,6 @@ export default function Layout({
   const { token, session } = useSupabaseSession();
   const [dbUserId, setDbUserId] = useState(0);
   const [babyId, setBabyId] = useState(0);
-
   useEffect(() => {
     const fetcher = async () => {
       try {
@@ -30,15 +29,14 @@ export default function Layout({
             const data = await GetBaby(token, babyId);
             if ("data" in data && data.data !== null) {
               const { data: babyData } = data;
-              babyData.created === babyData.updated
-                ? router.replace("../dashboard/setting")
-                : router.replace("../dashboard/sleep");
+              if (babyData.created === babyData.updated)
+                router.replace("../dashboard/setting");
             }
           }
         }
       } catch (e) {
-        console.log(e);
         alert("ユーザー情報の取得に失敗しました。");
+        //ログアウトさせる？？
       }
     };
     fetcher();

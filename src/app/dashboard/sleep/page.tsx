@@ -6,7 +6,7 @@ import { useContext } from "react";
 
 export default function Page() {
   const router = useRouter();
-  const dbUserIdid = useContext(UserContext);
+  const [dbUserId, babyId] = useContext(UserContext);
   const { session, isLoding } = useSupabaseSession();
   if (isLoding) return <p>Loading</p>;
   if (!session) {
@@ -14,5 +14,5 @@ export default function Page() {
     return null;
   }
 
-  return <h1>現在のユーザーのIDは{dbUserIdid}です。</h1>;
+  return <h1>現在のユーザーのIDは{dbUserId}です。</h1>;
 }

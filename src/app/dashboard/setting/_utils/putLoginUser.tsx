@@ -1,4 +1,5 @@
 import { UserUpdateRequests } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 
 export const PutUser = async (id: number, babyId: number, token: string) => {
   const prams: UserUpdateRequests = {
@@ -12,9 +13,17 @@ export const PutUser = async (id: number, babyId: number, token: string) => {
       babyId,
     },
   };
-  const resp = await fetch("/api/login/", {
-    ...prams,
-    body: JSON.stringify(prams.body),
-  });
-  return resp;
+  try {
+    const resp = await fetch("/api/login/", {
+      ...prams,
+      body: JSON.stringify(prams.body),
+    });
+    if (resp.status !== 200) {
+      throw new Error(`HTTP error. status: ${resp.status}`);
+    }
+    const data: ApiResponse = await resp.json();
+    return data;
+  } catch (e) {
+    throw e;
+  }
 };

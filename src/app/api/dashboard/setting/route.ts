@@ -64,7 +64,14 @@ export const GET = async (req: NextRequest) => {
         updated: true,
       },
     });
-    return Response.json(<IndexResponse>{ status: 200, data: getBaby });
+    if (getBaby) {
+      return Response.json(<IndexResponse>{ status: 200, data: getBaby });
+    } else {
+      return Response.json(<IndexResponse>{
+        status: 404,
+        error: "Requested record not found",
+      });
+    }
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
@@ -81,11 +88,13 @@ export const PUT = async (req: NextRequest) => {
 
   try {
     const body = await req.json();
-    const { babyId, name, birthday, expectedDateOfBirth, birthWeight, gender } =
-      body;
+    console.log(body);
+    const { id } = body;
+    const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
+      body.data;
     await prisma.baby.update({
       where: {
-        id: babyId,
+        id,
       },
       data: {
         name,

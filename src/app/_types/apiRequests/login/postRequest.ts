@@ -4,7 +4,7 @@ import { Role } from "@prisma/client";
 interface User {
   supabaseUserId: string;
   role: Role;
-  userName: string;
+  babyId: number | undefined | null;
 }
 export interface PostRequests extends ApiRequest {
   body: User;

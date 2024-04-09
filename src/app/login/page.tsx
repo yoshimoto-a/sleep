@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
 import { useState } from "react";
@@ -12,7 +13,6 @@ import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 
 export default function Page() {
   const router = useRouter();
-  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { token } = useSupabaseSession();
@@ -23,11 +23,11 @@ export default function Page() {
       email,
       password,
     });
+
     if (error) {
       alert("ログインに失敗しました");
       return;
     }
-    setUserName("");
     setEmail("");
     setPassword("");
     if (data.session) {
@@ -38,37 +38,31 @@ export default function Page() {
       if (token) {
         try {
           const { isRegistered } = await GetLoginUser(access_token, id);
+
           if (!isRegistered) {
-            //レスポンス内のbabyIdの有無を元に第二引数の値は変更する
-            const resp = await PostUser(id, "MAIN", userName, access_token);
+            const babyId: number | undefined | null =
+              data.user?.user_metadata.babyId;
+            const role = babyId ? "SUB" : "MAIN";
+            const resp = await PostUser(id, role, access_token, babyId);
+            if (resp.status !== 200) throw new Error("ユーザー登録失敗");
+            router.replace("../dashboard/setting");
           }
+          router.replace("../dashboard/sleep");
         } catch (e) {
-          console.log(e);
-          alert("ユーザー情報の取得に失敗しました");
+          alert("ログインに失敗しました");
         }
       }
     }
-    //初期設定の状況を見て遷移する先を変える
-
-    router.replace("../dashboard/sleep");
   };
   return (
     <>
       <Header />
+      <h1 className="text-center text-3xl font-bold mt-6">ログイン</h1>
       <div className="absolute inset-0 flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
           className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          <div className="mb-4">
-            <Input
-              id="userName"
-              type="text"
-              value={userName}
-              placeholder="ユーザーネーム"
-              onChange={value => setUserName(value)}
-            />
-          </div>
           <div className="mb-4">
             <Input
               id="email"
@@ -86,6 +80,9 @@ export default function Page() {
               placeholder="パスワード"
               onChange={value => setPassword(value)}
             />
+            <Link href="/resetPassword/sendEmail" className="header-link">
+              パスワードの再設定はこちら
+            </Link>
           </div>
           <div className="text-center">
             <button

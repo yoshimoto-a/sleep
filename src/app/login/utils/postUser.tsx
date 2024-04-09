@@ -4,24 +4,29 @@ import { Role } from "@prisma/client";
 export const PostUser = async (
   supabaseUserId: string,
   role: Role,
-  userName: string,
-  token: string
+  token: string,
+  babyId: number | null | undefined
 ) => {
-  const prams: PostRequests = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token,
-    },
-    body: {
-      supabaseUserId,
-      role,
-      userName,
-    },
-  };
-  const resp = await fetch("/api/login/", {
-    ...prams,
-    body: JSON.stringify(prams.body),
-  });
-  return resp;
+  try {
+    const prams: PostRequests = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: {
+        supabaseUserId,
+        role,
+        babyId,
+      },
+    };
+    const resp = await fetch("/api/login/", {
+      ...prams,
+      body: JSON.stringify(prams.body),
+    });
+    console.log(resp);
+    return resp;
+  } catch (e) {
+    throw e;
+  }
 };

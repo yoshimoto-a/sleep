@@ -14,7 +14,8 @@ import { useContext } from "react";
 import { GetBaby } from "./_utils/getBaby";
 import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 import { PutBaby } from "./_utils/putBaby";
-import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { token } = useSupabaseSession();
@@ -23,21 +24,27 @@ export default function Page() {
   const [expectedDateOfBirth, setExpectedDateOfBirth] = useState("");
   const [birthWeight, setBirthWeight] = useState("");
   const [gender, setGender] = useState<Gender | "">("");
-  const [babyId] = useContext(UserContext);
+  const [, babyId] = useContext(UserContext);
+  const router = useRouter();
   //初期設定
   useEffect(() => {
     const fetcher = async () => {
-      if (token && babyId !== 0) {
-        const data = await GetBaby(token, babyId);
-        console.log(data);
-        if ("data" in data && data.data !== null) {
-          const { data: babyData } = data;
-          setBabyName(String(babyData.name));
-          setBirthWeight(String(babyData.birthWeight));
-          setBirthday(String(babyData.birthday));
-          setExpectedDateOfBirth(String(babyData.expectedDateOfBirth));
-          setGender(babyData.gender);
+      try {
+        if (token && babyId !== 0) {
+          const data = await GetBaby(token, babyId);
+          if ("data" in data && data.data !== null) {
+            const { data: babyData } = data;
+            setBabyName(String(babyData.name));
+            setBirthWeight(String(babyData.birthWeight));
+            setBirthday(String(dayjs(babyData.birthday).format("YYYY-MM-DD")));
+            setExpectedDateOfBirth(
+              String(dayjs(babyData.expectedDateOfBirth).format("YYYY-MM-DD"))
+            );
+            setGender(babyData.gender);
+          }
         }
+      } catch (e) {
+        alert("保存情報の取得に失敗しました");
       }
     };
     fetcher();
@@ -47,15 +54,19 @@ export default function Page() {
     e.preventDefault();
 
     if (token && gender) {
-      const body: Baby = {
-        name: babyName,
-        birthday: new Date(birthday),
-        expectedDateOfBirth: new Date(expectedDateOfBirth),
-        birthWeight: parseInt(birthWeight),
-        gender,
-      };
-      const data: ApiResponse = await PutBaby(token, babyId, body);
-      if (data.status !== 200) alert("更新失敗");
+      try {
+        const body: Baby = {
+          name: babyName,
+          birthday: dayjs(birthday).toDate(),
+          expectedDateOfBirth: dayjs(expectedDateOfBirth).toDate(),
+          birthWeight: parseInt(birthWeight),
+          gender,
+        };
+        await PutBaby(token, babyId, body);
+        router.replace("/dashboard/sleep/");
+      } catch (e) {
+        alert("更新に失敗しました");
+      }
     }
   };
   return (
@@ -112,6 +123,7 @@ export default function Page() {
               name="gender"
               value={Gender.BOY}
               label="男の子"
+              checkedValue={gender}
               onChange={() => setGender(Gender.BOY)}
             />
             <InputRadio
@@ -119,6 +131,7 @@ export default function Page() {
               name="gender"
               value={Gender.GIRL}
               label="女の子"
+              checkedValue={gender}
               onChange={() => setGender(Gender.GIRL)}
             />
           </div>
@@ -127,7 +140,7 @@ export default function Page() {
               className="rounded-full w-32 bg-blue-500 text-white py-2"
               type="submit"
             >
-              登録
+              保存
             </button>
           </div>
         </form>
