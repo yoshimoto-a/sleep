@@ -39,31 +39,49 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
+  const { data, error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return Response.json(<IndexResponse>{
-        status: 400,
-        error: "Failed to obtain Id",
-      });
-    const getBaby = await prisma.baby.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        id: parseInt(id),
+        supabaseUserId: data.user.id,
       },
-      select: {
-        id: true,
-        name: true,
-        birthday: true,
-        expectedDateOfBirth: true,
-        birthWeight: true,
-        gender: true,
-        created: true,
-        updated: true,
+      include: {
+        Baby: {
+          select: {
+            id: true,
+            name: true,
+            birthday: true,
+            expectedDateOfBirth: true,
+            birthWeight: true,
+            gender: true,
+            created: true,
+            updated: true,
+          },
+        },
       },
     });
+
+    if (!user) return;
+
+    console.log(user.Baby);
+    // const getBaby = await prisma.baby.findUnique({
+    //   where: {
+    //     id: parseInt(id),
+
+    //   },
+    //   select: {
+    //     id: true,
+    //     name: true,
+    //     birthday: true,
+    //     expectedDateOfBirth: true,
+    //     birthWeight: true,
+    //     gender: true,
+    //     created: true,
+    //     updated: true,
+    //   },
+    // });
     if (getBaby) {
       return Response.json(<IndexResponse>{ status: 200, data: getBaby });
     } else {
