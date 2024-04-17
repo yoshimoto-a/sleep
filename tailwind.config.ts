@@ -15,6 +15,7 @@ const config: Config = {
       },
       colors: {
         "custom-gray": "rgba(233, 233, 233, 0.5)",
+        "custom-blue": "rgba(153, 211, 223, 1)",
       },
     },
   },

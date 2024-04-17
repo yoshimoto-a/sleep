@@ -26,13 +26,18 @@ interface Growth {
   archevedAt: Date;
 }
 /**睡眠時間→一覧表示・表・現在の活動時間の算出*/
-interface SleepingSituation {
+export interface SleepingSituation {
   id: number;
   babyId: number;
-  bedTime: Date;
-  sleep: Date;
-  wakeup: Date;
+  bedTime: Date | null;
+  sleep: Date | null;
+  wakeup: Date | null;
+  createUser: number;
+  changeUser: number;
+  created: Date;
+  updated: Date;
 }
+
 /**活動時間→お勧めねんね時刻の算出*/
 interface ActivityTime {
   id: number;
@@ -41,15 +46,17 @@ interface ActivityTime {
   type: Type;
 }
 
+interface BabyData {
+  baby: Baby;
+  user: User;
+  growth: Growth;
+  sleepingSituation: SleepingSituation;
+  activityTime: ActivityTime;
+}
+
 export interface IndexSuccessResponse {
   status: number;
-  data: {
-    baby: Baby;
-    user: User;
-    growth: Growth;
-    sleepingSituation: SleepingSituation;
-    activityTime: ActivityTime;
-  };
+  data: BabyData | BabyData[];
 }
 
 export interface IndexErrorResponse {
@@ -58,3 +65,9 @@ export interface IndexErrorResponse {
 }
 
 export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
+
+export interface SleepingSituationResponse {
+  status: number;
+  message: string;
+  data?: SleepingSituation[];
+}

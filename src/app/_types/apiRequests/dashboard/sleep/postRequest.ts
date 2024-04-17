@@ -4,7 +4,7 @@ import { ApiRequest } from "../../apiRequest";
  * bedTimeは記録しないことも想定
  *bedTimeかsleepが登録されるタイミングでPOST
  */
-interface SleepingSituation {
+export interface SleepingSituation {
   babyId: number;
   bedTime: Date | null;
   sleep: Date | null;

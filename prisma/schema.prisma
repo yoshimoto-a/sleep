@@ -52,7 +52,7 @@ model User {
   role Role
   created DateTime @default(now())
   updated DateTime @updatedAt
-  Baby Baby? @relation(fields: [babyId], references: [id])
+  baby Baby? @relation(fields: [babyId], references: [id])
   createdByWeights Weight[] @relation("CreatedByUser")
   changedByWeights Weight[] @relation("ChangedByUser")
   createdByActivityTimes ActivityTime[] @relation("CreatedByUser")
@@ -138,9 +138,9 @@ model SleepPrepTime {
 model SleepingSituation{
   id Int @id @default(autoincrement())
   babyId Int
-  bedTime　DateTime
-  sleep DateTime
-  wakeup DateTime
+  bedTime　DateTime?
+  sleep DateTime?
+  wakeup DateTime?
   created DateTime @default(now())
   updated DateTime @updatedAt
   createUser Int

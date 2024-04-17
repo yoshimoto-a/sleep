@@ -3,7 +3,7 @@ import { ApiRequest } from "../../apiRequest";
  *bedTimeかwakeupかの登録でputするので
  *sleepは必ずデータが入る
  */
-interface SleepingSituation {
+export interface SleepingSituation {
   babyId: number;
   bedTime: Date | null;
   sleep: Date;

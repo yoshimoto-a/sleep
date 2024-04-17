@@ -47,7 +47,7 @@ export default function Page() {
             if (resp.status !== 200) throw new Error("ユーザー登録失敗");
             router.replace("../dashboard/setting");
           }
-          router.replace("../dashboard/sleep");
+          router.replace("/dashboard/sleep");
         } catch (e) {
           alert("ログインに失敗しました");
         }

@@ -5,6 +5,7 @@ import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { GetLoginUser } from "../../utils/getLoginUser";
 import { useRouter } from "next/navigation";
 import { GetBaby } from "./setting/_utils/getBaby";
+import { Footer } from "./_components/footer";
 
 export const UserContext = createContext([0, 0]);
 
@@ -44,6 +45,7 @@ export default function Layout({
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}
+      <Footer />
     </UserContext.Provider>
   );
 }
