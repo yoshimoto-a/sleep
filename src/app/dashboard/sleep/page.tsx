@@ -97,16 +97,22 @@ export default function Page() {
     }
   };
 
-  const changeDate = (amount: number) => {
-    setDate(dayjs(date).add(amount, "d").toDate());
+  const handlePrev = () => {
+    setDate(dayjs(date).add(-1, "d").toDate());
   };
+
+  const handleNext = () => {
+    setDate(dayjs(date).add(1, "d").toDate());
+  };
+
   return (
     <>
       <Header
         name="ベビー"
         birthday={birthday}
         date={date}
-        changeDate={changeDate}
+        onClickPrev={handlePrev}
+        onClickNext={handleNext}
       ></Header>
       <div className="flex justify-between mx-10 my-5">
         <MainTime title="お勧めのねんね時刻" time="17:05" />
