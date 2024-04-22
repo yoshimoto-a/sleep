@@ -22,7 +22,7 @@ export const Input: React.FC<Props> = ({
       type={type}
       value={value}
       placeholder={placeholder}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={e => onChange(e.target.value)}
     />
   );
 };

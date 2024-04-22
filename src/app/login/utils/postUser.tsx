@@ -1,5 +1,5 @@
-import { PostRequests } from "@/app/_types/apiRequests/login/postRequest";
 import { Role } from "@prisma/client";
+import { PostRequests } from "@/app/_types/apiRequests/login/postRequest";
 
 export const PostUser = async (
   supabaseUserId: string,

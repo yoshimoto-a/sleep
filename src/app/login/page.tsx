@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { useState } from "react";
+import { GetLoginUser } from "../../utils/getLoginUser";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
-import { useState } from "react";
-import { supabase } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
-import { GetLoginUser } from "../../utils/getLoginUser";
-import { PostUser } from "./utils/postUser";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
+import { PostUser } from "./utils/postUser";
+import { supabase } from "@/utils/supabase";
 
 export default function Page() {
   const router = useRouter();

@@ -1,5 +1,5 @@
-import { ApiRequest } from "../apiRequest";
 import { Role } from "@prisma/client";
+import { ApiRequest } from "../apiRequest";
 
 interface User {
   supabaseUserId: string;

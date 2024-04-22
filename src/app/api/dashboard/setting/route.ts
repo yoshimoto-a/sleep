@@ -1,9 +1,9 @@
-import { supabase } from "@/utils/supabase";
-import { buildPrisma } from "@/utils/prisema";
+import { type NextRequest } from "next/server";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
-import { type NextRequest } from "next/server";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
+import { buildPrisma } from "@/utils/prisema";
+import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();

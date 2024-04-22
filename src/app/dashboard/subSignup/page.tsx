@@ -1,14 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
+import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../layout";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
-import { useState } from "react";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { useRouter } from "next/navigation";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
-import { UserContext } from "../layout";
-import { useContext } from "react";
 
 export default function Page() {
   const router = useRouter();
