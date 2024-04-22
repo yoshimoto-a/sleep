@@ -12,7 +12,8 @@ import dayjs from "dayjs";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
 import { RowItem } from "./_component/rowItem";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
-import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep/index";
+import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
+import { useBaby } from "../_hooks/useBaby";
 
 export default function Page() {
   const router = useRouter();
@@ -21,35 +22,32 @@ export default function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [action, setAction] = useState("");
   const [datetime, setDatetime] = useState(new Date());
-  const [records, setRecords] = useState<SleepingSituation[]>([]);
+  const [records, setRecords] = useState<FormatedData[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date()); //日付替えられたら日付セットして取得しなおす
+  const [date, setDate] = useState(new Date());
+  const { birthday, isLoading: isBabyLoading } = useBaby({ babyId });
 
-  //一覧表示する情報取得してステートに保存
+  const getRecords = async () => {
+    setLoading(true);
+    if (!token) return;
+    const resp = await fetch(`/api/dashboard?date=${date}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+    const data: SleepingSituationResponse = await resp.json();
+    data.status !== 200 && alert(`一覧取得できませんでした。${data.message}`);
+    if ("data" in data && data.data) {
+      setRecords(data.data);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
-    const getRecords = async () => {
-      setLoading(true);
-      if (!token) return;
-      const resp = await fetch(`/api/dashboard?date=${date}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-      //型の指定する
-      const data: SleepingSituationResponse = await resp.json();
-      data.status !== 200 && alert(`一覧取得できませんでした。${data.message}`);
-      if ("data" in data && data.data) {
-        setRecords(data.data);
-      }
-      setLoading(false);
-    };
     getRecords();
   }, [session, token, date]);
-
-  if (isLoding || isLoading) return <div>Loading</div>;
-  console.log(records);
+  if (isLoding || isLoading || isBabyLoading) return <div>Loading</div>;
   if (!session || !token) {
     router.push("/login/");
     return null;
@@ -64,7 +62,6 @@ export default function Page() {
 
   const saveValue = async () => {
     modalClose();
-    console.log(datetime);
     const resp = await fetch(`/api/dashboard/${action}`, {
       method: "POST",
       headers: {
@@ -78,16 +75,39 @@ export default function Page() {
       }),
     });
     const data: PostResponse = await resp.json();
-    data.status !== 200 && alert(`登録できませんでした。${data.message}`);
+    data.status !== 200
+      ? alert(`登録できませんでした。${data.message}`)
+      : getRecords();
   };
 
   const modalClose = () => {
     setIsModalOpen(false);
   };
 
+  const title = (): string => {
+    switch (action) {
+      case "bedTime":
+        return "寝かしつけ開始";
+      case "sleep":
+        return "寝た";
+      case "wakeup":
+        return "起きた";
+      default:
+        return "action名が不明です";
+    }
+  };
+
+  const changeDate = (amount: number) => {
+    setDate(dayjs(date).add(amount, "d").toDate());
+  };
   return (
     <>
-      <Header name="ベビー" birthday={new Date()} date={new Date()}></Header>
+      <Header
+        name="ベビー"
+        birthday={birthday}
+        date={date}
+        changeDate={changeDate}
+      ></Header>
       <div className="flex justify-between mx-10 my-5">
         <MainTime title="お勧めのねんね時刻" time="17:05" />
         <MainTime title="現在の活動時間" time="90分" />
@@ -96,8 +116,17 @@ export default function Page() {
         <div className="bg-white col-span-3">グラフ</div>
         <div className="relative col-span-7 h-full">
           <div>
-            {}
-            <RowItem time={new Date()} action="寝た" interval="90分"></RowItem>
+            {records.map((record, index) => {
+              return (
+                <RowItem
+                  key={index}
+                  id={record.id}
+                  time={record.HourAndMinutes}
+                  action={record.action}
+                  interval={record.MinutesOnly}
+                ></RowItem>
+              );
+            })}
           </div>
           <div className="absolute bottom-100 w-full px-3 py-1 bg-custom-blue flex justify-between items-center">
             <Button
@@ -125,6 +154,7 @@ export default function Page() {
           onClose={() => setIsModalOpen(false)}
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
         >
+          <h2 className="text-center">{title()}</h2>
           <input
             id="datetime"
             type="datetime-local"

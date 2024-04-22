@@ -1,16 +1,16 @@
 /**ログの行データ */
-import dayjs from "dayjs";
 import React from "react";
 
 interface Props {
-  time: Date;
+  id: number;
+  time: string;
   action: string;
   interval: string;
 }
-export const RowItem: React.FC<Props> = ({ time, action, interval }) => {
+export const RowItem: React.FC<Props> = ({ id, time, action, interval }) => {
   return (
     <div className="border-b pl-2">
-      <span className="mr-3">{dayjs(time).format("HH時mm分")}</span>
+      <span className="mr-3">{time}</span>
       <span>{action}</span>
       <span className="absolute right-2">{interval}</span>
     </div>

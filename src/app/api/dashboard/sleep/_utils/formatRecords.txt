@@ -52,23 +52,23 @@ bedtime(null許容)以外すべて当日で完成したデータ
 データ⑥：containTomorrowRecord
 当日と翌日が混じったデータ。0か1件になる
 
-●考えるられるパターン
+考えるられるパターン
 (yesterdayRecordは基本いつも存在して1件だけ)
-パターン①
+●パターン①
 日付またいで寝ている　OR　寝かしつけ中で当日のデータがまだ存在していない状態
 データ空で返す
 
-パターン②
+●パターン②
 日付またいで起きた(OR)寝た登録がおわったところで、日付の混ざったデータのみ存在している状態
 containYesterdayRecord　→　1件
 返すデータ1件
-(起きた/睡眠時間)
+(起きた/睡眠時間)OR(寝た/入眠時間)
 
-パターン③
+●パターン③
 日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日もまだデータがない
 データ空で返す
 
-パターン④
+●パターン④
 日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日データ登録したけど未完成
 yesterdayRecord　→　1件
 mappedContainNullRecords　→　1件
@@ -76,7 +76,7 @@ mappedContainNullRecords　→　1件
 (寝かしつけ開始/活動時間yesterdayRecord使う)
 (寝た/活動時間yesterdayRecord使う)
 
-パターン⑤
+●パターン⑤
 日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日データ登録した
 yesterdayRecord　→　1件存在するのみ
 mappedCompletedRecords　→　n件
@@ -84,7 +84,7 @@ mappedContainNullRecords　→　1件
 返すデータn件
 (寝かしつけ開始/活動時間yesterdayRecord使う)OR(寝た/活動時間yesterdayRecord使う)
 
-パターン⑥
+●パターン⑥
 日付またいで起きて登録完了して、他のデータの登録もある状態
 containYesterdayRecord　→　1件
 mappedContainNullRecords　→　0か1件
@@ -113,3 +113,5 @@ mappedCompletedRecords　→　n件
 日付またがず、当日のデータの登録があって、翌日登録完了した
 containTomorrowRecord　→　1件
 mappedCompletedRecords　→　n件
+
+

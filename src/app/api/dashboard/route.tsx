@@ -5,11 +5,33 @@ import { type NextRequest } from "next/server";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
+import { ContainNull } from "@/app/_types/dashboard/change";
+import { CompletedData } from "@/app/_types/dashboard/change";
 import { FormatRecords } from "./sleep/_utils/formatRecords";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Tokyo");
+
+const FormatContainNull = (record: SleepingSituation) => {
+  return {
+    id: record.id,
+    bedTime: record.bedTime,
+    sleep: record.sleep || null,
+    wakeup: record.wakeup || null,
+    changeUser: record.changeUser,
+  };
+};
+const FormatNotContainNull = (record: SleepingSituation) => {
+  return {
+    id: record.id,
+    bedTime: record.bedTime,
+    sleep: record.sleep as Date,
+    wakeup: record.wakeup as Date,
+    changeUser: record.changeUser,
+  };
+};
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
@@ -75,33 +97,15 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    //最新以外のレコード
-    interface CompletedData {
-      id: number;
-      bedtime: Date | null;
-      sleep: Date;
-      wakeup: Date;
-    }
     const mappedCompletedRecords: CompletedData[] = completedRecords.map(
-      record => ({
-        id: record.id,
-        bedtime: record.bedTime,
-        sleep: record.sleep as Date,
-        wakeup: record.wakeup as Date,
-      })
+      record => FormatNotContainNull(record)
     );
 
-    //!sleep||!wakeup → 必ず最新で一件になる
+    //当日で!sleep||!wakeup → 必ず最新で0か1件になる
     const containNullRecords = await prisma.sleepingSituation.findMany({
       where: {
         babyId,
         OR: [
-          {
-            bedTime: {
-              gte: startOfDay,
-              lt: endOfDay,
-            },
-          },
           {
             AND: [
               {
@@ -141,19 +145,8 @@ export const GET = async (req: NextRequest) => {
         ],
       },
     });
-    //最新のレコード
-    interface ContainNull {
-      bedtime: Date | null;
-      sleep: Date | null;
-      wakeup: Date | null;
-    }
     const mappedContainNullRecords: ContainNull[] = containNullRecords.map(
-      record => ({
-        id: record.id,
-        bedtime: record.bedTime,
-        sleep: record.sleep || null,
-        wakeup: record.wakeup || null,
-      })
+      record => FormatContainNull(record)
     );
 
     //当日をbedtimeかsleepかwakeupどれかに必ず含んでいて、bedtime以外nullは許容しない
@@ -197,6 +190,9 @@ export const GET = async (req: NextRequest) => {
         ],
       },
     });
+    const mappedContainTodayRecords: CompletedData[] = containTodayRecords.map(
+      record => FormatNotContainNull(record)
+    );
 
     //必要な時に備えて前日に起床した最後のレコードを取得しておく
     const startOfYesterday = dayjs(startOfDay)
@@ -212,8 +208,7 @@ export const GET = async (req: NextRequest) => {
       where: {
         babyId,
         wakeup: {
-          gte: startOfYesterday,
-          lt: endOfYesterday,
+          lt: startOfDay,
         },
       },
       orderBy: {
@@ -221,6 +216,9 @@ export const GET = async (req: NextRequest) => {
       },
       take: 1,
     });
+    const mappedYesterdayRecord: CompletedData[] = yesterdayRecord.map(record =>
+      FormatNotContainNull(record)
+    );
 
     //当日と昨日が混じったデータ
     //2件以上はあってはいけない。まず最初のデータになる
@@ -275,6 +273,8 @@ export const GET = async (req: NextRequest) => {
         ],
       },
     });
+    const mappedContainYesterdayRecord: ContainNull[] =
+      containYesterdayRecord.map(record => FormatContainNull(record));
 
     //必要な時に備えて翌日に寝たか起きたレコードを取得しておく
     const startOfTomorrow = dayjs(startOfDay)
@@ -335,20 +335,21 @@ export const GET = async (req: NextRequest) => {
         ],
       },
     });
-    console.log("前日を含む" + containYesterdayRecord.length);
-    console.log("前日の最後起床" + yesterdayRecord.length);
+    const mappedContainTomorrowRecord: ContainNull[] =
+      containTomorrowRecord.map(record => FormatContainNull(record));
 
-    //出力する情報に整える
-    //時刻.項目名.時間.更新者
-    // const records = FormatRecords(
-    //   getRecords,
-    //   startOfDay,
-    //   endOfDay,
-    //   yesterdayRecord
-    // );
+    const formatData = FormatRecords(
+      mappedCompletedRecords,
+      mappedContainNullRecords,
+      mappedContainTodayRecords,
+      mappedYesterdayRecord,
+      mappedContainYesterdayRecord,
+      mappedContainTomorrowRecord
+    );
     return Response.json({
       status: 200,
       message: "success",
+      data: formatData,
     });
   } catch (e) {
     if (e instanceof Error) {

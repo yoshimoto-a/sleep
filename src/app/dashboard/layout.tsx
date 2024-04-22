@@ -37,7 +37,6 @@ export default function Layout({
         }
       } catch (e) {
         alert("ユーザー情報の取得に失敗しました。");
-        //ログアウトさせる？？
       }
     };
     fetcher();

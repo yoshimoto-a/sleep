@@ -38,6 +38,14 @@ export interface SleepingSituation {
   updated: Date;
 }
 
+export interface FormatedData {
+  id: number;
+  HourAndMinutes: string; //時刻
+  action: string;
+  MinutesOnly: string; //時間
+  changer: number;
+}
+
 /**活動時間→お勧めねんね時刻の算出*/
 interface ActivityTime {
   id: number;
@@ -69,5 +77,5 @@ export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
 export interface SleepingSituationResponse {
   status: number;
   message: string;
-  data?: SleepingSituation[];
+  data?: FormatedData[];
 }
