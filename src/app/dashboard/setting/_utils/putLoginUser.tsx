@@ -1,5 +1,5 @@
-import { UserUpdateRequests } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import { UserUpdateRequests } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 
 export const PutUser = async (id: number, babyId: number, token: string) => {
   const prams: UserUpdateRequests = {

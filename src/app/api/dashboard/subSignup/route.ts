@@ -1,7 +1,7 @@
-import { supabase } from "@/utils/supabase";
-import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { createClient } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const token = req.headers.get("Authorization") ?? "";

@@ -1,21 +1,21 @@
 //赤ちゃんの設定
 "use client";
 
-import React from "react";
-import { Header } from "@/app/_components/header";
-import { Input } from "@/app/_components/input";
-import { Label } from "@/app/_components/label";
-import { InputRadio } from "@/app/_components/inputRadio";
-import { useState, useEffect } from "react";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Gender } from "@prisma/client";
-import { UserContext } from "../layout";
-import { useContext } from "react";
-import { GetBaby } from "./_utils/getBaby";
-import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
-import { PutBaby } from "./_utils/putBaby";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { UserContext } from "../layout";
+import { GetBaby } from "./_utils/getBaby";
+import { PutBaby } from "./_utils/putBaby";
+import { Header } from "@/app/_components/header";
+import { Input } from "@/app/_components/input";
+import { InputRadio } from "@/app/_components/inputRadio";
+import { Label } from "@/app/_components/label";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 
 export default function Page() {
   const { token } = useSupabaseSession();

@@ -1,5 +1,5 @@
-import React from "react";
 import { Gender } from "@prisma/client";
+import React from "react";
 
 interface Props {
   id: string;
@@ -26,7 +26,7 @@ export const InputRadio: React.FC<Props> = ({
         name={name}
         value={value}
         checked={value === checkedValue}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
       />
       <label htmlFor={id}>{label}</label>
     </div>
