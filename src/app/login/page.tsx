@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
-import { GetLoginUser } from "../../utils/getLoginUser";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
+import { GetLoginUser } from "@/utils/getLoginUser";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
