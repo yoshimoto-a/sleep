@@ -1,12 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
+import { useState } from "react";
+import { ErrorMessage } from "../_components/ErrorMessage";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
-import { useState } from "react";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
-import { ErrorMessage } from "../_components/ErrorMessage";
 
 export default function Page() {
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function Page() {
       email,
       password,
       options: {
-        emailRedirectTo: `http://localhost:3000/login`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/login`,
       },
     });
     if (error) {
@@ -79,7 +79,7 @@ export default function Page() {
               type="text"
               value={email}
               placeholder="メールアドレス"
-              onChange={value => setEmail(value)}
+              onChange={(value) => setEmail(value)}
             />
             <ErrorMessage message={emailErrorMessage} />
           </div>
@@ -89,7 +89,7 @@ export default function Page() {
               type="password"
               value={password}
               placeholder="パスワード"
-              onChange={value => setPassword(value)}
+              onChange={(value) => setPassword(value)}
             />
             <ErrorMessage message={passwordErrorMessage} />
           </div>
