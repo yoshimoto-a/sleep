@@ -1,7 +1,7 @@
 "use client";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { useState, useEffect } from "react";
 import { useBaby } from "../_hooks/useBaby";
 import { UserContext } from "../layout";
@@ -29,7 +29,7 @@ export default function Page() {
   const [date, setDate] = useState(new Date());
   const { birthday, isLoading: isBabyLoading } = useBaby({ babyId });
 
-  const getRecords = async () => {
+  const getRecords = useCallback(async () => {
     setLoading(true);
     if (!token) return;
     const resp = await fetch(`/api/dashboard?date=${date}`, {
@@ -45,10 +45,12 @@ export default function Page() {
       setRecords(data.data);
     }
     setLoading(false);
-  };
+  }, [date, token]);
+
   useEffect(() => {
     getRecords();
-  }, [session, token, date]);
+  }, [session, token, date, getRecords]);
+
   if (isLoding || isLoading || isBabyLoading) return <div>Loading</div>;
   if (!session || !token) {
     router.push("/login/");
