@@ -1,33 +1,35 @@
 "use client";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import { useCallback, useContext } from "react";
+import { useState, useEffect } from "react";
+import { useBaby } from "../_hooks/useBaby";
 import { UserContext } from "../layout";
-import { useContext } from "react";
+import { Button } from "./_component/button";
 import { Header } from "./_component/header";
 import { MainTime } from "./_component/mainTime";
-import { Button } from "./_component/button";
-import { CustomModal } from "@/app/_components/modal";
-import { useState, useEffect } from "react";
-import dayjs from "dayjs";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
 import { RowItem } from "./_component/rowItem";
+import { CustomModal } from "@/app/_components/modal";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
-import { useBaby } from "../_hooks/useBaby";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
+
+type Action = "bedTime" | "sleep" | "wakeup";
 
 export default function Page() {
   const router = useRouter();
   const [dbUserId, babyId] = useContext(UserContext);
   const { token, session, isLoding } = useSupabaseSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<Action>("sleep");
   const [datetime, setDatetime] = useState(new Date());
   const [records, setRecords] = useState<FormatedData[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const { birthday, isLoading: isBabyLoading } = useBaby({ babyId });
 
-  const getRecords = async () => {
+  const getRecords = useCallback(async () => {
     setLoading(true);
     if (!token) return;
     const resp = await fetch(`/api/dashboard?date=${date}`, {
@@ -43,10 +45,12 @@ export default function Page() {
       setRecords(data.data);
     }
     setLoading(false);
-  };
+  }, [date, token]);
+
   useEffect(() => {
     getRecords();
-  }, [session, token, date]);
+  }, [session, token, date, getRecords]);
+
   if (isLoding || isLoading || isBabyLoading) return <div>Loading</div>;
   if (!session || !token) {
     router.push("/login/");
@@ -54,7 +58,7 @@ export default function Page() {
   }
 
   //登録処理
-  const handleClick = async (action: string) => {
+  const handleClick = async (action: Action) => {
     setDatetime(new Date());
     setAction(action);
     setIsModalOpen(true);
@@ -92,21 +96,25 @@ export default function Page() {
         return "寝た";
       case "wakeup":
         return "起きた";
-      default:
-        return "action名が不明です";
     }
   };
 
-  const changeDate = (amount: number) => {
-    setDate(dayjs(date).add(amount, "d").toDate());
+  const handlePrev = () => {
+    setDate(dayjs(date).add(-1, "d").toDate());
   };
+
+  const handleNext = () => {
+    setDate(dayjs(date).add(1, "d").toDate());
+  };
+
   return (
     <>
       <Header
         name="ベビー"
         birthday={birthday}
         date={date}
-        changeDate={changeDate}
+        onClickPrev={handlePrev}
+        onClickNext={handleNext}
       ></Header>
       <div className="flex justify-between mx-10 my-5">
         <MainTime title="お勧めのねんね時刻" time="17:05" />
@@ -160,7 +168,7 @@ export default function Page() {
             type="datetime-local"
             defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
             className="block p-2 m-5 border"
-            onChange={e => setDatetime(new Date(e.target.value))}
+            onChange={(e) => setDatetime(new Date(e.target.value))}
           />
           <div className="w-full flex justify-between">
             <button

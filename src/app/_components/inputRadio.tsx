@@ -26,7 +26,7 @@ export const InputRadio: React.FC<Props> = ({
         name={name}
         value={value}
         checked={value === checkedValue}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
       <label htmlFor={id}>{label}</label>
     </div>
