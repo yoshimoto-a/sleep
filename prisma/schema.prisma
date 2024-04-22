@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 性別を表す列挙型
+enum Gender {
+  BOY
+  GIRL
+}
+
+//赤ちゃんテーブル
+model Baby {
+  id Int @id @default(autoincrement())
+  name String
+  birthday DateTime
+  expectedDateOfBirth DateTime
+  birthWeight Int
+  gender Gender
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  user User[]
+  weight Weight[]
+  activityTimes ActivityTime[]
+  milestone Milestone[]
+  growth Growth[]
+  chat Chat[]
+  sleepPrepTime SleepPrepTime[]
+  sleepingSituation SleepingSituation[]
+}
+
+// ユーザーの役割を表す列挙型
+enum Role {
+  MAIN
+  SUB
+}
+
+//ユーザーテーブル
+model User {
+  id Int @id @default(autoincrement())
+  babyId Int?
+  supabaseUserId String @unique
+  userName String?
+  role Role
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  baby Baby? @relation(fields: [babyId], references: [id])
+  createdByWeights Weight[] @relation("CreatedByUser")
+  changedByWeights Weight[] @relation("ChangedByUser")
+  createdByActivityTimes ActivityTime[] @relation("CreatedByUser")
+  changedByActivityTimes ActivityTime[] @relation("ChangedByUser")
+  createdByGrowths Growth[] @relation("CreatedByUser")
+  changedByGrowths Growth[] @relation("ChangedByUser")
+  createdByChats Chat[] @relation("CreatedByUser")
+  createdBySleepPrepTimes SleepPrepTime[] @relation("CreatedByUser")
+  changedBySleepPrepTimes SleepPrepTime[] @relation("ChangedByUser")
+  createdBySleepingSituations SleepingSituation[] @relation("CreatedByUser")
+  changedBySleepingSituations SleepingSituation[] @relation("ChangedByUser")
+}
+
+//体重テーブル
+model Weight {
+  id Int @id @default(autoincrement())
+  babyId Int
+  weight Int
+  measurementDate DateTime
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  createUser Int
+  changeUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser", fields: [createUser], references: [id])
+  ChangedByUser User @relation("ChangedByUser", fields: [changeUser], references: [id])
+}
+
+//発達項目の列挙型
+enum Milestone {
+  TURNING_OVER
+  TURNING_OVER_AND_OVER
+  CRAWLING
+  SITTING
+  CRAWLING_ON_HANDS_AND_KNEES
+  PULLING_UP_TO_STAND
+  CRUISING
+  STANDING
+  WALKING
+}
+//発達テーブル
+model Growth {
+  id Int @id @default(autoincrement())
+  babyId Int
+  milestone Milestone
+  startedAt DateTime
+  archevedAt DateTime
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  createUser Int
+  changeUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser", fields: [createUser], references: [id])
+  ChangedByUser User @relation("ChangedByUser", fields: [changeUser], references: [id])
+}
+
+//チャットテーブル
+model Chat {
+  id Int @id @default(autoincrement())
+  babyId Int
+  text String
+  created DateTime @default(now())
+  createUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser",fields: [createUser], references: [id])
+}
+
+//入眠までの時間テーブル
+model SleepPrepTime {
+  id Int @id @default(autoincrement())
+  babyId Int
+  time DateTime
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  createUser Int
+  changeUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser", fields: [createUser], references: [id])
+  ChangedByUser User @relation("ChangedByUser", fields: [changeUser], references: [id])
+}
+
+//睡眠時間テーブル
+model SleepingSituation{
+  id Int @id @default(autoincrement())
+  babyId Int
+  bedTime　DateTime?
+  sleep DateTime?
+  wakeup DateTime?
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  createUser Int
+  changeUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser", fields: [createUser], references: [id])
+  ChangedByUser User @relation("ChangedByUser", fields: [changeUser], references: [id])
+}
+
+
+//活動時間を表す列挙型
+enum Type {
+  ALL
+  MORNING
+  NOON
+  EVENING
+}
+//活動時間
+model ActivityTime {
+  id Int @id @default(autoincrement())
+  babyId Int
+  time DateTime
+  type Type
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  createUser Int
+  changeUser Int
+  Baby Baby @relation(fields: [babyId], references: [id])
+  CreatedByUser User @relation("CreatedByUser", fields: [createUser], references: [id])
+  ChangedByUser User @relation("ChangedByUser", fields: [changeUser], references: [id])
+}

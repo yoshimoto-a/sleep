@@ -1,0 +1,117 @@
+取得するデータ
+今日のデータで、bedtime以外はnullが含まれていないレコード(日付で並び替え)
+→型が
+bedtime:Date||null
+sleep::Date
+wakeup::Date
+
+最新のレコードは今日のデータで、登録か完了していないもの1件だけ(明日のデータを含む可能性あり)
+bedtime:Date||null
+sleep::Date||null
+wakeup::Date||null
+
+・全部当日のレコード取得
+
+
+①レコードが0件の場合は一覧には何も表示しない
+
+②レコードが1件の場合
+前日のwakeupの時刻が最後のレコード取得
+
+③レコードが2件以上ある場合
+一番最初のデータは前日のものが混じるからどれか前日の可能性あるから確認する
+  寝かしつけを開始せず(寝始めず)に日付を超えた場合は前日が存在しない
+  wakeup以外は前日の可能性もあるからbedtimeとsleepを確認する
+  最後のデータはsleepやwaleupもnullの可能性がある
+
+※
+1番目→前日と当日が混じったレコード取得(日付を跨いでいるレコード) 
+2番目以降→bedtimeはnullじゃない場合、全部が当日のレコード取得
+最後→翌日が混じったレコード取得
+　　→なければ!wakeup||!sleepレコード取得
+　　→どちらもなくてもいい
+
+
+
+
+データ①：mappedCompletedRecords
+bedtime(null許容)以外すべて当日で完成したデータ
+
+データ②：mappedContainNullRecords
+当日を含んで!sleep||!wakeup → 必ず最新で0か1件になる
+
+データ③：containTodayRecords
+当日をbedtimeかsleepかwakeupどれかに必ず含んでいて、bedtime以外nullは許容しない
+
+データ④：yesterdayRecord
+前日のwakeupの時刻が最後のデータ1件→いつも最新のレコードとは限らないから注意
+
+データ⑤：containYesterdayRecord
+当日と前日が混じったデータ。0か1件になる
+
+データ⑥：containTomorrowRecord
+当日と翌日が混じったデータ。0か1件になる
+
+考えるられるパターン
+(yesterdayRecordは基本いつも存在して1件だけ)
+●パターン①
+日付またいで寝ている　OR　寝かしつけ中で当日のデータがまだ存在していない状態
+データ空で返す
+
+●パターン②
+日付またいで起きた(OR)寝た登録がおわったところで、日付の混ざったデータのみ存在している状態
+containYesterdayRecord　→　1件
+返すデータ1件
+(起きた/睡眠時間)OR(寝た/入眠時間)
+
+●パターン③
+日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日もまだデータがない
+データ空で返す
+
+●パターン④
+日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日データ登録したけど未完成
+yesterdayRecord　→　1件
+mappedContainNullRecords　→　1件
+返すデータ(bedtimeがnullかどうかで1件か2件)
+(寝かしつけ開始/活動時間yesterdayRecord使う)
+(寝た/活動時間yesterdayRecord使う)
+
+●パターン⑤
+日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日データ登録した
+yesterdayRecord　→　1件存在するのみ
+mappedCompletedRecords　→　n件
+mappedContainNullRecords　→　1件
+返すデータn件
+(寝かしつけ開始/活動時間yesterdayRecord使う)OR(寝た/活動時間yesterdayRecord使う)
+
+●パターン⑥
+日付またいで起きて登録完了して、他のデータの登録もある状態
+containYesterdayRecord　→　1件
+mappedContainNullRecords　→　0か1件
+mappedCompletedRecords　→　n件
+
+パターン⑦　※デフォルトでは使わないパターンで、過去日付の検索した場合に登場
+日付またいで起きて登録完了して、他のデータの登録もあって、登録が完了しないまま翌日になった
+containYesterdayRecord　→　1件
+mappedContainNullRecords　→　1件
+mappedCompletedRecords　→　n件
+
+パターン⑦　※デフォルトでは使わないパターンで、過去日付の検索した場合に登場
+日付またいで起きて登録完了して、他のデータの登録もあって、翌日登録完了した
+containYesterdayRecord　→　1件
+containTomorrowRecord　→　1件
+mappedCompletedRecords　→　n件
+
+
+パターン⑧　※デフォルトでは使わないパターンで、過去日付の検索した場合に登場
+日付またがず、当日のデータのみの登録があって、登録が完了しないまま翌日になった
+containTomorrowRecord　→　1件
+mappedContainNullRecords　→　1件
+mappedCompletedRecords　→　n件
+
+パターン⑦　※デフォルトでは使わないパターンで、過去日付の検索した場合に登場
+日付またがず、当日のデータの登録があって、翌日登録完了した
+containTomorrowRecord　→　1件
+mappedCompletedRecords　→　n件
+
+
