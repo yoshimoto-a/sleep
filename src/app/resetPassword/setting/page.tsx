@@ -1,11 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
+import { useState } from "react";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
-import { useState } from "react";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function Page() {
               type="password"
               value={password}
               placeholder="パスワード"
-              onChange={value => setPassword(value)}
+              onChange={(value) => setPassword(value)}
             />
           </div>
           <div className="text-center">

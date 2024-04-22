@@ -1,11 +1,11 @@
-import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { ContainNull } from "@/app/_types/dashboard/change";
-import { CompletedData } from "@/app/_types/dashboard/change";
+import utc from "dayjs/plugin/utc";
 import { IsToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
+import { ContainNull } from "@/app/_types/dashboard/change";
+import { CompletedData } from "@/app/_types/dashboard/change";
+import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,26 +40,29 @@ export const formatRecords = (
   //何も返さないパターン→当日を含むレコードがない場合
   /**①日付またいで寝ている　OR　寝かしつけ中で当日のデータがまだ存在していない状態 */
   /**②日付が変わる前に起きて、日付が混ざっているデータの登録がないかつ、当日もまだデータがない*/
-  if (
+  const noRecords =
     mappedCompletedRecords.length === 0 &&
     mappedContainNullRecords.length === 0 &&
     containYesterdayRecord.length === 0 &&
     containTomorrowRecord.length === 0 &&
-    containTodayRecords.length === 0
-  )
-    return formatedRecords;
-  /*②日付またいで起きた(OR)寝た登録がおわったところで、日付の混ざったデータのみ存在している状態
-   */
-  if (
+    containTodayRecords.length === 0;
+
+  const onlyContainYesterdayRecord =
     containYesterdayRecord.length === 1 &&
     mappedContainNullRecords.length === 0 &&
-    mappedCompletedRecords.length === 0
-  ) {
+    mappedCompletedRecords.length === 0;
+
+  if (noRecords) return formatedRecords;
+  /*②日付またいで起きた(OR)寝た登録がおわったところで、日付の混ざったデータのみ存在している状態
+   */
+  if (onlyContainYesterdayRecord) {
     console.log("いち");
     const { id, bedTime, sleep, wakeup, changeUser } =
       containYesterdayRecord[0];
+
+    const hogeStatus = bedTime && sleep && !wakeup;
     //絶対複数の登録ある
-    if (bedTime && sleep && !wakeup) {
+    if (hogeStatus) {
       formatedRecords.push(
         createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser)
       );

@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
-import { useState } from "react";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
               type="text"
               value={email}
               placeholder="メールアドレス"
-              onChange={value => setEmail(value)}
+              onChange={(value) => setEmail(value)}
             />
           </div>
           <div className="text-center">
