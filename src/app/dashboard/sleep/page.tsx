@@ -1,26 +1,28 @@
 "use client";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { UserContext } from "../layout";
 import { useContext } from "react";
+import { useState, useEffect } from "react";
+import { useBaby } from "../_hooks/useBaby";
+import { UserContext } from "../layout";
+import { Button } from "./_component/button";
 import { Header } from "./_component/header";
 import { MainTime } from "./_component/mainTime";
-import { Button } from "./_component/button";
-import { CustomModal } from "@/app/_components/modal";
-import { useState, useEffect } from "react";
-import dayjs from "dayjs";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
 import { RowItem } from "./_component/rowItem";
+import { CustomModal } from "@/app/_components/modal";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
-import { useBaby } from "../_hooks/useBaby";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
+
+type Action = "bedTime" | "sleep" | "wakeup";
 
 export default function Page() {
   const router = useRouter();
   const [dbUserId, babyId] = useContext(UserContext);
   const { token, session, isLoding } = useSupabaseSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [action, setAction] = useState("");
+  const [action, setAction] = useState<Action>("sleep");
   const [datetime, setDatetime] = useState(new Date());
   const [records, setRecords] = useState<FormatedData[]>([]);
   const [isLoading, setLoading] = useState(false);
@@ -54,7 +56,7 @@ export default function Page() {
   }
 
   //登録処理
-  const handleClick = async (action: string) => {
+  const handleClick = async (action: Action) => {
     setDatetime(new Date());
     setAction(action);
     setIsModalOpen(true);
@@ -92,8 +94,6 @@ export default function Page() {
         return "寝た";
       case "wakeup":
         return "起きた";
-      default:
-        return "action名が不明です";
     }
   };
 
@@ -160,7 +160,7 @@ export default function Page() {
             type="datetime-local"
             defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
             className="block p-2 m-5 border"
-            onChange={e => setDatetime(new Date(e.target.value))}
+            onChange={(e) => setDatetime(new Date(e.target.value))}
           />
           <div className="w-full flex justify-between">
             <button
