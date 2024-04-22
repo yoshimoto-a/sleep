@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GetBaby } from "../setting/_utils/getBaby";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
 
 export const useBaby = ({ babyId }: { babyId: number }) => {
   const [baby, setBaby] = useState<IndexResponse | null>(null);

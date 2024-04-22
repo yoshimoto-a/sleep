@@ -1,14 +1,13 @@
-//リファクタリングしたいけどわからない。。
-import { supabase } from "@/utils/supabase";
-import { buildPrisma } from "@/utils/prisema";
-import { type NextRequest } from "next/server";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { type NextRequest } from "next/server";
+import { formatRecords } from "./sleep/_utils/formatRecords";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
-import { formatRecords } from "./sleep/_utils/formatRecords";
+import { buildPrisma } from "@/utils/prisema";
+import { supabase } from "@/utils/supabase";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

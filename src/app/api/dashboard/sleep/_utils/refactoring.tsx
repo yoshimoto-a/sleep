@@ -1,9 +1,9 @@
 //一時的にメモ的な使い方するから呼ばれることはない。
+import dayjs from "dayjs";
+import { IsToday } from "./isToday";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
-import dayjs from "dayjs";
-import { IsToday } from "./isToday";
 interface FormatedData {
   HourAndMinutes: string; //時刻
   action: string;

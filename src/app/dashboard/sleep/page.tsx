@@ -1,4 +1,5 @@
 "use client";
+
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext } from "react";
@@ -168,7 +169,7 @@ export default function Page() {
             type="datetime-local"
             defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
             className="block p-2 m-5 border"
-            onChange={(e) => setDatetime(new Date(e.target.value))}
+            onChange={e => setDatetime(new Date(e.target.value))}
           />
           <div className="w-full flex justify-between">
             <button
