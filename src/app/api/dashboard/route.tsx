@@ -8,7 +8,7 @@ import timezone from "dayjs/plugin/timezone";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
-import { FormatRecords } from "./sleep/_utils/formatRecords";
+import { formatRecords } from "./sleep/_utils/formatRecords";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -338,7 +338,7 @@ export const GET = async (req: NextRequest) => {
     const mappedContainTomorrowRecord: ContainNull[] =
       containTomorrowRecord.map(record => FormatContainNull(record));
 
-    const formatData = FormatRecords(
+    const formatData = formatRecords(
       mappedCompletedRecords,
       mappedContainNullRecords,
       mappedContainTodayRecords,

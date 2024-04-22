@@ -27,7 +27,7 @@ const createNewData = (
     changer,
   };
 };
-export const FormatRecords = (
+export const formatRecords = (
   mappedCompletedRecords: CompletedData[],
   mappedContainNullRecords: ContainNull[],
   containTodayRecords: CompletedData[], //これ要る？？
