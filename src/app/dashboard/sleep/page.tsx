@@ -15,6 +15,7 @@ import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
+import { FindLatestResponse } from "@/app/api/dashboard/sleep/_utils/findLatest";
 
 type Action = "bedTime" | "sleep" | "wakeup";
 
@@ -26,6 +27,7 @@ export default function Page() {
   const [action, setAction] = useState<Action>("sleep");
   const [datetime, setDatetime] = useState(new Date());
   const [records, setRecords] = useState<FormatedData[]>([]);
+  const [latestData, setLatestData] = useState<FindLatestResponse | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const { birthday, isLoading: isBabyLoading } = useBaby({ babyId });
@@ -44,6 +46,9 @@ export default function Page() {
     data.status !== 200 && alert(`一覧取得できませんでした。${data.message}`);
     if ("data" in data && data.data) {
       setRecords(data.data);
+    }
+    if ("latestData" in data && data.latestData) {
+      setLatestData(data.latestData);
     }
     setLoading(false);
   }, [date, token]);
@@ -118,8 +123,10 @@ export default function Page() {
         onClickNext={handleNext}
       ></Header>
       <div className="flex justify-between mx-10 my-5">
-        <MainTime title="お勧めのねんね時刻" time="17:05" />
-        <MainTime title="現在の活動時間" time="90分" />
+        {latestData && (
+          <MainTime title="お勧めねんね時刻" lastestData={latestData} />
+        )}
+        {latestData && <MainTime title="活動時間" lastestData={latestData} />}
       </div>
       <div className="grid grid-cols-10">
         <div className="bg-white col-span-3">グラフ</div>
