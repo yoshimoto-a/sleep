@@ -29,7 +29,7 @@ model Baby {
   updated DateTime @updatedAt
   user User[]
   weight Weight[]
-  activityTimes ActivityTime[]
+  wakeWindows WakeWindows[]
   milestone Milestone[]
   growth Growth[]
   chat Chat[]
@@ -55,8 +55,8 @@ model User {
   baby Baby? @relation(fields: [babyId], references: [id])
   createdByWeights Weight[] @relation("CreatedByUser")
   changedByWeights Weight[] @relation("ChangedByUser")
-  createdByActivityTimes ActivityTime[] @relation("CreatedByUser")
-  changedByActivityTimes ActivityTime[] @relation("ChangedByUser")
+  createdByWakeWindows WakeWindows[] @relation("CreatedByUser")
+  changedByWakeWindows WakeWindows[] @relation("ChangedByUser")
   createdByGrowths Growth[] @relation("CreatedByUser")
   changedByGrowths Growth[] @relation("ChangedByUser")
   createdByChats Chat[] @relation("CreatedByUser")
@@ -159,10 +159,10 @@ enum Type {
   EVENING
 }
 //活動時間
-model ActivityTime {
+model WakeWindows {
   id Int @id @default(autoincrement())
   babyId Int
-  time DateTime
+  time Int
   type Type
   created DateTime @default(now())
   updated DateTime @updatedAt

@@ -9,6 +9,7 @@ interface PropsItem {
 }
 
 export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
+  //console.log(lastestData);
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
   useEffect(() => {
@@ -41,6 +42,7 @@ export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
               new Date(),
               "HourAndMinutes"
             );
+          //console.log("起きた" + elapsedTime);
           break;
       }
     } else {

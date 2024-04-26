@@ -2,9 +2,9 @@ import { Type } from "@prisma/client";
 import { ApiRequest } from "../../apiRequest";
 
 /**活動時間*/
-export interface ActivityTime {
+export interface WakeWindows {
   babyId: number;
-  time: Date;
+  time: number;
   type: Type;
   createUser: number;
   changeUser: number;
@@ -20,7 +20,7 @@ export interface SleepPrepTime {
 export interface PostRequests extends ApiRequest {
   body: {
     data: {
-      activityTime: ActivityTime | ActivityTime[];
+      wakeWindows: WakeWindows | WakeWindows;
       sleepPrepTime: SleepPrepTime;
     };
   };

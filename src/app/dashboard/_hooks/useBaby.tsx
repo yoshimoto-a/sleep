@@ -9,6 +9,7 @@ export const useBaby = ({ babyId }: { babyId: number }) => {
   const { token, session } = useSupabaseSession();
   const [birthday, setBirthday] = useState<Date | null>(null);
   const [weight, setWeight] = useState<number | null>(null);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const fetcher = async () => {
@@ -17,6 +18,7 @@ export const useBaby = ({ babyId }: { babyId: number }) => {
         const resp = await GetBaby(token, babyId);
         if ("data" in resp && resp.data !== null) {
           const { data } = resp;
+          setName(data.name);
           setBirthday(data.birthday);
           setWeight(data.birthWeight);
           setBaby(resp);
@@ -31,5 +33,5 @@ export const useBaby = ({ babyId }: { babyId: number }) => {
     fetcher();
   }, [babyId, token, session]);
 
-  return { birthday, weight, baby, isLoading };
+  return { name, birthday, weight, baby, isLoading };
 };

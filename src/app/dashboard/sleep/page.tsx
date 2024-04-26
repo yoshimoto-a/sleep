@@ -30,7 +30,7 @@ export default function Page() {
   const [latestData, setLatestData] = useState<FindLatestResponse | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
-  const { birthday, isLoading: isBabyLoading } = useBaby({ babyId });
+  const { name, birthday, isLoading: isBabyLoading } = useBaby({ babyId });
 
   const getRecords = useCallback(async () => {
     setLoading(true);
@@ -62,7 +62,7 @@ export default function Page() {
     router.push("/login/");
     return null;
   }
-
+  console.log(records);
   //登録処理
   const handleClick = async (action: Action) => {
     setDatetime(new Date());
@@ -116,7 +116,7 @@ export default function Page() {
   return (
     <>
       <Header
-        name="ベビー"
+        name={name}
         birthday={birthday}
         date={date}
         onClickPrev={handlePrev}

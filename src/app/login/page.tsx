@@ -8,6 +8,7 @@ import { Header } from "../_components/header";
 import { Input } from "../_components/input";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
+import { SubmitButton } from "@/app/_components/button";
 import { GetLoginUser } from "@/utils/getLoginUser";
 import { supabase } from "@/utils/supabase";
 
@@ -85,12 +86,7 @@ export default function Page() {
             </Link>
           </div>
           <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
-              type="submit"
-            >
-              送信
-            </button>
+            <SubmitButton>送信</SubmitButton>
           </div>
         </form>
       </div>

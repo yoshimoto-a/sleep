@@ -30,47 +30,77 @@ export const findLatest = (
     containNullRecords.length === 0 &&
     completedRecords.length === 0 &&
     containYesterdayRecord.length === 1 &&
-    containYesterdayRecord[containYesterdayRecord.length - 1].sleep;
-  !containYesterdayRecord[containYesterdayRecord.length - 1].wakeup; //寝かしつけ開始が最新
+    containYesterdayRecord[containYesterdayRecord.length - 1].sleep &&
+    !containYesterdayRecord[containYesterdayRecord.length - 1].wakeup; //寝かしつけ開始が最新
   const fourthLatest =
     containNullRecords.length === 0 &&
     completedRecords.length === 0 &&
     containYesterdayRecord.length === 0 &&
     yesterdayRecord.length === 1; //起きたのが最新
+  const fifthLatestWakeupOnlyNull =
+    completedRecords.length === 0 &&
+    containNullRecords.length === 0 &&
+    containYesterdayRecord.length !== 0 &&
+    !containYesterdayRecord[0].wakeup; //昨日寝かしつけ開始して今日寝てまだ起きてない
+  const fifthLatest =
+    completedRecords.length === 0 &&
+    containNullRecords.length === 0 &&
+    containYesterdayRecord.length !== 0 &&
+    containYesterdayRecord[0].wakeup; //昨日寝て今日起きた
 
   if (firstLatestOnlybedTime) {
+    console.log("1");
     return {
       record: containNullRecords[containNullRecords.length - 1],
       action: "寝かしつけ開始",
     };
   }
   if (firstLatestWakeupOnlyNull) {
+    console.log("2");
     return {
       record: containNullRecords[containNullRecords.length - 1],
       action: "寝た",
     };
   }
   if (secondLatest) {
+    console.log("3");
     return {
       record: completedRecords[completedRecords.length - 1],
       action: "起きた",
     };
   }
   if (thirdLatestOnlybedTime) {
+    console.log("4");
     return {
       record: containYesterdayRecord[containYesterdayRecord.length - 1],
       action: "寝かしつけ開始",
     };
   }
   if (thirdLatestWakeupOnlyNull) {
+    console.log("5");
     return {
       record: containYesterdayRecord[containYesterdayRecord.length - 1],
       action: "寝た",
     };
   }
   if (fourthLatest) {
+    console.log("6");
     return {
       record: yesterdayRecord[yesterdayRecord.length - 1],
+      action: "起きた",
+    };
+  }
+  if (fifthLatestWakeupOnlyNull) {
+    console.log("7");
+    return {
+      record: containYesterdayRecord[containYesterdayRecord.length - 1],
+      action: "寝た",
+    };
+  }
+  if (fifthLatest) {
+    console.log("8");
+    return {
+      record: containYesterdayRecord[containYesterdayRecord.length - 1],
       action: "起きた",
     };
   }
