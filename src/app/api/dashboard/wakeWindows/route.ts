@@ -17,19 +17,27 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const body: PostRequests = await req.json();
-    const { babyId, time, type, createUser, changeUser } =
-      body.body.data.wakeWindows;
+    const { babyId } = body.body.data.sleepPrepTime;
     const babyIdCheck = await checkBabyId(token, babyId);
     if (!babyIdCheck)
       return Response.json(<ApiResponse>{
         status: 401,
         message: "Unauthorized",
       });
-    const resp = await prisma.wakeWindows.create({
+
+    const { wakeWindows } = body.body.data;
+    const wakeWindowsResp = await prisma.wakeWindows.createMany({
+      data: wakeWindows.map(record => {
+        const { time, type, createUser, changeUser, babyId } = record;
+        return { time, type, createUser, changeUser, babyId };
+      }),
+    });
+    const { sleepPrepTime } = body.body.data;
+    const { time, createUser, changeUser } = sleepPrepTime;
+    const sleepPrepTimeResp = await prisma.sleepPrepTime.create({
       data: {
         babyId,
         time,
-        type,
         createUser,
         changeUser,
       },
@@ -37,7 +45,6 @@ export const POST = async (req: NextRequest) => {
     return Response.json(<PostResponse>{
       status: 200,
       message: "success",
-      id: resp.id,
     });
   } catch (e) {
     if (e instanceof Error) {

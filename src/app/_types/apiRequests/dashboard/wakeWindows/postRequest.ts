@@ -20,7 +20,7 @@ export interface SleepPrepTime {
 export interface PostRequests extends ApiRequest {
   body: {
     data: {
-      wakeWindows: WakeWindows | WakeWindows;
+      wakeWindows: WakeWindows[];
       sleepPrepTime: SleepPrepTime;
     };
   };
