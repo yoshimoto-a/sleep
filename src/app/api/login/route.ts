@@ -1,3 +1,4 @@
+import { Milestone } from "@prisma/client";
 import { type NextRequest } from "next/server";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/login";
@@ -15,7 +16,6 @@ export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { supabaseUserId, role, babyId } = body;
-    console.log(babyId);
     const userPostResp = await prisma.user.create({
       data: {
         supabaseUserId,
@@ -43,6 +43,36 @@ export const POST = async (req: NextRequest) => {
         data: {
           babyId: babyResp.id,
         },
+      });
+    }
+
+    //ここでも成長記録のデータの登録を空で行う→挙動の確認未済
+    const milestoneResp = await prisma.growth.findMany({
+      where: {
+        babyId,
+      },
+    });
+    if (milestoneResp.length === 0) {
+      const milestones: Milestone[] = [
+        "TURNING_OVER",
+        "TURNING_OVER_AND_OVER",
+        "CRAWLING",
+        "SITTING",
+        "CRAWLING_ON_HANDS_AND_KNEES",
+        "PULLING_UP_TO_STAND",
+        "CRUISING",
+        "STANDING",
+        "WALKING",
+      ];
+      milestones.map(async milestone => {
+        await prisma.growth.create({
+          data: {
+            babyId,
+            milestone,
+            createUser: userPostResp.id,
+            changeUser: userPostResp.id,
+          },
+        });
       });
     }
 

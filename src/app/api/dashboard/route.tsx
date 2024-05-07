@@ -352,167 +352,72 @@ export const GET = async (req: NextRequest) => {
       mappedContainYesterdayRecord,
       mappedContainTomorrowRecord
     );
-    //console.log("一覧" + formatData);
+
+    //最新のレコードを探すため、未完成のデータ(常に最新)を日付問わず取得
+    const allContainNullRecords = await prisma.sleepingSituation.findMany({
+      where: {
+        babyId,
+        OR: [
+          {
+            AND: [
+              {
+                sleep: {
+                  not: null,
+                },
+              },
+              {
+                wakeup: null,
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                wakeup: {
+                  not: null,
+                },
+              },
+              {
+                sleep: null,
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                wakeup: {
+                  not: null,
+                },
+              },
+              {
+                sleep: null,
+              },
+              {
+                wakeup: null,
+              },
+            ],
+          },
+        ],
+      },
+    });
+    //未完成のデータがない場合、全てのレコードの中から完成していて最新のデータを探す
+    const allCompletedRecords = await prisma.sleepingSituation.findMany({
+      where: {
+        babyId,
+        wakeup: {
+          not: null,
+        },
+      },
+      orderBy: {
+        wakeup: "desc",
+      },
+      take: 1,
+    });
 
     //現在の活動時間等を取得するため常に現在の日時で取得する
     let latestData: FindLatestResponse | undefined;
-    const startOfToday = dayjs
-      .tz(new Date(), "Asia/Tokyo")
-      .startOf("day")
-      .toDate();
-    const endOfToday = dayjs.tz(new Date(), "Asia/Tokyo").endOf("day").toDate();
-    if (startOfDay !== startOfToday) {
-      //当日で取得しなおす
-      //bedtime(null許容)以外すべて当日で完成したデータのみ
-      const todayCompletedRecords = await prisma.sleepingSituation.findMany({
-        where: {
-          babyId,
-          AND: [
-            {
-              OR: [
-                {
-                  bedTime: null,
-                },
-                {
-                  bedTime: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-              ],
-            },
-            {
-              sleep: {
-                gte: startOfToday,
-                lt: endOfToday,
-              },
-            },
-            {
-              wakeup: {
-                gte: startOfToday,
-                lt: endOfToday,
-              },
-            },
-          ],
-        },
-      });
 
-      //当日で!sleep||!wakeup → 必ず最新で0か1件になる
-      const todayContainNullRecords = await prisma.sleepingSituation.findMany({
-        where: {
-          babyId,
-          OR: [
-            {
-              AND: [
-                {
-                  sleep: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-                {
-                  wakeup: null,
-                },
-              ],
-            },
-            {
-              AND: [
-                {
-                  wakeup: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-                {
-                  sleep: null,
-                },
-              ],
-            },
-            {
-              AND: [
-                {
-                  sleep: null,
-                },
-                {
-                  wakeup: null,
-                },
-              ],
-            },
-          ],
-        },
-      });
-      //当日をbedtimeかsleepかwakeupどれかに必ず含んでいて、bedtime以外nullは許容しない
-      //翌日のデータか前日のデータを含むレコード
-      const todayContainTodayRecords = await prisma.sleepingSituation.findMany({
-        where: {
-          babyId,
-          AND: [
-            {
-              OR: [
-                {
-                  bedTime: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-                {
-                  sleep: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-                {
-                  wakeup: {
-                    gte: startOfToday,
-                    lt: endOfToday,
-                  },
-                },
-              ],
-            },
-            {
-              sleep: {
-                not: null,
-              },
-            },
-            {
-              wakeup: {
-                not: null,
-              },
-            },
-          ],
-        },
-      });
-
-      //"console.log("クエリ書き換え必要" + todayContainTodayRecords);
-
-      const todayYesterdayRecord = await prisma.sleepingSituation.findMany({
-        where: {
-          babyId,
-          wakeup: {
-            lt: startOfToday,
-          },
-        },
-        orderBy: {
-          wakeup: "desc",
-        },
-        take: 1,
-      });
-
-      latestData = findLatest(
-        todayCompletedRecords,
-        todayContainNullRecords,
-        todayContainTodayRecords,
-        todayYesterdayRecord
-      );
-    } else {
-      latestData = findLatest(
-        completedRecords,
-        containNullRecords,
-        containTodayRecords,
-        yesterdayRecord
-      );
-    }
-    //console.log(latestData);
+    latestData = findLatest(allContainNullRecords, allCompletedRecords);
 
     return Response.json({
       status: 200,

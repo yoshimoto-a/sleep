@@ -14,10 +14,9 @@ export const POST = async (req: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
-
   try {
     const body: PostRequests = await req.json();
-    const { babyId } = body.body.data.sleepPrepTime;
+    const { babyId } = body.sleepPrepTime;
     const babyIdCheck = await checkBabyId(token, babyId);
     if (!babyIdCheck)
       return Response.json(<ApiResponse>{
@@ -25,16 +24,15 @@ export const POST = async (req: NextRequest) => {
         message: "Unauthorized",
       });
 
-    const { wakeWindows } = body.body.data;
-    const wakeWindowsResp = await prisma.wakeWindows.createMany({
+    const { wakeWindows } = body;
+    await prisma.wakeWindows.createMany({
       data: wakeWindows.map(record => {
         const { time, type, createUser, changeUser, babyId } = record;
         return { time, type, createUser, changeUser, babyId };
       }),
     });
-    const { sleepPrepTime } = body.body.data;
-    const { time, createUser, changeUser } = sleepPrepTime;
-    const sleepPrepTimeResp = await prisma.sleepPrepTime.create({
+    const { time, createUser, changeUser } = body.sleepPrepTime;
+    await prisma.sleepPrepTime.create({
       data: {
         babyId,
         time,
@@ -112,28 +110,41 @@ export const PUT = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: UpdateRequests = await req.json();
-    const { id } = body.body;
-    const { babyId, time, type, changeUser } = body.body.data.wakeWindows;
+    const { babyId } = body.sleepPrepTime;
     const babyIdCheck = await checkBabyId(token, babyId);
     if (!babyIdCheck)
       return Response.json({
         status: 401,
         message: "Unauthorized",
       });
-    const resp = await prisma.wakeWindows.update({
+
+    const { id, time, changeUser } = body.sleepPrepTime;
+    await prisma.sleepPrepTime.update({
       where: {
         id,
       },
       data: {
         time,
-        type,
         changeUser,
       },
     });
+    const { wakeWindows } = body;
+    wakeWindows.map(async item => {
+      const { id, time, changeUser } = item;
+      await prisma.wakeWindows.update({
+        where: {
+          id,
+        },
+        data: {
+          time,
+          changeUser,
+        },
+      });
+    });
+
     return Response.json(<PostResponse>{
       status: 200,
       message: "success",
-      id: resp.id,
     });
   } catch (e) {
     if (e instanceof Error) {

@@ -7,8 +7,10 @@ import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
 import { GetBaby } from "./setting/_utils/getBaby";
 
-export const UserContext = createContext([0, 0]);
-
+export const UserContext = createContext<[number | null, number | null]>([
+  null,
+  null,
+]);
 export default function Layout({
   children,
 }: Readonly<{
@@ -16,8 +18,8 @@ export default function Layout({
 }>) {
   const router = useRouter();
   const { token, session } = useSupabaseSession();
-  const [dbUserId, setDbUserId] = useState(0);
-  const [babyId, setBabyId] = useState(0);
+  const [dbUserId, setDbUserId] = useState<number | null>(null);
+  const [babyId, setBabyId] = useState<number | null>(null);
   useEffect(() => {
     const fetcher = async () => {
       try {
@@ -40,7 +42,7 @@ export default function Layout({
       }
     };
     fetcher();
-  }, [token, session]);
+  }, [token, session, router]);
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}

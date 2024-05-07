@@ -70,6 +70,7 @@ export default function Page() {
               type="text"
               value={email}
               placeholder="メールアドレス"
+              inputMode="email"
               onChange={value => setEmail(value)}
             />
           </div>
@@ -79,6 +80,7 @@ export default function Page() {
               type="password"
               value={password}
               placeholder="パスワード"
+              inputMode="text"
               onChange={value => setPassword(value)}
             />
             <Link href="/resetPassword/sendEmail" className="header-link">

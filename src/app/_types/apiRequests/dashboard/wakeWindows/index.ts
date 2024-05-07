@@ -4,7 +4,7 @@ import { Type } from "@prisma/client";
 export interface WakeWindows {
   id: number;
   babyId: number;
-  time: Date;
+  time: number;
   type: Type;
   createUser: number;
   changeUser: number;
@@ -13,7 +13,7 @@ export interface WakeWindows {
 export interface SleepPrepTime {
   id: number;
   babyId: number;
-  time: Date;
+  time: number;
   createUser: number;
   changeUser: number;
 }
@@ -21,7 +21,7 @@ export interface SleepPrepTime {
 export interface IndexSuccessResponse {
   status: number;
   data: {
-    activityTime: WakeWindows | WakeWindows[];
+    activityTime: WakeWindows[];
     sleepPrepTime: SleepPrepTime;
   };
 }

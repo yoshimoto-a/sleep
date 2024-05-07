@@ -1,103 +1,209 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { UserContext } from "../layout";
+import { useValidation } from "./_hooks/useValidation";
+import { convertToMinutes } from "./_utils/convertToMinutes";
 import { SubmitButton } from "@/app/_components/button";
 import { Input } from "@/app/_components/input";
 import { Label } from "@/app/_components/label";
-// import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
+import { WakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { SleepPrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { WakeWindows as PutWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { SleepPrepTime as PutSleePrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
 
+export interface Data {
+  activityTime: WakeWindows[];
+  sleepPrepTime: SleepPrepTime;
+}
 export default function Page() {
-  const [basicHour, setBasicHour] = useState<string>("");
-  const [basicMinutes, setBasicMinutes] = useState<string>("");
-  const [basicMinutesError, setBasicMinutesError] = useState<string>("");
-  const [basicHourError, setBasicHourError] = useState<string>("");
-  const [morningHour, setMorningHour] = useState<string>("");
-  const [morningHourError, setMorningHourError] = useState<string>("");
-  const [morningMinutes, setMorningMinutes] = useState<string>("");
-  const [morningMinutesError, setMorningMinutesError] = useState<string>("");
-  const [afternoonHour, setAfternoonHour] = useState<string>("");
-  const [afternoonHourError, setAfternoonHourError] = useState<string>("");
-  const [afternoonMinutes, setAfternoonMinutes] = useState<string>("");
-  const [afternoonMinutesError, setAfternoonMinutesError] =
-    useState<string>("");
-  const [eveningHour, setEveningHour] = useState<string>("");
-  const [eveningHourError, setEveningHourError] = useState<string>("");
-  const [eveningMinutes, setEveningMinutes] = useState<string>("");
-  const [eveningMinutesError, setEveningMinutesError] = useState<string>("");
-  const [sinceBedtime, setSinceBedtime] = useState<number | null>(null);
+  const [data, setData] = useState<Data | null>(null);
+  const [dbUserId, babyId] = useContext(UserContext);
+  const { token } = useSupabaseSession();
+  const {
+    basicHour,
+    basicMinutes,
+    basicMinutesError,
+    basicHourError,
+    morningHour,
+    morningHourError,
+    morningMinutes,
+    morningMinutesError,
+    afternoonHour,
+    afternoonHourError,
+    afternoonMinutes,
+    afternoonMinutesError,
+    eveningHour,
+    eveningHourError,
+    eveningMinutes,
+    eveningMinutesError,
+    sinceBedtime,
+    setSinceBedtime,
+    handleCahngeAfternoonHour,
+    handleCahngeAfternoonMinutes,
+    handleCahngeBasicHour,
+    handleCahngeBasicMinutes,
+    handleCahngeEveningHour,
+    handleCahngeMorningHour,
+    handleCahngeMorningMinutes,
+    handleCahngeEveningMinutes,
+    setting,
+  } = useValidation();
 
   //初期設定
-  useEffect(() => {});
+  useEffect(() => {
+    if (token && babyId) {
+      const fethcer = async () => {
+        const resp = await fetch(`/api/dashboard/wakeWindows?id=${babyId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
+        const jsonData = await resp.json();
+        const data: IndexResponse = jsonData;
+        if (data.status !== 200) {
+          alert("データの取得に失敗しました");
+          return;
+        }
+        if (
+          "data" in data &&
+          data.data !== null &&
+          "sleepPrepTime" in data.data
+        ) {
+          setData(data.data);
+          setting(data.data);
+        }
+      };
+      fethcer();
+    }
+  }, [token, babyId, setting]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const body = {
-      data: {},
-    };
-  };
-
-  const handleCahngeBasicHour = (val: string) => {
-    setBasicHour(val);
-    if (isNaN(Number(val))) {
-      setBasicHourError("数値を入力してください");
+    if (!token || !babyId || !dbUserId) return;
+    if (!data) {
+      const method = "POST";
+      const wakeWindows: WakeWindows[] = [
+        {
+          babyId,
+          type: "ALL",
+          time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
+          changeUser: dbUserId,
+          createUser: dbUserId,
+        },
+        {
+          babyId,
+          type: "MORNING",
+          time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
+          changeUser: dbUserId,
+          createUser: dbUserId,
+        },
+        {
+          babyId,
+          type: "NOON",
+          time: convertToMinutes(`${afternoonHour}時間${afternoonMinutes}分`),
+          changeUser: dbUserId,
+          createUser: dbUserId,
+        },
+        {
+          babyId,
+          type: "EVENING",
+          time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
+          changeUser: dbUserId,
+          createUser: dbUserId,
+        },
+      ];
+      const sleepPrepTime: SleepPrepTime = {
+        babyId,
+        time: sinceBedtime,
+        changeUser: dbUserId,
+        createUser: dbUserId,
+      };
+      const prams = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: { wakeWindows, sleepPrepTime },
+      };
+      const postResp = await fetch("/api/dashboard/wakeWindows", {
+        ...prams,
+        body: JSON.stringify(prams.body),
+      });
+      const resp = await postResp.json();
     } else {
-      setBasicHourError("");
-    }
-  };
-  const handleCahngeBasicMinutes = (val: string) => {
-    setBasicMinutes(val);
-    if (isNaN(Number(val))) {
-      setBasicMinutesError("数値を入力してください");
-    } else {
-      setBasicMinutesError("");
-    }
-  };
-  const handleCahngeMorningHour = (val: string) => {
-    setMorningHour(val);
-    if (isNaN(Number(val))) {
-      setMorningHourError("数値を入力してください");
-    } else {
-      setMorningHourError("");
-    }
-  };
-  const handleCahngeMorningMinutes = (val: string) => {
-    setMorningMinutes(val);
-    if (isNaN(Number(val))) {
-      setMorningMinutesError("数値を入力してください");
-    } else {
-      setMorningMinutesError("");
-    }
-  };
-  const handleCahngeAfternoonHour = (val: string) => {
-    setAfternoonHour(val);
-    if (isNaN(Number(val))) {
-      setAfternoonHourError("数値を入力してください");
-    } else {
-      setAfternoonHourError("");
-    }
-  };
-  const handleCahngeAfternoonMinutes = (val: string) => {
-    setAfternoonMinutes(val);
-    if (isNaN(Number(val))) {
-      setAfternoonMinutesError("数値を入力してください");
-    } else {
-      setAfternoonMinutesError("");
-    }
-  };
-  const handleCahngeEveningHour = (val: string) => {
-    setEveningHour(val);
-    if (isNaN(Number(val))) {
-      setEveningHourError("数値を入力してください");
-    } else {
-      setEveningHourError("");
-    }
-  };
-  const handleCahngeEveningMinutes = (val: string) => {
-    setEveningMinutes(val);
-    if (isNaN(Number(val))) {
-      setEveningMinutesError("数値を入力してください");
-    } else {
-      setEveningMinutesError("");
+      const method = "PUT";
+      const wakeWindows: PutWakeWindows[] = [];
+      data.activityTime.map(item => {
+        if (!item.id) return;
+        switch (item.type) {
+          case "ALL":
+            wakeWindows.push({
+              id: item.id,
+              babyId,
+              type: item.type,
+              time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
+              changeUser: dbUserId,
+            });
+            break;
+          case "MORNING":
+            wakeWindows.push({
+              id: item.id,
+              babyId,
+              type: item.type,
+              time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
+              changeUser: dbUserId,
+            });
+            break;
+          case "NOON":
+            wakeWindows.push({
+              id: item.id,
+              babyId,
+              type: item.type,
+              time: convertToMinutes(
+                `${afternoonHour}時間${afternoonMinutes}分`
+              ),
+              changeUser: dbUserId,
+            });
+            break;
+          case "EVENING":
+            wakeWindows.push({
+              id: item.id,
+              babyId,
+              type: item.type,
+              time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
+              changeUser: dbUserId,
+            });
+            break;
+        }
+      });
+      if (!data.sleepPrepTime.id) return;
+      const sleepPrepTime: PutSleePrepTime = {
+        id: data.sleepPrepTime.id,
+        babyId,
+        time: sinceBedtime,
+        changeUser: dbUserId,
+      };
+      const prams = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: { wakeWindows, sleepPrepTime },
+      };
+      const postResp = await fetch("/api/dashboard/wakeWindows", {
+        ...prams,
+        body: JSON.stringify(prams.body),
+      });
+      const resp = await postResp.json();
+      console.log(resp);
     }
   };
 

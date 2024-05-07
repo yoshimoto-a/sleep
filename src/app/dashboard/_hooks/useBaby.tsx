@@ -3,7 +3,7 @@ import { GetBaby } from "../setting/_utils/getBaby";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
 
-export const useBaby = ({ babyId }: { babyId: number }) => {
+export const useBaby = ({ babyId }: { babyId: number | null }) => {
   const [baby, setBaby] = useState<IndexResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { token, session } = useSupabaseSession();

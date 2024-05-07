@@ -62,7 +62,6 @@ export default function Page() {
     router.push("/login/");
     return null;
   }
-  console.log(records);
   //登録処理
   const handleClick = async (action: Action) => {
     setDatetime(new Date());

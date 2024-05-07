@@ -5,102 +5,32 @@ export interface FindLatestResponse {
   record: SleepingSituation;
   action: Action;
 }
+type length = [number] | [];
 
 export const findLatest = (
-  completedRecords: SleepingSituation[], //当日で完成したデータ
-  containNullRecords: SleepingSituation[], //当日のみで未完成のデータ※存在したら必ず最新になる
-  yesterdayRecord: SleepingSituation[], //前日以前最後に起床した
-  containYesterdayRecord: SleepingSituation[] //前日と当日を必ず含む
+  containNullRecords: SleepingSituation[], //未完成のデータ※存在したら必ず最新になる
+  completedRecords: SleepingSituation[] //完成した最後のデータ
 ): FindLatestResponse | undefined => {
-  const firstLatestOnlybedTime =
-    containNullRecords.length === 1 &&
-    !containNullRecords[containNullRecords.length - 1].sleep; //!sleep&&!wakeup→寝かしつけ開始が最新
-  const firstLatestWakeupOnlyNull =
-    containNullRecords.length === 1 &&
-    containNullRecords[containNullRecords.length - 1].sleep &&
-    !containNullRecords[containNullRecords.length - 1].wakeup; //sleep&&!wakeup→寝たのが最新
-  const secondLatest =
-    containNullRecords.length === 0 && completedRecords.length >= 1; //起きたのが最新
-  const thirdLatestOnlybedTime =
-    containNullRecords.length === 0 &&
-    completedRecords.length === 0 &&
-    containYesterdayRecord.length === 1 &&
-    !containYesterdayRecord[containYesterdayRecord.length - 1].sleep; //寝かしつけ開始が最新
-  const thirdLatestWakeupOnlyNull =
-    containNullRecords.length === 0 &&
-    completedRecords.length === 0 &&
-    containYesterdayRecord.length === 1 &&
-    containYesterdayRecord[containYesterdayRecord.length - 1].sleep &&
-    !containYesterdayRecord[containYesterdayRecord.length - 1].wakeup; //寝かしつけ開始が最新
-  const fourthLatest =
-    containNullRecords.length === 0 &&
-    completedRecords.length === 0 &&
-    containYesterdayRecord.length === 0 &&
-    yesterdayRecord.length === 1; //起きたのが最新
-  const fifthLatestWakeupOnlyNull =
-    completedRecords.length === 0 &&
-    containNullRecords.length === 0 &&
-    containYesterdayRecord.length !== 0 &&
-    !containYesterdayRecord[0].wakeup; //昨日寝かしつけ開始して今日寝てまだ起きてない
-  const fifthLatest =
-    completedRecords.length === 0 &&
-    containNullRecords.length === 0 &&
-    containYesterdayRecord.length !== 0 &&
-    containYesterdayRecord[0].wakeup; //昨日寝て今日起きた
-
-  if (firstLatestOnlybedTime) {
-    console.log("1");
+  const sleep = containNullRecords.length === 1 && containNullRecords[0].sleep;
+  const bedtime =
+    containNullRecords.length === 1 && !containNullRecords[0].sleep;
+  const wakeup =
+    containNullRecords.length === 0 && completedRecords.length === 1;
+  if (sleep) {
     return {
-      record: containNullRecords[containNullRecords.length - 1],
+      record: containNullRecords[0],
+      action: "寝た",
+    };
+  }
+  if (bedtime) {
+    return {
+      record: containNullRecords[0],
       action: "寝かしつけ開始",
     };
   }
-  if (firstLatestWakeupOnlyNull) {
-    console.log("2");
+  if (wakeup) {
     return {
-      record: containNullRecords[containNullRecords.length - 1],
-      action: "寝た",
-    };
-  }
-  if (secondLatest) {
-    console.log("3");
-    return {
-      record: completedRecords[completedRecords.length - 1],
-      action: "起きた",
-    };
-  }
-  if (thirdLatestOnlybedTime) {
-    console.log("4");
-    return {
-      record: containYesterdayRecord[containYesterdayRecord.length - 1],
-      action: "寝かしつけ開始",
-    };
-  }
-  if (thirdLatestWakeupOnlyNull) {
-    console.log("5");
-    return {
-      record: containYesterdayRecord[containYesterdayRecord.length - 1],
-      action: "寝た",
-    };
-  }
-  if (fourthLatest) {
-    console.log("6");
-    return {
-      record: yesterdayRecord[yesterdayRecord.length - 1],
-      action: "起きた",
-    };
-  }
-  if (fifthLatestWakeupOnlyNull) {
-    console.log("7");
-    return {
-      record: containYesterdayRecord[containYesterdayRecord.length - 1],
-      action: "寝た",
-    };
-  }
-  if (fifthLatest) {
-    console.log("8");
-    return {
-      record: containYesterdayRecord[containYesterdayRecord.length - 1],
+      record: completedRecords[0],
       action: "起きた",
     };
   }

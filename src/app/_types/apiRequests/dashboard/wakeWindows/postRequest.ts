@@ -3,6 +3,7 @@ import { ApiRequest } from "../../apiRequest";
 
 /**活動時間*/
 export interface WakeWindows {
+  id?: number;
   babyId: number;
   time: number;
   type: Type;
@@ -11,17 +12,14 @@ export interface WakeWindows {
 }
 /**入眠までの時間*/
 export interface SleepPrepTime {
+  id?: number;
   babyId: number;
-  time: Date;
+  time: number;
   createUser: number;
   changeUser: number;
 }
 
 export interface PostRequests extends ApiRequest {
-  body: {
-    data: {
-      wakeWindows: WakeWindows[];
-      sleepPrepTime: SleepPrepTime;
-    };
-  };
+  wakeWindows: WakeWindows[];
+  sleepPrepTime: SleepPrepTime;
 }

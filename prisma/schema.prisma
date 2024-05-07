@@ -98,8 +98,8 @@ model Growth {
   id Int @id @default(autoincrement())
   babyId Int
   milestone Milestone
-  startedAt DateTime
-  archevedAt DateTime
+  startedAt DateTime?
+  archevedAt DateTime?
   created DateTime @default(now())
   updated DateTime @updatedAt
   createUser Int
@@ -124,7 +124,7 @@ model Chat {
 model SleepPrepTime {
   id Int @id @default(autoincrement())
   babyId Int
-  time DateTime
+  time Int
   created DateTime @default(now())
   updated DateTime @updatedAt
   createUser Int
