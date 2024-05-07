@@ -1,21 +1,35 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../layout";
-import { DateState } from "./useToggle";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting";
 
-export const useUpdateGrowth = async (date: DateState, value: string) => {
-  const [dbUserId, babyId] = useContext(UserContext);
+export const useGetGrowth = (): {
+  getIsLoading: boolean;
+  data: IndexResponse | null;
+} => {
+  const [, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
+  const [getIsLoading, setGetIsLoading] = useState(false);
+  const [data, setDate] = useState<IndexResponse | null>(null);
+  useEffect(() => {
+    if (isLoding || !babyId) return;
+    const fetcher = async () => {
+      if (!token) return;
+      setGetIsLoading(true);
+      const prams = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      const resp = await fetch(`/api/dashboard/growth?id=${babyId}`, prams);
+      const data: IndexResponse = await resp.json();
+      setDate(data);
+      setGetIsLoading(false);
+    };
+    fetcher();
+  }, [token, babyId, isLoding]);
 
-  if (isLoding || !token || !babyId || !date[value]) return;
-  const prams = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token,
-    },
-  };
-
-  const resp = await fetch(`/api/dashboard/growth?babyId=${babyId}`, prams);
-  return { resp };
+  return { getIsLoading, data };
 };

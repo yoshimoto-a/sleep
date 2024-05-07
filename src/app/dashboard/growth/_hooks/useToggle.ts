@@ -75,6 +75,5 @@ export const useToggle = (): {
         updateDate(key, nextState, new Date());
       };
   }
-  console.log(date);
   return { state, handlers, date, updateDate };
 };

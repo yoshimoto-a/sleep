@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 // import { useState } from "react";
 import { InputDate } from "./_components/inputDate";
 import { Toggle } from "./_components/toggle";
+import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useModal } from "./_hooks/useModal";
 import { useToggle } from "./_hooks/useToggle";
 // import { getToggles } from "./_utils/toggles";
@@ -30,6 +31,18 @@ export default function Page() {
     walkingComp: false,
   });
   const { state, handlers, date, updateDate } = useToggle();
+  const { getIsLoading, data } = useGetGrowth();
+
+  if (getIsLoading) return;
+  if (data?.status !== 200 || !("data" in data)) return;
+
+  data.data.map(item => {
+    switch (item.milestone) {
+      case "TURNING_OVER":
+        console.log(item.startedAt);
+    }
+  });
+
   // const toggles = getToggles(state, handlers, date);
   return (
     <div className="flex flex-col mx-5">

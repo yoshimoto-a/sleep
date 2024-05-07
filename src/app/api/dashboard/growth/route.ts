@@ -35,7 +35,7 @@ export const GET = async (req: NextRequest) => {
     if (getGrowth) {
       return Response.json({
         status: 200,
-        data: { getGrowth },
+        data: getGrowth,
       });
     } else {
       return Response.json(<IndexResponse>{
