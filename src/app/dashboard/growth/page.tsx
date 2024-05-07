@@ -10,26 +10,6 @@ import { useToggle } from "./_hooks/useToggle";
 import { CustomModal } from "@/app/_components/modal";
 
 export default function Page() {
-  const { modalStates, openModal, closeModal } = useModal({
-    turningOver: false,
-    turningOverAndOver: false,
-    crawling: false,
-    sitting: false,
-    crawlingOnHandAndKnees: false,
-    pullingUpToStand: false,
-    cruising: false,
-    standing: false,
-    walking: false,
-    turningOverComp: false,
-    turningOverAndOverComp: false,
-    crawlingComp: false,
-    sittingComp: false,
-    crawlingOnHandAndKneesComp: false,
-    pullingUpToStandComp: false,
-    cruisingComp: false,
-    standingComp: false,
-    walkingComp: false,
-  });
   const { state, handlers, date, updateDate } = useToggle();
   const { getIsLoading, data } = useGetGrowth();
 
@@ -81,30 +61,7 @@ export default function Page() {
 
       {/* <div className="flex justify-between items-center gap-4">
         <div className="w-1/4 text-center">寝返り</div>
-        <div className="w-1/4 text-center">
-          <Toggle
-            isChecked={state.isCheckedTurningOver}
-            handleChange={handlers.handleChangeTurningOver}
-            date={
-              !date.turningOverDate
-                ? ""
-                : dayjs(date.turningOverDate).format("YYYY-MM-DD")
-            }
-            openModal={openModal}
-          ></Toggle>
-          <CustomModal
-            isOpen={isOpen}
-            onClose={closeModal}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
-          >
-            <InputDate
-              closeModal={closeModal}
-              value="turningOver"
-              state={state.turningOver}
-              updateDate={updateDate}
-            ></InputDate>
-          </CustomModal>
-        </div>
+        <ToggleWithInputModal />
         <div className="w-1/4 text-center">
           <Toggle
             isChecked={state.isCheckedTurningOverComp}
