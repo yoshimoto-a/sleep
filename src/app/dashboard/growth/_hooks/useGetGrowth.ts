@@ -11,6 +11,7 @@ export const useGetGrowth = (): {
   const { token, isLoding } = useSupabaseSession();
   const [getIsLoading, setGetIsLoading] = useState(false);
   const [data, setDate] = useState<IndexResponse | null>(null);
+
   useEffect(() => {
     if (isLoding || !babyId) return;
     const fetcher = async () => {

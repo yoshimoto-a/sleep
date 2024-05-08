@@ -55,7 +55,6 @@ export const useToggle = (): {
   });
 
   const updateDate = (key: string, isActive: boolean, date: Date) => {
-    console.log(`${key}Date`, isActive, date);
     setDate(prevDates => ({
       ...prevDates,
       [`${key}Date`]: isActive ? date : null,
