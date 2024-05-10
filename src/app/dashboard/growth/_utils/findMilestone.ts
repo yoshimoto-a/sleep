@@ -1,6 +1,5 @@
 import { Milestone } from "@prisma/client";
 export const findMilestone = (key: string): Milestone | undefined => {
-  console.log(key);
   switch (key) {
     case "turningOver":
     case "turningOverComp":

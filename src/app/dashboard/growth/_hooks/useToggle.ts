@@ -65,7 +65,6 @@ export const useToggle = (
     standingCompDate: null,
     walkingCompDate: null,
   });
-
   const updateDate = async (key: string, isActive: boolean, date: Date) => {
     if (!dbUserId) return;
     setDate(prevDates => ({
@@ -74,7 +73,6 @@ export const useToggle = (
     }));
     const name = findMilestone(key);
     if (data?.status !== 200 || !("data" in data)) return;
-    console.log(name, data.data);
     const targetData = data.data.find(item => item.milestone === name);
     if (!targetData) {
       alert("データない");

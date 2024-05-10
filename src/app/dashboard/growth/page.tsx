@@ -16,7 +16,7 @@ export default function Page() {
     }
     //最初だけ取得したデータ
     if (data?.status !== 200 || !("data" in data)) return;
-    setDateSwitch(data.data, setDate, setState);
+    setDateSwitch(data.data, date, setDate, state, setState);
   }, [getIsLoading]);
 
   if (!getIsLoading) return;
