@@ -2,10 +2,10 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect, createContext } from "react";
-import { GetLoginUser } from "../../utils/getLoginUser";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
 import { GetBaby } from "./setting/_utils/getBaby";
+import { getLoginUser } from "@/utils/getLoginUser";
 
 export const UserContext = createContext<[number | null, number | null]>([
   null,
@@ -25,7 +25,7 @@ export default function Layout({
       try {
         //ユーザー情報の取得
         if (token && session) {
-          const { id, babyId } = await GetLoginUser(token, session.user.id);
+          const { id, babyId } = await getLoginUser(token, session.user.id);
           if (id && babyId) {
             setDbUserId(id);
             setBabyId(babyId);

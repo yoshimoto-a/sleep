@@ -1,110 +1,137 @@
 "use client";
+import { useEffect } from "react";
+import { ColumnName } from "./_components/ColumnName";
 import { ToggleRow } from "./_components/ToggleRow";
 import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useToggle } from "./_hooks/useToggle";
+import { setDateSwitch } from "./_utils/setDate";
 
 export default function Page() {
-  const { state, handlers, date, updateDate } = useToggle();
-  const { getIsLoading, data } = useGetGrowth();
-
-  if (getIsLoading) return;
-  if (data?.status !== 200 || !("data" in data)) return;
-
-  data.data.map(item => {
-    switch (item.milestone) {
-      case "TURNING_OVER":
-      //console.log(item.startedAt);
+  const { getIsLoading, data, error } = useGetGrowth();
+  const { state, handlers, date, setDate, setState, updateDate } =
+    useToggle(data);
+  useEffect(() => {
+    if (!data || !getIsLoading) {
+      return;
     }
-  });
+    //最初だけ取得したデータ
+    if (data?.status !== 200 || !("data" in data)) return;
+    setDateSwitch(data.data, setDate, setState);
+  }, [getIsLoading]);
 
+  if (!getIsLoading) return;
+  if (error) return "An error has occurred.";
   return (
     <div className="flex flex-col mx-5">
       <h1>発達記録</h1>
-      <div className="flex justify-between items-center gap-4">
-        <span className="w-1/4 text-center">項目</span>
-        <span className="w-1/4 text-center">練習開始</span>
-        <span className="w-1/4 text-center">習得</span>
+      <div className="flex justify-between items-center gap-4 h-[55px]">
+        <ColumnName title="項目"></ColumnName>
+        <ColumnName title="練習開始"></ColumnName>
+        <ColumnName title="習得"></ColumnName>
       </div>
-
-      {/* <div className="flex justify-between items-center gap-4">
-        <div className="w-1/4 text-center">寝返り返り</div>
-        <div className="w-1/4 text-center">
-          <Toggle
-            isChecked={state.isCheckedTurningOverAndOver}
-            handleChange={handlers.handleChangeTurningOverAndOver}
-            date={
-              !date.turningOverAndOverDate
-                ? ""
-                : dayjs(date.turningOverAndOverDate).format("YYYY-MM-DD")
-            }
-            openModal={() => openModal("turningOverAndOver")}
-          ></Toggle>
-          <CustomModal
-            isOpen={modalStates.turningOverAndOver}
-            onClose={() => closeModal("turningOverAndOver")}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
-          >
-            <InputDate
-              closeModal={() => closeModal("turningOverAndOver")}
-              value="turningOverAndOver"
-              state={state.turningOverAndOver}
-              updateDate={updateDate}
-            ></InputDate>
-          </CustomModal>
-        </div>
-        <div className="w-1/4 text-center">
-          <Toggle
-            isChecked={state.isCheckedTurningOverAndOverComp}
-            handleChange={handlers.handleChangeTurningOverAndOverComp}
-            date={
-              !date.turningOverAndOverCompDate
-                ? ""
-                : dayjs(date.turningOverAndOverCompDate).format("YYYY-MM-DD")
-            }
-            openModal={() => openModal("turningOverAndOverComp")}
-          ></Toggle>
-          <CustomModal
-            isOpen={modalStates.turningOverAndOverComp}
-            onClose={() => closeModal("turningOverAndOverComp")}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
-          >
-            <InputDate
-              closeModal={() => closeModal("turningOverAndOverComp")}
-              value="turningOverAndOverComp"
-              state={state.turningOverAndOverComp}
-              updateDate={updateDate}
-            ></InputDate>
-          </CustomModal>
-        </div>
-      </div> */}
-      {/* <div className="flex justify-between items-center gap-4">
-        <ToggleWithInputModal
-          isChecked={state.turningOverAndOverComp}
-          onChange={handlers.handleChangeTurningOverAndOverComp}
-          onUpdate={updateDate}
-          date={date.turningOverAndOverCompDate}
-          value="turningOverAndOverComp"
-        ></ToggleWithInputModal>
-      </div> */}
-
+      <ToggleRow
+        label="寝返り"
+        isCheckedStart={state.turningOver}
+        onChangeStart={handlers.handleChangeTurningOver}
+        onUpdateStart={updateDate}
+        startDate={date.turningOverDate}
+        startValue="turningOver"
+        isCheckedComp={state.turningOverComp}
+        onChangeComp={handlers.handleChangeTurningOverComp}
+        onUpdateComp={updateDate}
+        compDate={date.turningOverCompDate}
+        compValue="turningOverComp"
+      ></ToggleRow>
       <ToggleRow
         label="寝返り返り"
-        rowItem={[
-          {
-            isChecked: state.turningOverAndOver,
-            onChange: handlers.handleChangeTurningOverAndOver,
-            onUpdate: updateDate,
-            date: date.turningOverAndOverDate,
-            value: "turningOverAndOver",
-          },
-          {
-            isChecked: state.turningOverAndOverComp,
-            onChange: handlers.handleChangeTurningOverAndOverComp,
-            onUpdate: updateDate,
-            date: date.turningOverAndOverCompDate,
-            value: "turningOverAndOverComp",
-          },
-        ]}
+        isCheckedStart={state.turningOverAndOver}
+        onChangeStart={handlers.handleChangeTurningOverAndOver}
+        onUpdateStart={updateDate}
+        startDate={date.turningOverAndOverDate}
+        startValue="turningOverAndOver"
+        isCheckedComp={state.turningOverAndOverComp}
+        onChangeComp={handlers.handleChangeTurningOverAndOverComp}
+        onUpdateComp={updateDate}
+        compDate={date.turningOverAndOverCompDate}
+        compValue="turningOverAndOverComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="ずり這い"
+        isCheckedStart={state.crawling}
+        onChangeStart={handlers.handleChangeCrawling}
+        onUpdateStart={updateDate}
+        startDate={date.crawlingDate}
+        startValue="crawling"
+        isCheckedComp={state.crawlingComp}
+        onChangeComp={handlers.handleChangeCrawlingComp}
+        onUpdateComp={updateDate}
+        compDate={date.crawlingCompDate}
+        compValue="crawlingComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="ハイハイ"
+        isCheckedStart={state.crawlingOnHandAndKnees}
+        onChangeStart={handlers.handleChangeCrawlingOnHandAndKnees}
+        onUpdateStart={updateDate}
+        startDate={date.crawlingOnHandAndKneesDate}
+        startValue="crawlingOnHandAndKnees"
+        isCheckedComp={state.crawlingOnHandAndKneesComp}
+        onChangeComp={handlers.handleChangeCrawlingOnHandAndKneesComp}
+        onUpdateComp={updateDate}
+        compDate={date.crawlingOnHandAndKneesCompDate}
+        compValue="crawlingOnHandAndKneesComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="つかまり立ち"
+        isCheckedStart={state.pullingUpToStand}
+        onChangeStart={handlers.handleChangePullingUpToStand}
+        onUpdateStart={updateDate}
+        startDate={date.pullingUpToStandDate}
+        startValue="pullingUpToStand"
+        isCheckedComp={state.pullingUpToStandComp}
+        onChangeComp={handlers.handleChangePullingUpToStandComp}
+        onUpdateComp={updateDate}
+        compDate={date.pullingUpToStandCompDate}
+        compValue="pullingUpToStandComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="つたい歩き"
+        isCheckedStart={state.cruising}
+        onChangeStart={handlers.handleChangeCruising}
+        onUpdateStart={updateDate}
+        startDate={date.cruisingDate}
+        startValue="cruising"
+        isCheckedComp={state.cruisingComp}
+        onChangeComp={handlers.handleChangeCruisingComp}
+        onUpdateComp={updateDate}
+        compDate={date.cruisingCompDate}
+        compValue="cruisingComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="立つ"
+        isCheckedStart={state.standing}
+        onChangeStart={handlers.handleChangeStanding}
+        onUpdateStart={updateDate}
+        startDate={date.standingDate}
+        startValue="standing"
+        isCheckedComp={state.standingComp}
+        onChangeComp={handlers.handleChangeStandingComp}
+        onUpdateComp={updateDate}
+        compDate={date.standingCompDate}
+        compValue="standingComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="歩く"
+        isCheckedStart={state.walking}
+        onChangeStart={handlers.handleChangeWalking}
+        onUpdateStart={updateDate}
+        startDate={date.walkingDate}
+        startValue="walking"
+        isCheckedComp={state.walkingComp}
+        onChangeComp={handlers.handleChangeWalkingComp}
+        onUpdateComp={updateDate}
+        compDate={date.walkingCompDate}
+        compValue="walkingComp"
       ></ToggleRow>
     </div>
   );

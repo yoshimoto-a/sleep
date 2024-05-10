@@ -1,29 +1,48 @@
 import { ToggleWithInputModal } from "./ToggleWithInputModal";
 interface Props {
   label: string;
-  rowItem: {
-    isChecked: boolean;
-    onChange: () => void;
-    onUpdate: (key: string, isActive: boolean, date: Date) => void;
-    date: Date | null | undefined;
-    value: string;
-  }[];
+  isCheckedStart: boolean;
+  onChangeStart: () => void;
+  onUpdateStart: (key: string, isActive: boolean, date: Date) => void;
+  startDate: Date | null | undefined;
+  startValue: string;
+  isCheckedComp: boolean;
+  onChangeComp: () => void;
+  onUpdateComp: (key: string, isActive: boolean, date: Date) => void;
+  compDate: Date | null | undefined;
+  compValue: string;
 }
 
-export const ToggleRow: React.FC<Props> = ({ label, rowItem }) => {
+export const ToggleRow: React.FC<Props> = ({
+  label,
+  isCheckedStart,
+  onChangeStart,
+  onUpdateStart,
+  startDate,
+  startValue,
+  isCheckedComp,
+  onChangeComp,
+  onUpdateComp,
+  compDate,
+  compValue,
+}) => {
   return (
-    <div className="flex justify-between items-center gap-4">
+    <div className="flex justify-between items-center gap-4 h-[60px]">
       <div className="w-1/4 text-center">{label}</div>
-      {rowItem.map(item => (
-        <ToggleWithInputModal
-          key={item.value}
-          isChecked={item.isChecked}
-          onChange={item.onChange}
-          onUpdate={item.onUpdate}
-          date={item.date}
-          value={item.value}
-        ></ToggleWithInputModal>
-      ))}
+      <ToggleWithInputModal
+        isChecked={isCheckedStart}
+        onChange={onChangeStart}
+        onUpdate={onUpdateStart}
+        date={startDate}
+        value={startValue}
+      ></ToggleWithInputModal>
+      <ToggleWithInputModal
+        isChecked={isCheckedComp}
+        onChange={onChangeComp}
+        onUpdate={onUpdateComp}
+        date={compDate}
+        value={compValue}
+      ></ToggleWithInputModal>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { Input } from "../_components/input";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
 import { SubmitButton } from "@/app/_components/button";
-import { GetLoginUser } from "@/utils/getLoginUser";
+import { getLoginUser } from "@/utils/getLoginUser";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
@@ -24,11 +24,11 @@ export default function Page() {
       email,
       password,
     });
-
     if (error) {
       alert("ログインに失敗しました");
       return;
     }
+
     setEmail("");
     setPassword("");
     if (data.session) {
@@ -38,8 +38,7 @@ export default function Page() {
       } = data.session;
       if (token) {
         try {
-          const { isRegistered } = await GetLoginUser(access_token, id);
-
+          const { isRegistered } = await getLoginUser(access_token, id);
           if (!isRegistered) {
             const babyId: number | undefined | null =
               data.user?.user_metadata.babyId;
@@ -50,6 +49,7 @@ export default function Page() {
           }
           router.replace("/dashboard/sleep");
         } catch (e) {
+          console.log(e);
           alert("ログインに失敗しました");
         }
       }

@@ -58,7 +58,7 @@ export const PUT = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: updateRequests = await req.json();
-    const { babyId } = body.body.data;
+    const { babyId } = body.data;
     const babyIdCheck = await checkBabyId(token, babyId);
     if (!babyIdCheck)
       return Response.json({
@@ -66,8 +66,8 @@ export const PUT = async (req: NextRequest) => {
         message: "Unauthorized",
       });
 
-    const { id } = body.body;
-    const { startedAt, archevedAt, changeUser } = body.body.data;
+    const { id } = body;
+    const { startedAt, archevedAt, changeUser } = body.data;
     await prisma.growth.update({
       where: {
         id,

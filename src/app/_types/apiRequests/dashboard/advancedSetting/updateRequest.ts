@@ -1,5 +1,3 @@
-import { ApiRequest } from "../../apiRequest";
-
 /**発達テーブル*/
 export interface Growth {
   babyId: number;
@@ -7,6 +5,7 @@ export interface Growth {
   archevedAt: Date;
   changeUser: number;
 }
-export interface updateRequests extends ApiRequest {
-  body: { id: number; data: Growth };
+export interface updateRequests {
+  id: number;
+  data: Growth;
 }

@@ -15,8 +15,9 @@ export const MenuItem: React.FC<ItemProps> = ({ icon, text, link }) => {
         <Image
           src={icon}
           alt="menu icon"
-          width={20}
-          height={20}
+          height={0}
+          width={0}
+          style={{ width: "20px", height: "auto" }}
           className="mx-auto mb-1 mt-1"
         />
         <span className="text-sm">{text}</span>

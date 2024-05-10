@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { useState } from "react";
+import { ModalButton } from "./ModalButton";
 interface Props {
   closeModal: () => void;
   value: string;
@@ -32,18 +33,16 @@ export const InputDate: React.FC<Props> = ({
         }}
       />
       <div className="w-full flex justify-between">
-        <button
+        <ModalButton
           onClick={closeModal}
-          className="w-2/5 rounded bg-gray-300 px-4 py-2"
-        >
-          閉じる
-        </button>
-        <button
+          text="閉じる"
+          colorClass="bg-gray-300"
+        ></ModalButton>
+        <ModalButton
           onClick={handleSave}
-          className="w-2/5 rounded bg-blue-500 px-4 py-2"
-        >
-          保存
-        </button>
+          text="保存"
+          colorClass="bg-blue-500"
+        ></ModalButton>
       </div>
     </>
   );

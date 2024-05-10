@@ -14,8 +14,9 @@ export const RowItem: React.FC<ItemProps> = ({ icon, title, link }) => {
         <Image
           src={icon}
           alt="menu icon"
-          width={30}
-          height={30}
+          height={0}
+          width={0}
+          style={{ width: "30px", height: "auto" }}
           className="mx-auto mb-1 mt-1 mx-5"
         />
         <span className="text-lg">{title}</span>
