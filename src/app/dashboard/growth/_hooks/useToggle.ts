@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../layout";
 import { findMilestone } from "../_utils/findMilestone";
@@ -21,6 +21,7 @@ export const useToggle = (
   date: DateState;
   setDate: (date: DateState) => void;
   setState: (state: State) => void;
+  setData: () => void;
   updateDate: (key: string, isActive: boolean, date: Date) => void;
 } => {
   const [dbUserId] = useContext(UserContext);
@@ -116,5 +117,111 @@ export const useToggle = (
         updateDate(key, nextState, new Date());
       };
   }
-  return { state, handlers, date, setDate, setState, updateDate };
+
+  const setData = useCallback(() => {
+    if (data?.status !== 200 || !("data" in data)) return;
+    data.data.forEach(item => {
+      switch (item.milestone) {
+        case "TURNING_OVER":
+          setDate({
+            ...date,
+            turningOverDate: item.startedAt,
+            turningOverCompDate: item.archevedAt,
+          });
+
+          setState({
+            ...state,
+            turningOver: !!item.startedAt,
+            turningOverComp: !!item.archevedAt,
+          });
+          break;
+        case "TURNING_OVER_AND_OVER":
+          setDate({
+            ...date,
+            turningOverAndOverDate: item.startedAt,
+            turningOverAndOverCompDate: item.archevedAt,
+          });
+
+          setState({
+            ...state,
+            turningOverAndOver: !!item.startedAt,
+            turningOverAndOverComp: !!item.archevedAt,
+          });
+          break;
+        case "CRAWLING":
+          setDate({
+            ...date,
+            crawlingDate: item.startedAt,
+            crawlingCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            crawling: !!item.startedAt,
+            crawlingComp: !!item.archevedAt,
+          });
+          break;
+        case "SITTING":
+          setDate({
+            ...date,
+            sittingDate: item.startedAt,
+            sittingCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            sitting: !!item.startedAt,
+            sittingComp: !!item.archevedAt,
+          });
+          break;
+        case "CRAWLING_ON_HANDS_AND_KNEES":
+          setDate({
+            ...date,
+            crawlingOnHandAndKneesDate: item.startedAt,
+            crawlingOnHandAndKneesCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            crawlingOnHandAndKnees: !!item.startedAt,
+            crawlingOnHandAndKneesComp: !!item.archevedAt,
+          });
+          break;
+        case "PULLING_UP_TO_STAND":
+          setDate({
+            ...date,
+            pullingUpToStandDate: item.startedAt,
+            pullingUpToStandCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            pullingUpToStand: !!item.startedAt,
+            pullingUpToStandComp: !!item.archevedAt,
+          });
+          break;
+        case "CRUISING":
+          setDate({
+            ...date,
+            cruisingDate: item.startedAt,
+            cruisingCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            cruising: !!item.startedAt,
+            cruisingComp: !!item.archevedAt,
+          });
+          break;
+        case "STANDING":
+          setDate({
+            ...date,
+            standingDate: item.startedAt,
+            standingCompDate: item.archevedAt,
+          });
+          setState({
+            ...state,
+            standing: !!item.startedAt,
+            standingComp: !!item.archevedAt,
+          });
+          break;
+      }
+    });
+  }, [date, state, data]);
+  return { state, handlers, date, setDate, setState, setData, updateDate };
 };

@@ -4,22 +4,17 @@ import { ColumnName } from "./_components/ColumnName";
 import { ToggleRow } from "./_components/ToggleRow";
 import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useToggle } from "./_hooks/useToggle";
-import { setDateSwitch } from "./_utils/setDate";
 
 export default function Page() {
-  const { getIsLoading, data, error } = useGetGrowth();
-  const { state, handlers, date, setDate, setState, updateDate } =
+  const { isLoading, data, error } = useGetGrowth();
+  const { state, handlers, date, setDate, setState, setData, updateDate } =
     useToggle(data);
   useEffect(() => {
-    if (!data || !getIsLoading) {
-      return;
-    }
-    //最初だけ取得したデータ
-    if (data?.status !== 200 || !("data" in data)) return;
-    setDateSwitch(data.data, date, setDate, state, setState);
-  }, [getIsLoading]);
+    setData();
+  }, [isLoading]);
 
-  if (!getIsLoading) return;
+  if (isLoading) return;
+
   if (error) return "An error has occurred.";
   return (
     <div className="flex flex-col mx-5">
