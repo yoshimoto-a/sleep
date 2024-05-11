@@ -1,6 +1,5 @@
-//リファクタリングしたいけどわからない。。
 import { type NextRequest } from "next/server";
-import { ChangeTimeZone } from "@/utils/chageTimeZone";
+import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 

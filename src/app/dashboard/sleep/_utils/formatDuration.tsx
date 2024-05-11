@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-type Style = "HourAndMinutes" | "MinutesOnly";
+export type Style = "HourAndMinutes" | "MinutesOnly";
 
 export const FormatDuration = (
   start: Date,

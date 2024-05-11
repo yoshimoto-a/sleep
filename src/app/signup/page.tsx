@@ -79,7 +79,8 @@ export default function Page() {
               type="text"
               value={email}
               placeholder="メールアドレス"
-              onChange={(value) => setEmail(value)}
+              inputMode="email"
+              onChange={value => setEmail(value)}
             />
             <ErrorMessage message={emailErrorMessage} />
           </div>
@@ -89,7 +90,8 @@ export default function Page() {
               type="password"
               value={password}
               placeholder="パスワード"
-              onChange={(value) => setPassword(value)}
+              inputMode="text"
+              onChange={value => setPassword(value)}
             />
             <ErrorMessage message={passwordErrorMessage} />
           </div>

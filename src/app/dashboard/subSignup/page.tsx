@@ -17,7 +17,7 @@ export default function Page() {
   const [, babyId] = useContext(UserContext);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (token) {
+    if (token && babyId) {
       const prams: PostRequests = {
         method: "POST",
         headers: {
@@ -35,7 +35,6 @@ export default function Page() {
       });
       console.log(resp);
       if (resp.status === 200) {
-        //成功時の処理
         setEmail("");
         router.push("/signup/sentEmail/");
       } else {
@@ -64,6 +63,7 @@ export default function Page() {
               type="text"
               value={email}
               placeholder="メールアドレス"
+              inputMode="email"
               onChange={value => setEmail(value)}
             />
           </div>

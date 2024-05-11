@@ -1,10 +1,23 @@
 import React from "react";
 
+type InputMode =
+  | "search"
+  | "email"
+  | "tel"
+  | "text"
+  | "url"
+  | "none"
+  | "numeric"
+  | "decimal"
+  | undefined;
+
 interface Props {
   type: string;
   id: string;
   value: string;
   placeholder: string;
+  inputMode: InputMode;
+
   onChange: (value: string) => void;
 }
 
@@ -13,6 +26,7 @@ export const Input: React.FC<Props> = ({
   id,
   value,
   placeholder,
+  inputMode,
   onChange,
 }) => {
   return (
@@ -22,6 +36,7 @@ export const Input: React.FC<Props> = ({
       type={type}
       value={value}
       placeholder={placeholder}
+      inputMode={inputMode}
       onChange={e => onChange(e.target.value)}
     />
   );

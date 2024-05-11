@@ -1,6 +1,7 @@
 import { Role } from "@prisma/client";
 import { Milestone } from "@prisma/client";
 import { Type } from "@prisma/client";
+import { FindLatestResponse } from "@/app/api/dashboard/sleep/_utils/findLatest";
 
 /**現在の月齢を表示*/
 interface Baby {
@@ -77,5 +78,6 @@ export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
 export interface SleepingSituationResponse {
   status: number;
   message: string;
-  data?: FormatedData[];
+  data: FormatedData[];
+  latestData: FindLatestResponse;
 }

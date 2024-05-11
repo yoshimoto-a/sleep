@@ -1,6 +1,6 @@
 import { IndexResponse } from "../app/_types/apiRequests/login";
 
-export const GetLoginUser = async (token: string, supabaseUserId: string) => {
+export const getLoginUser = async (token: string, supabaseUserId: string) => {
   try {
     const resp = await fetch(`/api/login?supabaseUserId=${supabaseUserId}`, {
       method: "GET",
