@@ -78,7 +78,6 @@ export const PUT = async (req: NextRequest) => {
         changeUser,
       },
     });
-
     return Response.json(<PostResponse>{
       status: 200,
       message: "success",

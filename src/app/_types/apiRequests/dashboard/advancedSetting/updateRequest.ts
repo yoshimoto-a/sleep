@@ -1,8 +1,8 @@
 /**発達テーブル*/
 export interface Growth {
   babyId: number;
-  startedAt: Date;
-  archevedAt: Date;
+  startedAt: Date | null;
+  archevedAt: Date | null;
   changeUser: number;
 }
 export interface updateRequests {

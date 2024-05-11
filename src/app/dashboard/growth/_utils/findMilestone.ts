@@ -25,6 +25,9 @@ export const findMilestone = (key: string): Milestone | undefined => {
     case "standing":
     case "standingComp":
       return "STANDING";
+    case "walking":
+    case "walkingComp":
+      return "WALKING";
     default:
       return undefined;
   }

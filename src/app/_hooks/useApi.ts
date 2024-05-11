@@ -68,6 +68,7 @@ export const useApi = () => {
         },
         body: JSON.stringify(payload),
       });
+
       if (response.status !== 200) throw new Error("更新に失敗しました。");
 
       const data: ResponseType = await response.json();

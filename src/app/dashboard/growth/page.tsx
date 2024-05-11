@@ -4,16 +4,15 @@ import { ColumnName } from "./_components/ColumnName";
 import { ToggleRow } from "./_components/ToggleRow";
 import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useToggle } from "./_hooks/useToggle";
+import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Page() {
   const { isLoading, data, error } = useGetGrowth();
-  const { state, handlers, date, setDate, setState, setData, updateDate } =
-    useToggle(data);
+  const { state, handlers, date, setData, updateDate } = useToggle(data);
   useEffect(() => {
     setData();
   }, [isLoading]);
-
-  if (isLoading) return;
+  if (isLoading) return <IsLoading></IsLoading>;
 
   if (error) return "An error has occurred.";
   return (
@@ -75,6 +74,19 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.crawlingOnHandAndKneesCompDate}
         compValue="crawlingOnHandAndKneesComp"
+      ></ToggleRow>
+      <ToggleRow
+        label="お座り"
+        isCheckedStart={state.sitting}
+        onChangeStart={handlers.handleChangeSitting}
+        onUpdateStart={updateDate}
+        startDate={date.sittingDate}
+        startValue="sitting"
+        isCheckedComp={state.sittingComp}
+        onChangeComp={handlers.handleChangeSittingComp}
+        onUpdateComp={updateDate}
+        compDate={date.sittingCompDate}
+        compValue="sittingComp"
       ></ToggleRow>
       <ToggleRow
         label="つかまり立ち"

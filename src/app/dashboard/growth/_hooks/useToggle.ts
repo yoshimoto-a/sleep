@@ -66,7 +66,11 @@ export const useToggle = (
     standingCompDate: null,
     walkingCompDate: null,
   });
-  const updateDate = async (key: string, isActive: boolean, date: Date) => {
+  const updateDate = async (
+    key: string,
+    isActive: boolean,
+    date: Date | null
+  ) => {
     if (!dbUserId) return;
     setDate(prevDates => ({
       ...prevDates,
@@ -79,13 +83,14 @@ export const useToggle = (
       alert("データない");
       return;
     }
-    const { id, babyId } = targetData;
+    const { id, babyId, startedAt, archevedAt } = targetData;
+    !isActive && (date = null);
     const payload = {
       id,
       data: {
         babyId,
-        startedAt: date,
-        archevedAt: new Date(),
+        startedAt: key.includes("Comp") ? startedAt : date,
+        archevedAt: key.includes("Comp") ? date : archevedAt,
         changeUser: dbUserId,
       },
     };
@@ -120,108 +125,108 @@ export const useToggle = (
 
   const setData = useCallback(() => {
     if (data?.status !== 200 || !("data" in data)) return;
+    const _state: State = {
+      turningOver: false,
+      turningOverAndOver: false,
+      crawling: false,
+      sitting: false,
+      crawlingOnHandAndKnees: false,
+      pullingUpToStand: false,
+      cruising: false,
+      standing: false,
+      walking: false,
+      turningOverComp: false,
+      turningOverAndOverComp: false,
+      crawlingComp: false,
+      sittingComp: false,
+      crawlingOnHandAndKneesComp: false,
+      pullingUpToStandComp: false,
+      cruisingComp: false,
+      standingComp: false,
+      walkingComp: false,
+    };
+    const _date: DateState = {
+      turningOverDate: null,
+      turningOverAndOverDate: null,
+      crawlingDate: null,
+      sittingDate: null,
+      crawlingOnHandAndKneesDate: null,
+      pullingUpToStandDate: null,
+      cruisingDate: null,
+      standingDate: null,
+      walkingDate: null,
+      turningOverCompDate: null,
+      turningOverAndOverCompDate: null,
+      crawlingCompDate: null,
+      sittingCompDate: null,
+      crawlingOnHandAndKneesCompDate: null,
+      pullingUpToStandCompDate: null,
+      cruisingCompDate: null,
+      standingCompDate: null,
+      walkingCompDate: null,
+    };
+
     data.data.forEach(item => {
       switch (item.milestone) {
         case "TURNING_OVER":
-          setDate({
-            ...date,
-            turningOverDate: item.startedAt,
-            turningOverCompDate: item.archevedAt,
-          });
-
-          setState({
-            ...state,
-            turningOver: !!item.startedAt,
-            turningOverComp: !!item.archevedAt,
-          });
+          _date.turningOverDate = item.startedAt;
+          _date.turningOverCompDate = item.archevedAt;
+          _state.turningOver = !!item.startedAt;
+          _state.turningOverComp = !!item.archevedAt;
           break;
         case "TURNING_OVER_AND_OVER":
-          setDate({
-            ...date,
-            turningOverAndOverDate: item.startedAt,
-            turningOverAndOverCompDate: item.archevedAt,
-          });
-
-          setState({
-            ...state,
-            turningOverAndOver: !!item.startedAt,
-            turningOverAndOverComp: !!item.archevedAt,
-          });
+          _date.turningOverAndOverDate = item.startedAt;
+          _date.turningOverAndOverCompDate = item.archevedAt;
+          _state.turningOverAndOver = !!item.startedAt;
+          _state.turningOverAndOverComp = !!item.archevedAt;
           break;
         case "CRAWLING":
-          setDate({
-            ...date,
-            crawlingDate: item.startedAt,
-            crawlingCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            crawling: !!item.startedAt,
-            crawlingComp: !!item.archevedAt,
-          });
+          _date.crawlingDate = item.startedAt;
+          _date.crawlingCompDate = item.archevedAt;
+          _state.crawling = !!item.startedAt;
+          _state.crawlingComp = !!item.archevedAt;
           break;
         case "SITTING":
-          setDate({
-            ...date,
-            sittingDate: item.startedAt,
-            sittingCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            sitting: !!item.startedAt,
-            sittingComp: !!item.archevedAt,
-          });
+          _date.sittingDate = item.startedAt;
+          _date.sittingCompDate = item.archevedAt;
+          _state.sitting = !!item.startedAt;
+          _state.sittingComp = !!item.archevedAt;
           break;
         case "CRAWLING_ON_HANDS_AND_KNEES":
-          setDate({
-            ...date,
-            crawlingOnHandAndKneesDate: item.startedAt,
-            crawlingOnHandAndKneesCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            crawlingOnHandAndKnees: !!item.startedAt,
-            crawlingOnHandAndKneesComp: !!item.archevedAt,
-          });
+          _date.crawlingOnHandAndKneesDate = item.startedAt;
+          _date.crawlingOnHandAndKneesCompDate = item.archevedAt;
+          _state.crawlingOnHandAndKnees = !!item.startedAt;
+          _state.crawlingOnHandAndKneesComp = !!item.archevedAt;
           break;
         case "PULLING_UP_TO_STAND":
-          setDate({
-            ...date,
-            pullingUpToStandDate: item.startedAt,
-            pullingUpToStandCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            pullingUpToStand: !!item.startedAt,
-            pullingUpToStandComp: !!item.archevedAt,
-          });
+          _date.pullingUpToStandDate = item.startedAt;
+          _date.pullingUpToStandCompDate = item.archevedAt;
+          _state.pullingUpToStand = !!item.startedAt;
+          _state.pullingUpToStandComp = !!item.archevedAt;
           break;
         case "CRUISING":
-          setDate({
-            ...date,
-            cruisingDate: item.startedAt,
-            cruisingCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            cruising: !!item.startedAt,
-            cruisingComp: !!item.archevedAt,
-          });
+          _date.cruisingDate = item.startedAt;
+          _date.cruisingCompDate = item.archevedAt;
+          _state.cruising = !!item.startedAt;
+          _state.cruisingComp = !!item.archevedAt;
           break;
         case "STANDING":
-          setDate({
-            ...date,
-            standingDate: item.startedAt,
-            standingCompDate: item.archevedAt,
-          });
-          setState({
-            ...state,
-            standing: !!item.startedAt,
-            standingComp: !!item.archevedAt,
-          });
+          _date.standingDate = item.startedAt;
+          _date.standingCompDate = item.archevedAt;
+          _state.standing = !!item.startedAt;
+          _state.standingComp = !!item.archevedAt;
+          break;
+        case "WALKING":
+          _date.walkingDate = item.startedAt;
+          _date.walkingCompDate = item.archevedAt;
+          _state.walking = !!item.startedAt;
+          _state.walkingComp = !!item.archevedAt;
           break;
       }
     });
-  }, [date, state, data]);
+    setDate(_date);
+    setState(_state);
+  }, [data, setDate, setState]);
+
   return { state, handlers, date, setDate, setState, setData, updateDate };
 };
