@@ -1,28 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useState } from "react";
+import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
 import { UserContext } from "../layout";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
 import { SubmitButton } from "@/app/_components/button";
 import { Input } from "@/app/_components/input";
+import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";
+import { useApi } from "@/app/_hooks/useApi";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
-import { WakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import { PostWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
 import { SleepPrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
-import { WakeWindows as PutWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
-import { SleepPrepTime as PutSleePrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { PutWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
-export interface Data {
-  activityTime: WakeWindows[];
-  sleepPrepTime: SleepPrepTime;
-}
 export default function Page() {
-  const [data, setData] = useState<Data | null>(null);
+  const { data: getData, error, isLoading, mutate } = useGetWakeWindows();
+  const [data, setData] = useState<WakeWindowsData | null>(null);
   const [dbUserId, babyId] = useContext(UserContext);
   const { token } = useSupabaseSession();
+  const fetcher = useApi();
   const {
     basicHour,
     basicMinutes,
@@ -53,42 +56,26 @@ export default function Page() {
     setting,
   } = useValidation();
 
-  //初期設定
   useEffect(() => {
-    if (token && babyId) {
-      const fethcer = async () => {
-        const resp = await fetch(`/api/dashboard/wakeWindows?id=${babyId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        });
-        const jsonData = await resp.json();
-        const data: IndexResponse = jsonData;
-        if (data.status !== 200) {
-          alert("データの取得に失敗しました");
-          return;
-        }
-        if (
-          "data" in data &&
-          data.data !== null &&
-          "sleepPrepTime" in data.data
-        ) {
-          setData(data.data);
-          setting(data.data);
-        }
-      };
-      fethcer();
+    if (isLoading) return;
+    if (
+      getData &&
+      "data" in getData &&
+      getData.data !== null &&
+      "sleepPrepTime" in getData.data
+    ) {
+      setData(getData.data);
+      setting(getData.data);
     }
-  }, [token, babyId, setting]);
+  }, [isLoading, getData, setting]);
+  if (isLoading) return <IsLoading></IsLoading>;
+  if (error) return <div>データの取得に失敗しました</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!token || !babyId || !dbUserId) return;
     if (!data) {
-      const method = "POST";
-      const wakeWindows: WakeWindows[] = [
+      const wakeWindows: PostWakeWindows[] = [
         {
           babyId,
           type: "ALL",
@@ -124,21 +111,18 @@ export default function Page() {
         changeUser: dbUserId,
         createUser: dbUserId,
       };
-      const prams = {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: { wakeWindows, sleepPrepTime },
-      };
-      const postResp = await fetch("/api/dashboard/wakeWindows", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      const resp = await postResp.json();
+      const prams = { wakeWindows, sleepPrepTime };
+
+      try {
+        await fetcher.post<PostRequests, ApiResponse>(
+          "/api/dashboard/wakeWindows",
+          prams
+        );
+        mutate();
+      } catch (e) {
+        alert("データの登録に失敗しました");
+      }
     } else {
-      const method = "PUT";
       const wakeWindows: PutWakeWindows[] = [];
       data.activityTime.map(item => {
         if (!item.id) return;
@@ -184,26 +168,23 @@ export default function Page() {
         }
       });
       if (!data.sleepPrepTime.id) return;
-      const sleepPrepTime: PutSleePrepTime = {
+      const sleepPrepTime = {
         id: data.sleepPrepTime.id,
         babyId,
         time: sinceBedtime,
         changeUser: dbUserId,
       };
-      const prams = {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: { wakeWindows, sleepPrepTime },
-      };
-      const postResp = await fetch("/api/dashboard/wakeWindows", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      const resp = await postResp.json();
-      console.log(resp);
+      const prams = { wakeWindows, sleepPrepTime };
+
+      try {
+        await fetcher.put<UpdateRequests, ApiResponse>(
+          "/api/dashboard/wakeWindows",
+          prams
+        );
+        mutate();
+      } catch (e) {
+        alert("データ更新に失敗しました");
+      }
     }
   };
 

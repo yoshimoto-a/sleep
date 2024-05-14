@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useNextSleepTime } from "../_hooks/useNextSleepTime";
 import { FormatDuration } from "../_utils/formatDuration";
 import { FindLatestResponse } from "@/app/api/dashboard/sleep/_utils/findLatest";
 
@@ -12,6 +13,9 @@ interface PropsItem {
 export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
+  const { currentTime, wakeWindowsData, babyData } =
+    useNextSleepTime(lastestData);
+  console.log(currentTime, wakeWindowsData, babyData);
   useEffect(() => {
     let time: string | null = null;
     if (title === "活動時間") {

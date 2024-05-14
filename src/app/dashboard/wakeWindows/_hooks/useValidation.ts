@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Data } from "../page";
+import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
 export const useValidation = () => {
   const [basicHour, setBasicHour] = useState<string>("");
@@ -21,7 +21,7 @@ export const useValidation = () => {
   const [eveningMinutesError, setEveningMinutesError] = useState<string>("");
   const [sinceBedtime, setSinceBedtime] = useState<number>(0);
 
-  const setting = useCallback((data: Data) => {
+  const setting = useCallback((data: WakeWindowsData) => {
     data.activityTime.map(item => {
       const hours = Math.floor(item.time / 60).toString();
       const minutes = (item.time % 60).toString();

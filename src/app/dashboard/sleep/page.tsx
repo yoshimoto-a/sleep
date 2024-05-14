@@ -10,6 +10,7 @@ import { Button } from "./_component/button";
 import { Header } from "./_component/header";
 import { MainTime } from "./_component/mainTime";
 import { RowItem } from "./_component/rowItem";
+import { checkType } from "./_utils/checkType";
 import { IsLoading } from "@/app/_components/isLoading";
 import { CustomModal } from "@/app/_components/modal";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
@@ -94,16 +95,16 @@ export default function Page() {
     setIsModalOpen(false);
   };
 
-  const title = (): string => {
-    switch (action) {
-      case "bedTime":
-        return "寝かしつけ開始";
-      case "sleep":
-        return "寝た";
-      case "wakeup":
-        return "起きた";
-    }
-  };
+  // const title = (): string => {
+  //   switch (action) {
+  //     case "bedTime":
+  //       return "寝かしつけ開始";
+  //     case "sleep":
+  //       return "寝た";
+  //     case "wakeup":
+  //       return "起きた";
+  //   }
+  // };
 
   const handlePrev = () => {
     setDate(dayjs(date).add(-1, "d").toDate());
@@ -170,7 +171,7 @@ export default function Page() {
           onClose={() => setIsModalOpen(false)}
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
         >
-          <h2 className="text-center">{title()}</h2>
+          <h2 className="text-center">{checkType(action)}</h2>
           <input
             id="datetime"
             type="datetime-local"

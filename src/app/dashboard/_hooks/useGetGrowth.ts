@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import useSWR from "swr";
-import { UserContext } from "../../layout";
+import { UserContext } from "../layout";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting";
 

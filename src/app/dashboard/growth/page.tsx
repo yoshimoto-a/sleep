@@ -1,8 +1,8 @@
 "use client";
 import { useEffect } from "react";
+import { useGetGrowth } from "../_hooks/useGetGrowth";
 import { ColumnName } from "./_components/ColumnName";
 import { ToggleRow } from "./_components/ToggleRow";
-import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useToggle } from "./_hooks/useToggle";
 import { IsLoading } from "@/app/_components/isLoading";
 
