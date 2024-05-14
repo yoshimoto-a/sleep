@@ -1,51 +1,41 @@
 import { type NextRequest } from "next/server";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/postResponse";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { data, error } = await supabase.auth.getUser(token);
+  const { error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
 
   try {
     const body = await req.json();
-    const { name, birthday, expectedDateOfBirth, birthWeight, gender } = body;
-    const resp = await prisma.baby.create({
+    const { babyId, measurementDate, weight, createUser, changeUser } =
+      body.data;
+    const resp = await prisma.weight.create({
       data: {
-        name,
-        birthday,
-        expectedDateOfBirth,
-        birthWeight,
-        gender,
+        babyId,
+        measurementDate,
+        weight,
+        createUser,
+        changeUser,
       },
     });
-
-    //出生体重を計測日が誕生日で体重テーブルに登録する→動作確認未済
-    const user = await prisma.user.findUnique({
-      where: {
-        supabaseUserId: data.user.id,
-      },
-    });
-    if (!user) throw new Error("user is not found");
-    const weightResp = await prisma.weight.create({
-      data: {
-        babyId: resp.id,
-        measurementDate: expectedDateOfBirth,
-        weight: birthWeight,
-        createUser: user?.id,
-        changeUser: user?.id,
-      },
-    });
-
     return Response.json(<PostResponse>{
       status: 200,
       message: "success",
-      id: resp.id,
+      data: {
+        id: resp.id,
+        babyId: resp.babyId,
+        weight: resp.weight,
+        measurementDate: resp.measurementDate,
+        createUser: resp.createUser,
+        changeUser: resp.changeUser,
+      },
     });
   } catch (e) {
     if (e instanceof Error) {
@@ -67,29 +57,15 @@ export const GET = async (req: NextRequest) => {
         status: 400,
         error: "Failed to obtain Id",
       });
-    const getBaby = await prisma.baby.findUnique({
+    const getWeigth = await prisma.weight.findMany({
       where: {
-        id: parseInt(id),
+        babyId: parseInt(id),
       },
-      select: {
-        id: true,
-        name: true,
-        birthday: true,
-        expectedDateOfBirth: true,
-        birthWeight: true,
-        gender: true,
-        created: true,
-        updated: true,
+      orderBy: {
+        measurementDate: "asc",
       },
     });
-    if (getBaby) {
-      return Response.json(<IndexResponse>{ status: 200, data: getBaby });
-    } else {
-      return Response.json(<IndexResponse>{
-        status: 404,
-        error: "Requested record not found",
-      });
-    }
+    return Response.json(<IndexResponse>{ status: 200, data: getWeigth });
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
@@ -107,18 +83,15 @@ export const PUT = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { id } = body;
-    const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
-      body.data;
-    await prisma.baby.update({
+    const { measurementDate, weight, changeUser } = body.data;
+    await prisma.weight.update({
       where: {
         id,
       },
       data: {
-        name,
-        birthday,
-        expectedDateOfBirth,
-        birthWeight,
-        gender,
+        measurementDate,
+        weight,
+        changeUser,
       },
     });
     return Response.json(<ApiResponse>{
@@ -128,6 +101,32 @@ export const PUT = async (req: NextRequest) => {
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
+    }
+  }
+};
+
+export const DELETE = async (req: NextRequest) => {
+  const prisma = await buildPrisma();
+  const token = req.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error)
+    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
+  try {
+    const id = req.nextUrl.searchParams.get("id");
+    if (!id)
+      return Response.json(<IndexResponse>{
+        status: 400,
+        error: "Failed to obtain Id",
+      });
+    await prisma.weight.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    return Response.json(<IndexResponse>{ status: 200 });
+  } catch (e) {
+    if (e instanceof Error) {
+      return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
   }
 };

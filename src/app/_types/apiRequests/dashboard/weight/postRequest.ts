@@ -1,5 +1,3 @@
-import { ApiRequest } from "../../apiRequest";
-
 //体重テーブル
 export interface Weight {
   babyId: number;
@@ -8,8 +6,6 @@ export interface Weight {
   createUser: number;
   changeUser: number;
 }
-export interface PostRequests extends ApiRequest {
-  body: {
-    data: Weight;
-  };
+export interface PostRequests {
+  data: Weight;
 }

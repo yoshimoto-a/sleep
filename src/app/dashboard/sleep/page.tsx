@@ -10,6 +10,7 @@ import { Button } from "./_component/button";
 import { Header } from "./_component/header";
 import { MainTime } from "./_component/mainTime";
 import { RowItem } from "./_component/rowItem";
+import { IsLoading } from "@/app/_components/isLoading";
 import { CustomModal } from "@/app/_components/modal";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
@@ -57,7 +58,7 @@ export default function Page() {
     getRecords();
   }, [session, token, date, getRecords]);
 
-  if (isLoding || isLoading || isBabyLoading) return <div>Loading</div>;
+  if (isLoding || isLoading || isBabyLoading) return <IsLoading></IsLoading>;
   if (!session || !token) {
     router.push("/login/");
     return null;

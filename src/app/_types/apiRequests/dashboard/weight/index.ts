@@ -9,7 +9,7 @@ export interface Weight {
 
 export interface IndexSuccessResponse {
   status: number;
-  data: Weight;
+  data: Weight[];
 }
 
 export interface IndexErrorResponse {

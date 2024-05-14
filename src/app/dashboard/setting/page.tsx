@@ -30,7 +30,7 @@ export default function Page() {
   useEffect(() => {
     const fetcher = async () => {
       try {
-        if (token && babyId !== 0) {
+        if (token && babyId && babyId !== 0) {
           const data = await GetBaby(token, babyId);
           if ("data" in data && data.data !== null) {
             const { data: babyData } = data;
@@ -62,7 +62,7 @@ export default function Page() {
           birthWeight: parseInt(birthWeight),
           gender,
         };
-        await PutBaby(token, babyId, body);
+        if (babyId) await PutBaby(token, babyId, body);
         router.replace("/dashboard/sleep/");
       } catch (e) {
         alert("更新に失敗しました");
@@ -84,6 +84,7 @@ export default function Page() {
               type="text"
               value={babyName}
               placeholder=""
+              inputMode="text"
               onChange={value => setBabyName(value)}
             />
           </div>
@@ -94,6 +95,7 @@ export default function Page() {
               type="date"
               value={birthday}
               placeholder=""
+              inputMode="numeric"
               onChange={value => setBirthday(value)}
             />
           </div>
@@ -104,6 +106,7 @@ export default function Page() {
               type="date"
               value={expectedDateOfBirth}
               placeholder=""
+              inputMode="numeric"
               onChange={value => setExpectedDateOfBirth(value)}
             />
           </div>
@@ -111,9 +114,10 @@ export default function Page() {
           <div className="mb-4">
             <Input
               id="birthWeight"
-              type="number"
+              type="text"
               value={birthWeight}
               placeholder=""
+              inputMode="numeric"
               onChange={value => setBirthWeight(value)}
             />
           </div>

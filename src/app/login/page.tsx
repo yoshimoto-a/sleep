@@ -49,7 +49,6 @@ export default function Page() {
           }
           router.replace("/dashboard/sleep");
         } catch (e) {
-          console.log(e);
           alert("ログインに失敗しました");
         }
       }

@@ -25,7 +25,6 @@ export const POST = async (req: NextRequest) => {
           redirectTo: "http://localhost:3000/resetPassword/sendEmail/",
         }
       );
-      console.log(data);
       if (error) {
         throw error;
       } else {
