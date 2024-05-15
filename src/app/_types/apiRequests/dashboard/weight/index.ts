@@ -8,7 +8,7 @@ export interface Weight {
 }
 
 export interface IndexSuccessResponse {
-  status: number;
+  status: 200;
   data: Weight[];
 }
 
@@ -17,4 +17,4 @@ export interface IndexErrorResponse {
   error: string;
 }
 
-export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
+export type IndexResponse = IndexSuccessResponse;

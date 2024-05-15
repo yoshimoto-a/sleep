@@ -1,7 +1,6 @@
 "use client";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Footer } from "../_components/footer";
 import { Button } from "./_components/Button";
 import { EditButton } from "./_components/EditButton";
@@ -22,10 +21,8 @@ export default function Page() {
   const { data, error, isLoading, mutate, babyId, dbUserId } = useGetWeight();
   const router = useRouter();
   const { post } = useApi();
-  const noData = data?.status !== 200 || !("data" in data) || !data.data;
-  useEffect(() => {
-    if (noData) return;
-  }, [isLoading, data]);
+  const noData = !data?.data
+
   if (isLoading) return <IsLoading></IsLoading>;
   if (error) return <div>データの取得に失敗しました</div>;
 

@@ -18,6 +18,7 @@ export const useGetWeight = () => {
     };
     const resp = await fetch(`/api/dashboard/weight?id=${babyId}`, prams);
     const data: IndexResponse = await resp.json();
+    if (data.status !== 200) throw new Error("データの取得に失敗しました");
     return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
