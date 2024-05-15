@@ -13,9 +13,7 @@ interface PropsItem {
 export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
-  const { currentTime, wakeWindowsData, babyData } =
-    useNextSleepTime(lastestData);
-  console.log(currentTime, wakeWindowsData, babyData);
+  const isLoading = useNextSleepTime(lastestData);
   useEffect(() => {
     let time: string | null = null;
     if (title === "活動時間") {
@@ -59,6 +57,8 @@ export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
     }
     setElapsedTime(time);
   }, [title, lastestData]);
+
+  if (isLoading) return <div>計算中</div>;
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
       <span className="text-sm">{action}</span>

@@ -48,17 +48,18 @@ export const useGetBaby = (): {
   const { token } = useSupabaseSession();
 
   const fetcher = async () => {
-    if (!token || !babyId) return;
-    const prams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    const resp = await fetch(`/api/dashboard/setting?id=${babyId}`, prams);
-    const data: IndexResponse = await resp.json();
-    return data;
+    if (token && babyId) {
+      const prams = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      const resp = await fetch(`/api/dashboard/setting?id=${babyId}`, prams);
+      const data: IndexResponse = await resp.json();
+      return data;
+    }
   };
   const { data, error, isLoading } = useSWR(
     `/api/dashboard/setting?id=${babyId}`,

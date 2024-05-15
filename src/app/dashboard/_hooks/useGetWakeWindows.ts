@@ -12,20 +12,22 @@ export const useGetWakeWindows = (): {
 } => {
   const [, babyId] = useContext(UserContext);
   const { token } = useSupabaseSession();
-
   const fetcher = async () => {
-    if (!token || !babyId) return;
-    const prams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    const resp = await fetch(`/api/dashboard/wakeWindows?id=${babyId}`, prams);
-    const data: IndexResponse = await resp.json();
-
-    return data;
+    if (token && babyId) {
+      const prams = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      const resp = await fetch(
+        `/api/dashboard/wakeWindows?id=${babyId}`,
+        prams
+      );
+      const data: IndexResponse = await resp.json();
+      return data;
+    }
   };
   const { data, error, isLoading, mutate } = useSWR(
     `/api/dashboard/wakeWindows?id=${babyId}`,

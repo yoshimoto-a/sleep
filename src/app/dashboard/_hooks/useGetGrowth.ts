@@ -13,23 +13,23 @@ export const useGetGrowth = (): {
   const { token } = useSupabaseSession();
 
   const fetcher = async () => {
-    if (!token || !babyId) return;
-    const prams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    };
-    const resp = await fetch(`/api/dashboard/growth?id=${babyId}`, prams);
-    const data: IndexResponse = await resp.json();
+    if (token && babyId) {
+      const prams = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      };
+      const resp = await fetch(`/api/dashboard/growth?id=${babyId}`, prams);
+      const data: IndexResponse = await resp.json();
 
-    return data;
+      return data;
+    }
   };
   const { data, error, isLoading } = useSWR(
     `/api/dashboard/growth?id=${babyId}`,
     fetcher
   );
-
   return { isLoading, data, error };
 };

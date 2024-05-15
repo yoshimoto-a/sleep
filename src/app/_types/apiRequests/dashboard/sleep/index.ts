@@ -38,6 +38,17 @@ export interface SleepingSituation {
   created: Date;
   updated: Date;
 }
+export interface SleepingSituationComp {
+  id: number;
+  babyId: number;
+  bedTime: Date | null;
+  sleep: Date;
+  wakeup: Date;
+  createUser: number;
+  changeUser: number;
+  created: Date;
+  updated: Date;
+}
 
 export interface FormatedData {
   id: number;
