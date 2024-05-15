@@ -61,7 +61,7 @@ export const useGetBaby = (): {
       return data;
     }
   };
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, isValidating, mutate } = useSWR(
     `/api/dashboard/setting?id=${babyId}`,
     fetcher
   );
