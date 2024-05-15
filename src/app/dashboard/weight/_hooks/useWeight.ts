@@ -47,7 +47,7 @@ export const useWeight = (
         "/api/dashboard/weight",
         body
       );
-      mutate(`/api/dashboard/weight?id=${babyId}`, body);
+      mutate();
     } catch (e) {
       alert("更新に失敗しました");
     }
