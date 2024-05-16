@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useNextSleepTime } from "../_hooks/useNextSleepTime";
+import { useGetNextSleepTime } from "../_hooks/useGetNextSleepTime";
 import { FormatDuration } from "../_utils/formatDuration";
 import { FindLatestResponse } from "@/app/api/dashboard/sleep/_utils/findLatest";
 
@@ -12,8 +12,10 @@ interface PropsItem {
 
 export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
   const [action, setAction] = useState<string>("");
-  const [elapsedTime, setElapsedTime] = useState<string | null>(null);
-  const isLoading = useNextSleepTime(lastestData);
+  const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
+    null
+  );
+  const { isLoading, data, error, mutate } = useGetNextSleepTime();
   useEffect(() => {
     let time: string | null = null;
     if (title === "活動時間") {
@@ -58,7 +60,10 @@ export const MainTime: React.FC<PropsItem> = ({ title, lastestData }) => {
     setElapsedTime(time);
   }, [title, lastestData]);
 
-  if (isLoading) return <div>計算中</div>;
+  if (isLoading) return <div>読込み中...</div>;
+  if (error) return <div>エラー発生</div>;
+  setElapsedTime(data && data.data);
+
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
       <span className="text-sm">{action}</span>

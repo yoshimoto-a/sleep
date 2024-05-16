@@ -4,12 +4,7 @@ import { UserContext } from "../layout";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 
-export const useGetWakeWindows = (): {
-  isLoading: boolean;
-  data: IndexResponse | undefined;
-  error: any;
-  mutate: any;
-} => {
+export const useGetWakeWindows = () => {
   const [, babyId] = useContext(UserContext);
   const { token } = useSupabaseSession();
   const fetcher = async () => {

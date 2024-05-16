@@ -51,7 +51,6 @@ export const useWeight = (
     } catch (e) {
       alert("更新に失敗しました");
     }
-    //モーダルなんで勝手に閉じる？？？閉じていいけどなんで？
   };
   const del = async () => {
     try {
