@@ -1,7 +1,6 @@
 import { Milestone } from "@prisma/client";
 import { type NextRequest } from "next/server";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/login";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 
@@ -94,7 +93,7 @@ export const GET = async (req: NextRequest) => {
   try {
     const supabaseUserId = req.nextUrl.searchParams.get("supabaseUserId");
     if (!supabaseUserId)
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 400,
         error: "Failed to obtain supabaseUserId",
       });
@@ -103,10 +102,10 @@ export const GET = async (req: NextRequest) => {
         supabaseUserId,
       },
     });
-    return Response.json(<IndexResponse>{ status: 200, data: getUser });
+    return Response.json({ status: 200, data: getUser });
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json(<IndexResponse>{ status: 400, error: e.message });
+      return Response.json({ status: 400, error: e.message });
     }
   }
 };
@@ -121,7 +120,7 @@ export const PUT = async (req: NextRequest) => {
     const body = await req.json();
     const { id, babyId } = body;
     if (!id)
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 400,
         error: "Failed to obtain id",
       });

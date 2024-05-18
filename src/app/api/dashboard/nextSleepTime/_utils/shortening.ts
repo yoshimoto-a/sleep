@@ -35,6 +35,7 @@ export const shortening = (
     }
   }
   switch (ageCategory) {
+    //低月齢は別計算
     case "isAge0to5Months":
       break;
     case "isAge6and7Months":

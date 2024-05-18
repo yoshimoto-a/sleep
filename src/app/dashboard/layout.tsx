@@ -24,17 +24,16 @@ export default function Layout({
     const fetcher = async () => {
       try {
         //ユーザー情報の取得
-        if (token && session) {
-          const { id, babyId } = await getLoginUser(token, session.user.id);
-          if (id && babyId) {
-            setDbUserId(id);
-            setBabyId(babyId);
-            const data = await GetBaby(token, babyId);
-            if ("data" in data && data.data !== null) {
-              const { data: babyData } = data;
-              if (babyData.created === babyData.updated)
-                router.replace("../dashboard/setting");
-            }
+        if (!token || !session) return;
+        const { id, babyId } = await getLoginUser(token, session.user.id);
+        if (id && babyId) {
+          setDbUserId(id);
+          setBabyId(babyId);
+          const data = await GetBaby(token, babyId);
+          if ("data" in data && data.data !== null) {
+            const { data: babyData } = data;
+            if (babyData.created === babyData.updated)
+              router.replace("../dashboard/setting");
           }
         }
       } catch (e) {
@@ -50,3 +49,27 @@ export default function Layout({
     </UserContext.Provider>
   );
 }
+
+/**const router = useRouter();
+  // const { data: userData, error, isLoading } = useGetLoginUser();
+  const { data, error, isLoading } = useGetBaby();
+  const { session, isLoding } = useSupabaseSession();
+  // const [dbUserId, setDbUserId] = useState<number | null>(null);
+  // const [babyId, setBabyId] = useState<number | null>(null);
+
+  if (isLoading || isLoding) return <IsLoading></IsLoading>;
+  if (!session) {
+    router.replace("../login");
+  }
+
+  if (error) return <div>エラー発生</div>;
+  if (!data || data.status == 200 || !("data" in data))
+    return <div>データなし</div>;
+  if (data.data.created === data.data.updated)
+    router.replace("../dashboard/setting");
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  ); */

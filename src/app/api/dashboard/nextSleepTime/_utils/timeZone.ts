@@ -4,20 +4,20 @@ export const timeZone = (time: dayjs.Dayjs) => {
   console.log("時間帯" + time.format("HH:mm"), time.hour());
   //各活動時間で算出した時刻がどの時間帯に該当するか確認する
   const timeRanges = {
-    earlyMorning: { start: 4, end: 7 },
+    wakeupTime: { start: 6, end: 8 },
     morning: { start: 8, end: 10 },
     noon: { start: 11, end: 14 },
     evening: { start: 15, end: 17 },
     night: [
-      { start: 19, end: 24 },
-      { start: 0, end: 3 },
+      { start: 18, end: 24 },
+      { start: 0, end: 5 },
     ],
   };
   if (
-    time.hour() >= timeRanges.earlyMorning.start &&
-    time.hour() <= timeRanges.earlyMorning.end
+    time.hour() >= timeRanges.wakeupTime.start &&
+    time.hour() <= timeRanges.wakeupTime.end
   ) {
-    return "earlyMorning";
+    return "wakeupTime";
   }
   if (
     time.hour() >= timeRanges.morning.start &&

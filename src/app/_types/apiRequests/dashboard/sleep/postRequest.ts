@@ -1,9 +1,9 @@
-import { ApiRequest } from "../../apiRequest";
-
 /**POSTする時点ではwakeupは必ずnull
  * bedTimeは記録しないことも想定
  *bedTimeかsleepが登録されるタイミングでPOST
  */
+
+type Action = "bedTime" | "sleep" | "wakeup";
 export interface SleepingSituation {
   babyId: number;
   bedTime: Date | null;
@@ -11,8 +11,6 @@ export interface SleepingSituation {
   wakeup: null;
   createUser: number;
 }
-export interface PostRequests extends ApiRequest {
-  body: {
-    data: SleepingSituation;
-  };
+export interface PostRequests {
+  data: SleepingSituation;
 }

@@ -38,7 +38,11 @@ export const calculate = (
   if (correctedMonthAge <= 5 && sleepLength >= 45)
     return wakeupTime.add(45, "minutes").format("HH時mm分");
 
-  //6ヶ月以上なら活動時間から短縮する時間を計算する
+  //6ヶ月以上
+  //そもそも夜間睡眠の時間ならすぐ寝かせたい
+  if (timeZone(wakeupTime) === "night") return "即時";
+
+  //活動時間から短縮する時間を計算する
   const shorteningTime =
     monthAge >= 6
       ? shortening(monthAge, sleepLength, practicing, acquisition, walking)
@@ -53,9 +57,7 @@ export const calculate = (
   //時間帯を問わず活動時間が同じで登録されてるパターン
   if (all != 0 && morning === 0 && noon === 0 && evening === 0) {
     const basicTime = addWakeWindows(all - shorteningTime);
-    if (timeZone(basicTime) === "earlyMorning") return "8時00分";
-    if (timeZone(basicTime) === "night")
-      return dayjs(new Date()).format("HH時mm分");
+    if (timeZone(basicTime) === "wakeupTime") return "8時00分";
     return basicTime.format("HH時mm分");
   }
 
@@ -65,18 +67,19 @@ export const calculate = (
   const eveningTime = addWakeWindows(evening - shorteningTime);
 
   //例えば朝の活動時間で計算して朝が入っていたらその時間を返す
-  console.log("タイムゾーン" + timeZone(eveningTime));
+  console.log("タイムゾーン" + timeZone(noonTime));
   if (timeZone(morningTime) === "morning")
     return morningTime.format("HH時mm分");
   if (timeZone(noonTime) === "noon") return noonTime.format("HH時mm分");
   if (timeZone(eveningTime) === "evening")
     return eveningTime.format("HH時mm分");
+  if (timeZone(eveningTime) === "night") return eveningTime.format("HH時mm分");
 
-  //夜間覚醒→ホントお疲れさまです活動時間待たず即寝させる
-  //早朝起き→8時返す
-  if (timeZone(eveningTime) === "night")
-    return dayjs(new Date()).format("HH時mm分");
-  if (timeZone(morningTime) === "earlyMorning") return "8時00分";
+  if (
+    timeZone(wakeupTime) === "night" &&
+    timeZone(morningTime) === "wakeupTime"
+  )
+    return "8時00分";
 
   console.log(wakeupTime.format("YYYY/MM/DD HH:mm"));
   return "ここまで届かないはず";

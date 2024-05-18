@@ -52,6 +52,7 @@ export interface SleepingSituationComp {
 
 export interface FormatedData {
   id: number;
+  datetime: Date;
   HourAndMinutes: string; //時刻
   action: string;
   MinutesOnly: string; //時間

@@ -39,27 +39,29 @@ export const useBaby = ({ babyId }: { babyId: number | null }) => {
   return { name, birthday, weight, baby, isLoading };
 };
 
-export const useGetBaby = (): {
-  isLoading: boolean;
-  data: IndexResponse | undefined;
-  error: any;
-} => {
+export const useGetBaby = () => {
   const [, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
 
   const fetcher = async () => {
-    if (token && babyId) {
-      const prams = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      };
-      const resp = await fetch(`/api/dashboard/setting?id=${babyId}`, prams);
-      const data: IndexResponse = await resp.json();
-      return data;
+    if (isLoding) return;
+    if (!token || !babyId) {
+      console.log(isLoading, token, babyId);
+      throw new Error("token or babyId is undefinde");
     }
+    const prams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    };
+    const resp = await fetch(`/api/dashboard/setting?id=${babyId}`, prams);
+    const data: IndexResponse = await resp.json();
+    if (data.status !== 200) {
+      throw new Error("Failed to get data");
+    }
+    return data;
   };
   const { data, error, isLoading } = useSWR(
     `/api/dashboard/setting?id=${babyId}`,
