@@ -3,7 +3,8 @@ import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/login";
 
 export const useGetLoginUser = () => {
-  const { token, session } = useSupabaseSession();
+  const { token, session, isLoding } = useSupabaseSession();
+  const shouldFetchData = !isLoding && token && session;
   const fetcher = async () => {
     if (!token || !session?.user.id) return;
     const prams = {
@@ -24,7 +25,7 @@ export const useGetLoginUser = () => {
     return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/login?supabaseUserId=${session?.user.id}`,
+    shouldFetchData ? `/api/login?supabaseUserId=${session?.user.id}` : null,
     fetcher
   );
   return { data, error, isLoading, mutate };

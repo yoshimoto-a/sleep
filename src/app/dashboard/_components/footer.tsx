@@ -14,7 +14,7 @@ export const Footer = () => {
         <MenuItem
           icon="/_footerIcon/weight.png"
           text="体重"
-          link="/dashboard/sleep/weight"
+          link="/dashboard/weight"
         />
         <MenuItem
           icon="/_footerIcon/home.png"
@@ -23,8 +23,8 @@ export const Footer = () => {
         />
         <MenuItem
           icon="/_footerIcon/setting.png"
-          text="設定"
-          link="/dashboard/"
+          text="活動時間"
+          link="/dashboard/wakeWindows"
         />
         <MenuItem icon="/_footerIcon/menu.png" text="メニュー" link="./menu" />
       </div>

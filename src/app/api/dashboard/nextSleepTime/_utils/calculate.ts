@@ -67,7 +67,7 @@ export const calculate = (
   const eveningTime = addWakeWindows(evening - shorteningTime);
 
   //例えば朝の活動時間で計算して朝が入っていたらその時間を返す
-  console.log("タイムゾーン" + timeZone(noonTime));
+  console.log("タイムゾーン" + timeZone(morningTime));
   if (timeZone(morningTime) === "morning")
     return morningTime.format("HH時mm分");
   if (timeZone(noonTime) === "noon") return noonTime.format("HH時mm分");
@@ -81,6 +81,6 @@ export const calculate = (
   )
     return "8時00分";
 
-  console.log(wakeupTime.format("YYYY/MM/DD HH:mm"));
+  console.log("起床時刻" + wakeupTime.format("YYYY/MM/DD HH:mm"));
   return "ここまで届かないはず";
 };

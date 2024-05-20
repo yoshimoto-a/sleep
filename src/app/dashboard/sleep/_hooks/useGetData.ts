@@ -1,18 +1,12 @@
-import { useContext } from "react";
 import useSWR from "swr";
-import { UserContext } from "../../layout";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 
 export const useGetData = (date: Date) => {
   const { token, isLoding } = useSupabaseSession();
-  const [, babyId] = useContext(UserContext);
-
+  const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
-    if (isLoding) return;
-    if (!token || !babyId) {
-      throw new Error("token or babyId not found");
-    }
+    if (!token) return;
     const resp = await fetch(`/api/dashboard?date=${date}`, {
       method: "GET",
       headers: {
@@ -27,7 +21,7 @@ export const useGetData = (date: Date) => {
     return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/dashboard?date=${date}`,
+    shouldFetchData ? `/api/dashboard?date=${date}` : null,
     fetcher
   );
 

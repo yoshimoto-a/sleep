@@ -6,7 +6,8 @@ import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 
 export const useGetWakeWindows = () => {
   const [, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
+  const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
     if (token && babyId) {
       const prams = {
@@ -25,7 +26,7 @@ export const useGetWakeWindows = () => {
     }
   };
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/dashboard/wakeWindows?id=${babyId}`,
+    shouldFetchData ? `/api/dashboard/wakeWindows?id=${babyId}` : null,
     fetcher
   );
 

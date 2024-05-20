@@ -12,14 +12,12 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
   const { isLoading, data, error } = useGetNextSleepTime();
   useEffect(() => {
-    if (isLoading) return;
     if (data) {
       setElapsedTime(data.data);
     }
   }, [data, isLoading]);
 
   useEffect(() => {
-    if (isLoading) return;
     if (SleepingSituationData) {
       switch (SleepingSituationData.latestData.action) {
         case "起きた":
@@ -31,7 +29,8 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     }
   }, [SleepingSituationData, isLoading]);
 
-  if (isLoading || !data) return <div>読込み中...</div>;
+  console.log(data, error);
+  if (isLoading) return <div>読込み中...</div>;
   if (error) return <div>エラー発生</div>;
 
   return (

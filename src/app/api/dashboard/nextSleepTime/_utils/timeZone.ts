@@ -4,7 +4,7 @@ export const timeZone = (time: dayjs.Dayjs) => {
   console.log("時間帯" + time.format("HH:mm"), time.hour());
   //各活動時間で算出した時刻がどの時間帯に該当するか確認する
   const timeRanges = {
-    wakeupTime: { start: 6, end: 8 },
+    wakeupTime: { start: 6, end: 7 },
     morning: { start: 8, end: 10 },
     noon: { start: 11, end: 14 },
     evening: { start: 15, end: 17 },

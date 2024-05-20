@@ -13,9 +13,7 @@ import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const [date, setDate] = useState(new Date());
   const { isLoading, data, error, mutate } = useGetData(date);
-  console.log(isLoading, data, error);
-  //ロード中なのに失敗表示されることあるから条件式に(!data && !error)追加
-  if (isLoading || (!data && !error)) return <IsLoading></IsLoading>;
+  if (isLoading) return <IsLoading></IsLoading>;
   if (error) return <div>データ取得失敗</div>;
 
   const handlePrev = () => {

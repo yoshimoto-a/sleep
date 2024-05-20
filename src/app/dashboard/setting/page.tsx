@@ -7,18 +7,19 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useContext } from "react";
+import { useGetBaby } from "../_hooks/useBaby";
 import { UserContext } from "../layout";
-import { GetBaby } from "./_utils/getBaby";
 import { PutBaby } from "./_utils/putBaby";
-import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
 import { InputRadio } from "@/app/_components/inputRadio";
+import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 
 export default function Page() {
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
+  const { data, isLoading, error } = useGetBaby();
   const [babyName, setBabyName] = useState("");
   const [birthday, setBirthday] = useState("");
   const [expectedDateOfBirth, setExpectedDateOfBirth] = useState("");
@@ -28,27 +29,20 @@ export default function Page() {
   const router = useRouter();
   //初期設定
   useEffect(() => {
-    const fetcher = async () => {
-      try {
-        if (token && babyId && babyId !== 0) {
-          const data = await GetBaby(token, babyId);
-          if ("data" in data && data.data !== null) {
-            const { data: babyData } = data;
-            setBabyName(String(babyData.name));
-            setBirthWeight(String(babyData.birthWeight));
-            setBirthday(String(dayjs(babyData.birthday).format("YYYY-MM-DD")));
-            setExpectedDateOfBirth(
-              String(dayjs(babyData.expectedDateOfBirth).format("YYYY-MM-DD"))
-            );
-            setGender(babyData.gender);
-          }
-        }
-      } catch (e) {
-        alert("保存情報の取得に失敗しました");
-      }
-    };
-    fetcher();
-  }, [token, babyId]);
+    if (data && "data" in data) {
+      const { data: babyData } = data;
+      setBabyName(babyData.name);
+      setBirthWeight(babyData.birthWeight.toString());
+      setBirthday(dayjs(babyData.birthday).format("YYYY-MM-DD"));
+      setExpectedDateOfBirth(
+        String(dayjs(babyData.expectedDateOfBirth).format("YYYY-MM-DD"))
+      );
+      setGender(babyData.gender);
+    }
+  }, [isLoding, data]);
+
+  if (isLoading) return <IsLoading></IsLoading>;
+  if (error) return <div>エラー発生</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,7 +65,6 @@ export default function Page() {
   };
   return (
     <>
-      <Header />
       <div className="absolute inset-0 flex items-center justify-center">
         <form
           onSubmit={handleSubmit}

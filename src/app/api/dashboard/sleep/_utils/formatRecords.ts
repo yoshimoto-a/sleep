@@ -143,12 +143,12 @@ export const formatRecords = (
   ) {
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     let wakeup: Date;
-    if (mappedCompletedRecords.length > 1) {
+    if (mappedCompletedRecords.length >= 1) {
       wakeup = mappedCompletedRecords[mappedCompletedRecords.length - 1].wakeup;
     } else {
       wakeup = yesterdayRecord[0].wakeup;
     }
-
+    console.log(wakeup);
     if (bedTime && !sleep) {
       formatedRecords.push(
         createNewData(
@@ -191,7 +191,7 @@ export const formatRecords = (
     const { wakeup: yesterdayWakeup } = containYesterdayRecord[0];
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     let wakeup: Date;
-    if (mappedCompletedRecords.length > 1) {
+    if (mappedCompletedRecords.length >= 1) {
       wakeup = mappedCompletedRecords[mappedCompletedRecords.length - 1].wakeup;
     } else {
       yesterdayWakeup ? (wakeup = yesterdayWakeup) : (wakeup = new Date());

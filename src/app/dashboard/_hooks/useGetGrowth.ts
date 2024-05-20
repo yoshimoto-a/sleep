@@ -10,8 +10,8 @@ export const useGetGrowth = (): {
   error: any;
 } => {
   const [, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
-
+  const { token, isLoding } = useSupabaseSession();
+  const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
     if (token && babyId) {
       const prams = {
@@ -28,7 +28,7 @@ export const useGetGrowth = (): {
     }
   };
   const { data, error, isLoading } = useSWR(
-    `/api/dashboard/growth?id=${babyId}`,
+    shouldFetchData ? `/api/dashboard/growth?id=${babyId}` : null,
     fetcher
   );
   return { isLoading, data, error };

@@ -42,13 +42,9 @@ export const useBaby = ({ babyId }: { babyId: number | null }) => {
 export const useGetBaby = () => {
   const [, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
-
+  const shouldFetchData = !isLoding && token && babyId;
   const fetcher = async () => {
-    if (isLoding) return;
-    if (!token || !babyId) {
-      console.log(isLoading, token, babyId);
-      throw new Error("token or babyId is undefinde");
-    }
+    if (!token) return;
     const prams = {
       method: "GET",
       headers: {
@@ -64,7 +60,7 @@ export const useGetBaby = () => {
     return data;
   };
   const { data, error, isLoading } = useSWR(
-    `/api/dashboard/setting?id=${babyId}`,
+    shouldFetchData ? `/api/dashboard/setting?id=${babyId}` : null,
     fetcher
   );
 

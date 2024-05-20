@@ -6,7 +6,8 @@ import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
 
 export const useGetWeight = () => {
   const [dbUserId, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
+  const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
     if (!token || !babyId) return;
     const prams = {
@@ -21,7 +22,7 @@ export const useGetWeight = () => {
     return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/dashboard/weight?id=${babyId}`,
+    shouldFetchData ? `/api/dashboard/weight?id=${babyId}` : null,
     fetcher
   );
 

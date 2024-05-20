@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
 import { UserContext } from "../layout";
+import { Guideline } from "./_components/guideline";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
 import { SubmitButton } from "@/app/_components/button";
@@ -24,7 +25,7 @@ export default function Page() {
   const { data: getData, error, isLoading, mutate } = useGetWakeWindows();
   const [data, setData] = useState<WakeWindowsData | null>(null);
   const [dbUserId, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
   const fetcher = useApi();
   const {
     basicHour,
@@ -57,7 +58,6 @@ export default function Page() {
   } = useValidation();
 
   useEffect(() => {
-    if (isLoading) return;
     if (
       getData &&
       "data" in getData &&
@@ -67,8 +67,8 @@ export default function Page() {
       setData(getData.data);
       setting(getData.data);
     }
-  }, [isLoading, getData, setting]);
-  if (isLoading) return <IsLoading></IsLoading>;
+  }, [isLoading, getData, setting, isLoding]);
+  if (isLoading || isLoding) return <IsLoading></IsLoading>;
   if (error) return <div>データの取得に失敗しました</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -190,7 +190,8 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="text-center text-3xl font-bold mt-6">詳細設定</h1>
+      <h1 className="text-center text-3xl font-bold mt-6">活動時間設定</h1>
+      <Guideline></Guideline>
       <form
         onSubmit={handleSubmit}
         className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 my-4"

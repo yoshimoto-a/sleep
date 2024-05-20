@@ -10,14 +10,14 @@ interface ItemProps {
 export const RowItem: React.FC<ItemProps> = ({ icon, title, link }) => {
   return (
     <div className="border-b w-4/5 mx-auto pt-5">
-      <Link href={link} className="flex justify-start items-center">
+      <Link href={link} className="flex items-center space-x-4">
         <Image
           src={icon}
           alt="menu icon"
           height={0}
           width={0}
           style={{ width: "30px", height: "auto" }}
-          className="mx-auto mb-1 mt-1 mx-5"
+          className="p-2"
         />
         <span className="text-lg">{title}</span>
       </Link>

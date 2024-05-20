@@ -17,7 +17,7 @@ export default function Layout({
   children: number;
 }>) {
   const router = useRouter();
-  const { token, session } = useSupabaseSession();
+  const { token, session, isLoding } = useSupabaseSession();
   const [dbUserId, setDbUserId] = useState<number | null>(null);
   const [babyId, setBabyId] = useState<number | null>(null);
   useEffect(() => {
@@ -40,8 +40,8 @@ export default function Layout({
         alert("ユーザー情報の取得に失敗しました。");
       }
     };
-    fetcher();
-  }, [token, session, router]);
+    !isLoding ? fetcher() : null;
+  }, [token, session, router, isLoding]);
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}

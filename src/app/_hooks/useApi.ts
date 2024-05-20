@@ -80,7 +80,10 @@ export const useApi = () => {
     }
   };
 
-  const del = async <RequestType, ResponseType>(endpoint: string) => {
+  const del = async <RequestType, ResponseType>(
+    endpoint: string,
+    payload: RequestType
+  ) => {
     try {
       const response = await fetch(endpoint, {
         method: "DELETE",
@@ -90,11 +93,12 @@ export const useApi = () => {
             await supabase.auth.getSession()
           ).data.session?.access_token!,
         },
+        body: JSON.stringify(payload),
       });
 
       if (response.status !== 200) throw new Error("削除に失敗しました。");
 
-      const data = await response.json();
+      const data: ResponseType = await response.json();
 
       return data;
     } catch (error) {
