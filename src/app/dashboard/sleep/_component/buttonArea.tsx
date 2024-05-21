@@ -1,50 +1,29 @@
-import dayjs from "dayjs";
-import { useContext } from "react";
 import { useState } from "react";
-import { UserContext } from "../../layout";
 import { Action } from "../_types/action";
-import { checkType } from "../_utils/checkType";
+import { InputAcionModal } from "./InputActionModal";
+import { InputAllModal } from "./InputAllModal";
 import { Button } from "./button";
 import { CustomModal } from "@/app/_components/modal";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
 
 interface Props {
   mutate: any;
 }
 export const ButtonArea: React.FC<Props> = ({ mutate }) => {
-  const { token } = useSupabaseSession();
-  const [dbUserId, babyId] = useContext(UserContext);
+  //都度入力用のステート
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [action, setAction] = useState<Action>("sleep");
   const [datetime, setDatetime] = useState(new Date());
+
   const handleClick = async (action: Action) => {
     setDatetime(new Date());
     setAction(action);
     setIsModalOpen(true);
   };
-  const modalClose = () => {
-    setIsModalOpen(false);
-  };
-  const saveValue = async () => {
-    modalClose();
-    if (!token) return;
-    const resp = await fetch(`/api/dashboard/${action}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        babyId,
-        [action]: datetime,
-        createUser: dbUserId,
-      }),
-    });
-    const data: PostResponse = await resp.json();
-    data.status !== 200
-      ? alert(`登録できませんでした。${data.message}`)
-      : mutate();
+  //まとめて入力する画面
+  const [isAllModalOpen, setIsAllModalOpen] = useState(false);
+
+  const handleClickAll = () => {
+    setIsAllModalOpen(true);
   };
   return (
     <>
@@ -67,34 +46,35 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
           action="wakeup"
           onclick={() => handleClick("wakeup")}
         ></Button>
+        <Button
+          icon="/_buttonIcon/wakeUp.png"
+          text="一括登録"
+          action="wakeup"
+          onclick={handleClickAll}
+        ></Button>
       </div>
       <CustomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
       >
-        <h2 className="text-center">{checkType(action)}</h2>
-        <input
-          id="datetime"
-          type="datetime-local"
-          defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
-          className="block p-2 m-5 border"
-          onChange={e => setDatetime(new Date(e.target.value))}
-        />
-        <div className="w-full flex justify-between">
-          <button
-            onClick={modalClose}
-            className="w-2/5 rounded bg-gray-300 px-4 py-2"
-          >
-            閉じる
-          </button>
-          <button
-            onClick={saveValue}
-            className="w-2/5 rounded bg-blue-500 px-4 py-2"
-          >
-            保存
-          </button>
-        </div>
+        <InputAcionModal
+          mutate={mutate}
+          action={action}
+          datetime={datetime}
+          setIsModalOpen={setIsModalOpen}
+        ></InputAcionModal>
+      </CustomModal>
+      <CustomModal
+        isOpen={isAllModalOpen}
+        onClose={() => setIsAllModalOpen(false)}
+        className=""
+      >
+        <InputAllModal
+          setAllIsModalOpen={setIsAllModalOpen}
+          // allDatetime={allDatetime}
+          mutate={mutate}
+        ></InputAllModal>
       </CustomModal>
     </>
   );

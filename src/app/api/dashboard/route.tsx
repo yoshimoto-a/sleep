@@ -43,6 +43,8 @@ export const GET = async (req: NextRequest) => {
     //検索対象の日付を取得する
     const params = req.nextUrl.searchParams;
     const date = params.get("date");
+    if (!date)
+      return Response.json({ status: 401, message: "date is undefined" });
     const startOfDay = dayjs.tz(date, "Asia/Tokyo").startOf("day").toDate();
     const endOfDay = dayjs.tz(date, "Asia/Tokyo").endOf("day").toDate();
 
@@ -191,6 +193,7 @@ export const GET = async (req: NextRequest) => {
           },
         ],
       },
+      orderBy: { wakeup: "desc" },
     });
     const mappedContainTodayRecords: CompletedData[] = containTodayRecords.map(
       record => FormatNotContainNull(record)
@@ -280,7 +283,6 @@ export const GET = async (req: NextRequest) => {
     });
     const mappedContainYesterdayRecord: ContainNull[] =
       containYesterdayRecord.map(record => FormatContainNull(record));
-    //console.log("ok" + containYesterdayRecord[0].wakeup);
 
     //必要な時に備えて翌日に寝たか起きたレコードを取得しておく
     const startOfTomorrow = dayjs(startOfDay)
@@ -345,6 +347,7 @@ export const GET = async (req: NextRequest) => {
       containTomorrowRecord.map(record => FormatContainNull(record));
 
     const formatData = formatRecords(
+      startOfDay,
       mappedCompletedRecords,
       mappedContainNullRecords,
       mappedContainTodayRecords,

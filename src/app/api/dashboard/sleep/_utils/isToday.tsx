@@ -4,9 +4,9 @@ import isBetween from "dayjs/plugin/isBetween";
 
 dayjs.extend(isBetween);
 
-export const IsToday = (date: Date) => {
-  const startOfDay = dayjs.tz(new Date(), "Asia/Tokyo").startOf("day");
-  const endOfDay = dayjs.tz(new Date(), "Asia/Tokyo").endOf("day");
+export const IsToday = (date: Date, targetDate: Date) => {
+  const startOfDay = dayjs.tz(targetDate, "Asia/Tokyo").startOf("day");
+  const endOfDay = dayjs.tz(targetDate, "Asia/Tokyo").endOf("day");
 
   return dayjs(date).isBetween(startOfDay, endOfDay);
 };
