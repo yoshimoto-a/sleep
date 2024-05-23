@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import { PostRequest } from "@/app/_types/apiRequests/dashboard/allSleepData/postRequest";
 import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
@@ -9,7 +10,7 @@ export const POST = async (req: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
-    const body = await req.json();
+    const body: PostRequest = await req.json();
     const { babyId, bedtime, sleep, wakeup, createUser, changeUser } = body;
 
     const resp = await prisma.sleepingSituation.create({

@@ -1,3 +1,4 @@
+"use client";
 import useSWR from "swr";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/sleepDetail/IndexResponse";

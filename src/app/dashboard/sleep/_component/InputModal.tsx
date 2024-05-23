@@ -16,7 +16,6 @@ import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/sleep/updateR
 interface Props {
   onClose: () => void;
   id: number;
-  // data: FormatedData[];
   mutate: any;
 }
 export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
@@ -38,6 +37,8 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
 
   const put = async () => {
     if (!dbUserId) return;
+    if (!sleep || !wakeup) {
+    }
     try {
       const body = {
         id,
@@ -57,7 +58,6 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         throw new Error(`response is ${resp}`);
       }
     } catch (e) {
-      console.log(e);
       alert("更新に失敗しました");
     }
   };
@@ -92,7 +92,6 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
   };
   return (
     <>
-      <h2 className="text-center">編集</h2>
       <label className="flex justify-center">寝かしつけ開始</label>
       <input
         id="bedtime"
@@ -100,9 +99,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         value={dayjs(bedtime).format("YYYY-MM-DDTHH:mm:ss")}
         className="block p-2 m-5 border"
         onChange={e => {
-          if (dayjs(e.target.value).isValid()) {
-            setBedtime(new Date(e.target.value));
-          }
+          setBedtime(new Date(e.target.value));
         }}
       />
       <label className="flex justify-center">寝た</label>
@@ -112,9 +109,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         value={dayjs(sleep).format("YYYY-MM-DDTHH:mm:ss")}
         className="block p-2 m-5 border"
         onChange={e => {
-          if (dayjs(e.target.value).isValid()) {
-            setSleep(new Date(e.target.value));
-          }
+          setSleep(new Date(e.target.value));
         }}
       />
       <label className="flex justify-center">起きた</label>
@@ -124,9 +119,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         value={dayjs(wakeup).format("YYYY-MM-DDTHH:mm:ss")}
         className="block p-2 m-5 border"
         onChange={e => {
-          if (dayjs(e.target.value).isValid()) {
-            setWakeup(new Date(e.target.value));
-          }
+          setWakeup(new Date(e.target.value));
         }}
       />
       <div>

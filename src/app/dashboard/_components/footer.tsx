@@ -4,7 +4,7 @@ import { MenuItem } from "./menuItem";
 
 export const Footer = () => {
   return (
-    <footer className="fixed bottom-0 w-full px-3 pb-1 pt-3 bg-custom-blue">
+    <footer className="fixed bottom-0 w-full px-3 pb-1 pt-3 bg-custom-blue z-40">
       <div className="flex justify-between items-center">
         <MenuItem
           icon="/_footerIcon/graph.png"

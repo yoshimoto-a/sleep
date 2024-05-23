@@ -33,7 +33,6 @@ const FormatNotContainNull = (record: SleepingSituation) => {
     changeUser: record.changeUser,
   };
 };
-
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
@@ -51,6 +50,7 @@ export const GET = async (req: NextRequest) => {
     //ユーザーに紐づくbabyId取得する
     if (!data.user)
       return Response.json({ status: 400, message: "Userdata is null" });
+
     const user = await prisma.user.findUnique({
       where: {
         supabaseUserId: data.user.id,
@@ -64,9 +64,11 @@ export const GET = async (req: NextRequest) => {
       },
     });
     const babyId = user?.babyId;
+
     if (!babyId)
       return Response.json({ status: 400, message: "BabyId is null" });
 
+    // console.log("ここまでok");
     //bedtime(null許容)以外すべて当日で完成したデータのみ
     const completedRecords = await prisma.sleepingSituation.findMany({
       where: {
@@ -198,7 +200,6 @@ export const GET = async (req: NextRequest) => {
     const mappedContainTodayRecords: CompletedData[] = containTodayRecords.map(
       record => FormatNotContainNull(record)
     );
-    // console.log("ok" + mappedContainTodayRecords[0].wakeup);
 
     //必要な時に備えて前日以前に起床した最後のレコードを取得しておく
     const startOfYesterday = dayjs(startOfDay)
@@ -422,6 +423,7 @@ export const GET = async (req: NextRequest) => {
 
     latestData = findLatest(allContainNullRecords, allCompletedRecords);
 
+    console.log("kここ？" + latestData);
     return Response.json({
       status: 200,
       message: "success",

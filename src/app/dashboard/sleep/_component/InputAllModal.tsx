@@ -1,13 +1,12 @@
-import dayjs from "dayjs";
 import { useContext } from "react";
-import { useState } from "react";
 import { ModalButton } from "../../growth/_components/ModalButton";
 import { UserContext } from "../../layout";
+import { useDatetimeValidation } from "../_hooks/useDatetimeValidation";
 import { Action } from "../_types/action";
+import { InputDatetime } from "./InputDatetime";
 import { useApi } from "@/app/_hooks/useApi";
 import { PostRequest } from "@/app/_types/apiRequests/dashboard/allSleepData/postRequest";
 import { PostResonse } from "@/app/_types/apiRequests/dashboard/allSleepData/postResponse";
-
 interface Props {
   mutate: any;
   setAllIsModalOpen: (isOpen: boolean) => void;
@@ -17,20 +16,18 @@ export const InputAllModal: React.FC<Props> = ({
   setAllIsModalOpen,
 }) => {
   const [dbUserId, babyId] = useContext(UserContext);
-  const [allDatetime, setAllDatetime] = useState<{
-    bedtime: Date | null;
-    sleep: Date;
-    wakeup: Date;
-  }>({ bedtime: null, sleep: new Date(), wakeup: new Date() });
+  const { allDatetime, errors, handleChange, validate } =
+    useDatetimeValidation();
+
   const fetcher = useApi();
-  const handleChange = (date: Date, action: Action) => {
-    setAllDatetime({ ...allDatetime, [action]: date });
-  };
   const handleSave = async () => {
     if (!babyId || !dbUserId) return;
+    if (!validate()) {
+      return;
+    }
     const body = {
       babyId,
-      bedtime: allDatetime.bedtime,
+      bedtime: allDatetime.bedTime,
       sleep: allDatetime.sleep,
       wakeup: allDatetime.wakeup,
       createUser: dbUserId,
@@ -49,37 +46,33 @@ export const InputAllModal: React.FC<Props> = ({
 
   return (
     <>
-      <h2 className="text-center">編集</h2>
-      <label className="flex justify-center">寝かしつけ開始</label>
-      <input
-        id="bedtime"
-        type="datetime-local"
-        value={dayjs(allDatetime.bedtime).format("YYYY-MM-DDTHH:mm:ss")}
-        className="block p-2 m-5 border"
+      <InputDatetime
+        id="bedTime"
+        label="寝かしつけ開始"
+        date={allDatetime.bedTime}
+        err=""
         onChange={e => {
-          handleChange(new Date(e.target.value), "bedTime");
+          handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      />
-      <label className="flex justify-center">寝た</label>
-      <input
+      ></InputDatetime>
+      <InputDatetime
         id="sleep"
-        type="datetime-local"
-        value={dayjs(allDatetime.sleep).format("YYYY-MM-DDTHH:mm:ss")}
-        className="block p-2 m-5 border"
+        label="寝た"
+        date={allDatetime.sleep}
+        err={errors.sleepError}
         onChange={e => {
-          handleChange(new Date(e.target.value), "sleep");
+          handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      />
-      <label className="flex justify-center">起きた</label>
-      <input
+      ></InputDatetime>
+      <InputDatetime
         id="wakeup"
-        type="datetime-local"
-        value={dayjs(allDatetime.wakeup).format("YYYY-MM-DDTHH:mm:ss")}
-        className="block p-2 m-5 border"
+        label="起きた"
+        date={allDatetime.wakeup}
+        err={errors.wakeupError}
         onChange={e => {
-          handleChange(new Date(e.target.value), "bedTime");
+          handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      />
+      ></InputDatetime>
       <div>
         <ModalButton
           onClick={() => setAllIsModalOpen(false)}

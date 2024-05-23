@@ -27,10 +27,16 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
   };
   return (
     <>
-      <div className="absolute bottom-100 w-full px-3 py-1 bg-custom-blue flex justify-between items-center">
+      <div className="fixed bottom-16 w-full px-3 py-2 flex justify-between items-center z-50">
+        <Button
+          icon="/_buttonIcon/all.png"
+          text="一括登録"
+          action="wakeup"
+          onclick={handleClickAll}
+        ></Button>
         <Button
           icon="/_buttonIcon/start.png"
-          text="寝かしつけ開始"
+          text="寝かしつけ"
           action="bedTime"
           onclick={() => handleClick("bedTime")}
         ></Button>
@@ -45,12 +51,6 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
           text="起きた"
           action="wakeup"
           onclick={() => handleClick("wakeup")}
-        ></Button>
-        <Button
-          icon="/_buttonIcon/wakeUp.png"
-          text="一括登録"
-          action="wakeup"
-          onclick={handleClickAll}
         ></Button>
       </div>
       <CustomModal

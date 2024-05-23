@@ -4,14 +4,12 @@ import { useCallback } from "react";
 import { InputModal } from "./InputModal";
 import { RowItem } from "./rowItem";
 import { CustomModal } from "@/app/_components/modal";
-import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 
 interface Props {
   rowKey: number;
   id: number;
   action: string;
   HourAndMinutes: string;
-  data: FormatedData[];
   MinutesOnly: string;
   mutate: any;
 }
@@ -20,7 +18,6 @@ export const RowDataWithModal: React.FC<Props> = ({
   id,
   action,
   HourAndMinutes,
-  data,
   MinutesOnly,
   mutate,
 }) => {

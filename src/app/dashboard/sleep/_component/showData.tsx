@@ -26,7 +26,6 @@ export const ShowData: React.FC<Props> = ({
             rowKey={index}
             id={record.id}
             action={record.action}
-            data={data.data}
             mutate={mutate}
             HourAndMinutes={record.HourAndMinutes}
             MinutesOnly={record.MinutesOnly}

@@ -37,11 +37,6 @@ export const formatRecords = (
   containYesterdayRecord: ContainNull[],
   containTomorrowRecord: ContainNull[]
 ) => {
-  console.log(
-    "containTodayRecords" +
-      containTodayRecords[0].id +
-      containTodayRecords[0].sleep
-  );
   const formatedRecords: FormatedData[] = [];
   //何も返さないパターン→当日を含むレコードがない場合
   /**①日付またいで寝ている　OR　寝かしつけ中で当日のデータがまだ存在していない状態 */

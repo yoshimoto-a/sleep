@@ -19,11 +19,11 @@ export default function Page() {
   const handlePrev = () => {
     setDate(dayjs(date).add(-1, "d").toDate());
   };
-
   const handleNext = () => {
     setDate(dayjs(date).add(1, "d").toDate());
   };
 
+  console.log(data);
   return (
     <>
       <Header
@@ -31,21 +31,22 @@ export default function Page() {
         onClickPrev={handlePrev}
         onClickNext={handleNext}
       ></Header>
-      <div className="flex justify-between mx-10 my-5">
+      <div className="flex justify-between mx-5 my-5">
         <MainTime SleepingSituationData={data} />
         <ElapsedTime data={data} />
       </div>
-      <div className="grid grid-cols-10">
-        <div className="bg-white col-span-3">グラフ</div>
-        <div className="relative col-span-7 h-full">
-          <ShowData
-            data={data}
-            isLoading={isLoading}
-            error={error}
-            mutate={mutate}
-          ></ShowData>
-          <ButtonArea mutate={mutate}></ButtonArea>
-        </div>
+      {/* <div className="grid grid-cols-10"> */}
+      {/* <div className="bg-white col-span-3">グラフ</div> */}
+      <div className="relative col-span-7 h-full w-4/5 mx-auto">
+        <ShowData
+          data={data}
+          isLoading={isLoading}
+          error={error}
+          mutate={mutate}
+        ></ShowData>
+      </div>
+      <div className="fixed bottom-25 w-full bg-white z-50">
+        <ButtonArea mutate={mutate}></ButtonArea>
       </div>
     </>
   );
