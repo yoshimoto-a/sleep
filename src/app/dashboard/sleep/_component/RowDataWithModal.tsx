@@ -1,17 +1,17 @@
-"use client";
-import { useState } from "react";
-import { useCallback } from "react";
-import { InputModal } from "./InputModal";
-import { RowItem } from "./rowItem";
-import { CustomModal } from "@/app/_components/modal";
+'use client'
+import { useState } from 'react'
+import { useCallback } from 'react'
+import { InputModal } from './InputModal'
+import { RowItem } from './rowItem'
+import { CustomModal } from '@/app/_components/modal'
 
 interface Props {
-  rowKey: number;
-  id: number;
-  action: string;
-  HourAndMinutes: string;
-  MinutesOnly: string;
-  mutate: any;
+  rowKey: number
+  id: number
+  action: string
+  HourAndMinutes: string
+  MinutesOnly: string
+  mutate: any
 }
 export const RowDataWithModal: React.FC<Props> = ({
   rowKey,
@@ -21,21 +21,23 @@ export const RowDataWithModal: React.FC<Props> = ({
   MinutesOnly,
   mutate,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   const onClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+    setIsOpen(false)
+  }, [])
 
   return (
-    <div key={rowKey} onClick={() => setIsOpen(true)}>
-      <RowItem
-        key={rowKey}
-        id={id}
-        time={HourAndMinutes}
-        action={action}
-        interval={MinutesOnly}
-      ></RowItem>
+    <div key={rowKey}>
+      <div onClick={() => setIsOpen(true)}>
+        <RowItem
+          key={rowKey}
+          id={id}
+          time={HourAndMinutes}
+          action={action}
+          interval={MinutesOnly}
+        ></RowItem>
+      </div>
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
@@ -44,5 +46,5 @@ export const RowDataWithModal: React.FC<Props> = ({
         <InputModal id={id} onClose={onClose} mutate={mutate}></InputModal>
       </CustomModal>
     </div>
-  );
-};
+  )
+}
