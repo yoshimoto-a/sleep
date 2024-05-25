@@ -28,14 +28,16 @@ export const RowDataWithModal: React.FC<Props> = ({
   }, []);
 
   return (
-    <div key={rowKey} onClick={() => setIsOpen(true)}>
-      <RowItem
-        key={rowKey}
-        id={id}
-        time={HourAndMinutes}
-        action={action}
-        interval={MinutesOnly}
-      ></RowItem>
+    <div key={rowKey}>
+      <div onClick={() => setIsOpen(true)}>
+        <RowItem
+          key={rowKey}
+          id={id}
+          time={HourAndMinutes}
+          action={action}
+          interval={MinutesOnly}
+        ></RowItem>
+      </div>
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}

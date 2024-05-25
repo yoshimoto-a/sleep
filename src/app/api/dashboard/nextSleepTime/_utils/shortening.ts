@@ -1,6 +1,6 @@
 /**発達状況と睡眠時間を元に月齢に応じて活動時間を短縮する時間を返す関数 */
 import { Growth } from "@prisma/client";
-
+import { wakeWindowsShortening } from "./wakeWindowsShortening";
 type AgeRanges =
   | "isAge0to5Months"
   | "isAge6and7Months"
@@ -60,9 +60,7 @@ export const shortening = (
       break;
   }
   //発達状況を元に短縮時間を計算
-  practicing.length != 0 && (shortening += 15);
-  acquisition.length != 0 && (shortening += 15);
-  walking.length != 0 && (shortening += 15);
+  shortening += wakeWindowsShortening(practicing, acquisition, walking);
 
   return shortening;
 };

@@ -28,5 +28,5 @@
     ".next/types/**/*.ts",
     "src/app/api/dashboard/allSleepData"
   ],
-  "exclude": ["node_modules", "out", ".next", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["node_modules", "out", ".next"]
 }

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { applyWakeWindows } from "./applyWakeWindows";
 import { shortening } from "./shortening";
 import { timeZone } from "./timeZone";
+import { wakeWindowsShortening } from "./wakeWindowsShortening";
 
 export const calculate = (
   practicing: Growth[],
@@ -14,9 +15,12 @@ export const calculate = (
   wakeWindows: WakeWindows[],
   baby: Baby,
   sleepingSituation: SleepingSituation[]
-): string => {
+) => {
   //起床時刻
   const wakeupTime = dayjs(sleepingSituation[0].wakeup);
+
+  //そもそも夜間睡眠の時間ならすぐ寝かせたい
+  if (timeZone(wakeupTime) === "night") return "即時";
 
   //月齢と修正月齢
   const monthAge = dayjs().diff(dayjs(baby.birthday), "month");
@@ -25,26 +29,55 @@ export const calculate = (
     "month"
   );
 
-  //睡眠時間と月齢を元に短縮時間を計算
+  //睡眠時間
   const sleepLength = dayjs(sleepingSituation[0].wakeup).diff(
     dayjs(sleepingSituation[0].sleep),
     "minutes"
   );
 
-  //5ヶ月以内は先に算出して返す
-  if (correctedMonthAge <= 5 && sleepLength <= 45)
+  //活動時間情報を取りだす
+  const { all, morning, noon, evening } = applyWakeWindows(wakeWindows);
+
+  //0.1ヶ月以内は先に算出して返す(昼夜の区別ないから基本の活動時間で算出)
+  if (monthAge <= 1 && sleepLength < 40)
     return wakeupTime.add(sleepLength, "minutes").format("HH時mm分");
+  if (monthAge <= 1 && sleepLength >= 40) {
+    return wakeupTime.add(all, "minutes").format("HH時mm分");
+  }
 
-  if (correctedMonthAge <= 5 && sleepLength >= 45)
-    return wakeupTime.add(45, "minutes").format("HH時mm分");
+  //2ヶ月は運動面の発達まだ見ない(基本の活動時間で算出)
+  if (monthAge === 2 && sleepLength < all)
+    return wakeupTime.add(sleepLength, "minutes").format("HH時mm分");
+  if (monthAge === 2 && sleepLength >= all)
+    return wakeupTime.add(all, "minutes").format("HH時mm分");
 
-  //6ヶ月以上
-  //そもそも夜間睡眠の時間ならすぐ寝かせたい
-  if (timeZone(wakeupTime) === "night") return "即時";
+  //発達の状況から短縮する時間を算出する
+  const wakeWindowsShorteningTime = wakeWindowsShortening(
+    practicing,
+    acquisition,
+    walking
+  );
+
+  //3-5ヶ月運動面の発達考慮するけどそれ以外は2ヶ月と同じ
+  if (monthAge >= 3 && monthAge <= 5 && sleepLength < all) {
+    return wakeupTime
+      .add(
+        sleepLength - wakeWindowsShorteningTime >= 30
+          ? sleepLength - wakeWindowsShorteningTime
+          : 30,
+        "minutes"
+      )
+      .format("HH時mm分");
+  }
+  if (monthAge >= 3 && monthAge <= 5 && sleepLength >= all) {
+    return wakeupTime
+      .add(all - wakeWindowsShorteningTime, "minutes")
+      .format("HH時mm分");
+  }
 
   //活動時間から短縮する時間を計算する
   const shorteningTime =
-    monthAge >= 6
+    monthAge >= 3
       ? shortening(monthAge, sleepLength, practicing, acquisition, walking)
       : 0;
 
@@ -52,8 +85,6 @@ export const calculate = (
     return wakeupTime.add(val, "minutes");
   };
 
-  //活動時間情報を取りだす
-  const { all, morning, noon, evening } = applyWakeWindows(wakeWindows);
   //時間帯を問わず活動時間が同じで登録されてるパターン
   if (all != 0 && morning === 0 && noon === 0 && evening === 0) {
     const basicTime = addWakeWindows(all - shorteningTime);

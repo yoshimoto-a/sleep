@@ -423,7 +423,6 @@ export const GET = async (req: NextRequest) => {
 
     latestData = findLatest(allContainNullRecords, allCompletedRecords);
 
-    console.log("kここ？" + latestData);
     return Response.json({
       status: 200,
       message: "success",
