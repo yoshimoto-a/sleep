@@ -227,4 +227,140 @@ describe("calculate", () => {
       });
     });
   });
+  describe("2ヶ月", () => {
+    const baby: Baby = {
+      id: 9,
+      name: "2ヶ月ベビー",
+      birthday: new Date("2024-03-03"),
+      birthWeight: 3000,
+      expectedDateOfBirth: new Date("2024-03-03"),
+      gender: "BOY",
+      created: new Date("2024-05-23"),
+      updated: new Date("2024-05-24"),
+      milestone: [],
+    };
+    describe("活動時間60分", () => {
+      const wakeWindows: WakeWindows[] = [
+        {
+          babyId: 9,
+          id: 1,
+          type: "ALL",
+          time: 60,
+          createUser: 20,
+          changeUser: 20,
+          created: new Date("2024-05-03"),
+          updated: new Date("2024-05-03"),
+        },
+      ];
+      describe("その他は空", () => {
+        const practicing: Growth[] = [];
+        const acquisition: Growth[] = [];
+        const walking: Growth[] = [];
+        describe("30分で起床", () => {
+          const sleepingSituation: SleepingSituation[] = [
+            {
+              babyId: 9,
+              bedTime: null,
+              sleep: new Date("2024-05-20T09:30:00"),
+              wakeup: new Date("2024-05-20T10:00:00"),
+              id: 1,
+              createUser: 20,
+              changeUser: 20,
+              created: new Date("2024-05-20"),
+              updated: new Date("2024-05-20"),
+            },
+          ];
+          it("返す値のテスト", async () => {
+            const result = calculate(
+              practicing,
+              acquisition,
+              walking,
+              wakeWindows,
+              baby,
+              sleepingSituation
+            );
+            console.log(`7 : ${result}`);
+          });
+        });
+        describe("3時間で起床", () => {
+          const sleepingSituation: SleepingSituation[] = [
+            {
+              babyId: 9,
+              bedTime: null,
+              sleep: new Date("2024-05-20T07:00:00"),
+              wakeup: new Date("2024-05-20T10:00:00"),
+              id: 1,
+              createUser: 20,
+              changeUser: 20,
+              created: new Date("2024-05-20"),
+              updated: new Date("2024-05-20"),
+            },
+          ];
+          it("返す値のテスト", async () => {
+            const result = calculate(
+              practicing,
+              acquisition,
+              walking,
+              wakeWindows,
+              baby,
+              sleepingSituation
+            );
+            console.log(`8 : ${result}`);
+          });
+        });
+        describe("30分で起床(早朝)", () => {
+          const sleepingSituation: SleepingSituation[] = [
+            {
+              babyId: 9,
+              bedTime: null,
+              sleep: new Date("2024-05-20T03:30:00"),
+              wakeup: new Date("2024-05-20T04:00:00"),
+              id: 1,
+              createUser: 20,
+              changeUser: 20,
+              created: new Date("2024-05-20"),
+              updated: new Date("2024-05-20"),
+            },
+          ];
+          it("返す値のテスト", async () => {
+            const result = calculate(
+              practicing,
+              acquisition,
+              walking,
+              wakeWindows,
+              baby,
+              sleepingSituation
+            );
+            console.log(`9 : ${result}`);
+          });
+        });
+        describe("3時間で起床(早朝)", () => {
+          const sleepingSituation: SleepingSituation[] = [
+            {
+              babyId: 9,
+              bedTime: null,
+              sleep: new Date("2024-05-20T01:00:00"),
+              wakeup: new Date("2024-05-20T04:00:00"),
+              id: 1,
+              createUser: 20,
+              changeUser: 20,
+              created: new Date("2024-05-20"),
+              updated: new Date("2024-05-20"),
+            },
+          ];
+          it("返す値のテスト", async () => {
+            const result = calculate(
+              practicing,
+              acquisition,
+              walking,
+              wakeWindows,
+              baby,
+              sleepingSituation
+            );
+            console.log(`10 : ${result}`);
+          });
+        });
+      });
+    });
+  });
 });

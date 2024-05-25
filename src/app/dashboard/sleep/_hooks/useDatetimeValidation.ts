@@ -19,11 +19,18 @@ export const useDatetimeValidation = () => {
 
   const handleChange = (date: Date | null, action: keyof DatetimeState) => {
     setAllDatetime({ ...allDatetime, [action]: date });
+    const isInvalidDate = !date || isNaN(date.getTime());
     if (action === "sleep") {
-      setErrors({ ...errors, sleepError: !date ? "日時は必須です" : "" });
+      setErrors({
+        ...errors,
+        sleepError: isInvalidDate ? "日時は必須です" : "",
+      });
     }
     if (action === "wakeup") {
-      setErrors({ ...errors, wakeupError: !date ? "日時は必須です" : "" });
+      setErrors({
+        ...errors,
+        wakeupError: isInvalidDate ? "日時は必須です" : "",
+      });
     }
   };
 

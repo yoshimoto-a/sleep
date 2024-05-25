@@ -21,10 +21,10 @@ export const InputDatetime: React.FC<Props> = ({
         id={id}
         type="datetime-local"
         value={dayjs(date).format("YYYY-MM-DDTHH:mm")}
-        className="block p-2 m-5 border"
+        className="block p-2 mx-5 mt-1 border"
         onChange={onChange}
       />
-      <span>{err}</span>
+      <span className="pl-2">{err}</span>
     </>
   );
 };
