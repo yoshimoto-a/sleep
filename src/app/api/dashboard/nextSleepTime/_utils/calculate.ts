@@ -98,19 +98,28 @@ export const calculate = (
   const eveningTime = addWakeWindows(evening - shorteningTime);
 
   //例えば朝の活動時間で計算して朝が入っていたらその時間を返す
-  console.log("タイムゾーン" + timeZone(morningTime));
   if (timeZone(morningTime) === "morning")
     return morningTime.format("HH時mm分");
-  if (timeZone(noonTime) === "noon") return noonTime.format("HH時mm分");
-  if (timeZone(eveningTime) === "evening")
+  if (timeZone(noonTime) === "noon" && noon !== 0)
+    return noonTime.format("HH時mm分");
+  if (timeZone(eveningTime) === "evening" && evening !== 0)
     return eveningTime.format("HH時mm分");
+
+  //夕寝のつもりが18時過ぎる場合
   if (timeZone(eveningTime) === "night") return eveningTime.format("HH時mm分");
 
+  //早朝起きか6時以降に起きて、活動時間で計算した結果8時より前なら8時を返す
   if (
-    timeZone(wakeupTime) === "night" &&
+    (timeZone(wakeupTime) === "wakeupTime" ||
+      timeZone(wakeupTime) === "morning") &&
     timeZone(morningTime) === "wakeupTime"
   )
     return "8時00分";
+
+  //夕寝の活動時間がなくて次が18時以降になる場合or昼寝が夕寝の時間になる場合そのまま返す
+  if (timeZone(noonTime) === "night" || timeZone(noonTime) === "evening") {
+    return noonTime.format("HH時mm分");
+  }
 
   console.log("起床時刻" + wakeupTime.format("YYYY/MM/DD HH:mm"));
   return "ここまで届かないはず";
