@@ -38,7 +38,8 @@ export default function Page() {
               type="password"
               value={password}
               placeholder="パスワード"
-              onChange={(value) => setPassword(value)}
+              inputMode="text"
+              onChange={value => setPassword(value)}
             />
           </div>
           <div className="text-center">

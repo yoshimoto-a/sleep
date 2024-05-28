@@ -1,14 +1,16 @@
 "use client";
 import { useGetLoginUser } from "../_hooks/useGetLoginUser";
 import { RowItem } from "./_components/rowItem";
+import { useLogout } from "./_hooks/useLogout";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Menu() {
   const { data, error, isLoading } = useGetLoginUser();
-
+  const { logout } = useLogout();
   if (isLoading) return <IsLoading></IsLoading>;
   if (error) return <div>エラー発生</div>;
   if (!isLoading && !data) return <div>ユーザー情報なし</div>;
+
   return (
     <>
       <h1 className="pt-5 text-center text-lg">メニュー</h1>
@@ -37,11 +39,9 @@ export default function Menu() {
         link="./setting/"
         title="赤ちゃん情報の設定"
       />
-      <RowItem
-        icon="/_menuIcon/logout.png"
-        link="./"
-        title="ログアウト(挙動検討)"
-      />
+      <div onClick={logout}>
+        <RowItem icon="/_menuIcon/logout.png" link="./" title="ログアウト" />
+      </div>
     </>
   );
 }
