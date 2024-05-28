@@ -7,9 +7,9 @@ export const Footer = () => {
     <footer className="fixed bottom-0 w-full px-3 pb-1 pt-3 bg-custom-blue z-40">
       <div className="flex justify-between items-center">
         <MenuItem
-          icon="/_footerIcon/graph.png"
-          text="睡眠ログ"
-          link="/dashboard/graph"
+          icon="/_menuIcon/growth.png"
+          text="発達"
+          link="/dashboard/growth"
         />
         <MenuItem
           icon="/_footerIcon/weight.png"

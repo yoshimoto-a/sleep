@@ -690,4 +690,60 @@ describe("calculate", () => {
       );
     });
   });
+  describe("(49)18ヶ月/活動時間(朝180、昼0、夕240)/睡眠3hours/15時10分起床", () => {
+    it("テスト", async () => {
+      const result = calculate(
+        [],
+        [],
+        [],
+        [
+          {
+            babyId: 9,
+            id: 1,
+            type: "ALL",
+            time: 240,
+            createUser: 20,
+            changeUser: 20,
+            created: new Date("2024-05-03"),
+            updated: new Date("2024-05-03"),
+          },
+          {
+            babyId: 9,
+            id: 2,
+            type: "MORNING",
+            time: 180,
+            createUser: 20,
+            changeUser: 20,
+            created: new Date("2024-05-03"),
+            updated: new Date("2024-05-03"),
+          },
+          {
+            babyId: 9,
+            id: 3,
+            type: "NOON",
+            time: 0,
+            createUser: 20,
+            changeUser: 20,
+            created: new Date("2024-05-03"),
+            updated: new Date("2024-05-03"),
+          },
+          {
+            babyId: 9,
+            id: 3,
+            type: "EVENING",
+            time: 240,
+            createUser: 20,
+            changeUser: 20,
+            created: new Date("2024-05-03"),
+            updated: new Date("2024-05-03"),
+          },
+        ],
+        baby.eightteenMonthBaby,
+        sleepingSituation.addition_eighteenMonthWakeWindows.evening
+      );
+      console.log(
+        `(49)18ヶ月/活動時間(朝180、夕240)/睡眠3hours/15時10分起床 : ${result}`
+      );
+    });
+  });
 });

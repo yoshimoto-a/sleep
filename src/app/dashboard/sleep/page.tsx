@@ -23,7 +23,9 @@ export default function Page() {
     setDate(dayjs(date).add(1, "d").toDate());
   };
 
-  console.log(data);
+  // const handleMutate = async () => {
+  //   await mutate();
+  // };
   return (
     <>
       <Header
@@ -45,7 +47,7 @@ export default function Page() {
           mutate={mutate}
         ></ShowData>
       </div>
-      <div className="fixed bottom-25 w-full bg-white z-50">
+      <div className="fixed bottom-25 w-full bg-white z-0">
         <ButtonArea mutate={mutate}></ButtonArea>
       </div>
     </>

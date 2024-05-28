@@ -39,6 +39,7 @@ export const InputAllModal: React.FC<Props> = ({
         body
       );
       mutate();
+      setAllIsModalOpen(false);
     } catch (e) {
       alert("登録に失敗しました");
     }

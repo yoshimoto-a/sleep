@@ -37,13 +37,12 @@ export const Guideline = () => {
     },
   ];
   return (
-    <div className="pt-5 mx-3">
-      この画面で登録した活動時間を元にお勧めねんね時刻を算出します。
-      お子さまの活動時間がわからない場合は目安を参考に登録してください。
+    <div className="pt-3 mx-3">
+      登録した活動時間を元にお勧めねんね時刻を算出します。
       <div className="flex justify-center gap-4 pt-5">
         <button
           onClick={() => setIsOpenWakeWindows(true)}
-          className="w-40 h-10 mb-3 flex flex-col justify-center items-center border-solid border-2 border-slate-600 rounded-full"
+          className="w-40 h-10 mb-2 flex flex-col justify-center items-center border-solid border-2 border-slate-600 rounded-full"
         >
           目安
         </button>
@@ -63,17 +62,17 @@ export const Guideline = () => {
           <table className="min-w-full border-collapse border border-gray-300">
             <thead>
               <tr>
-                <th className="border border-gray-300 px-4 py-2">月齢</th>
-                <th className="border border-gray-300 px-4 py-2">活動時間</th>
+                <th className="border border-gray-300 px-2 py-1">月齢</th>
+                <th className="border border-gray-300 px-2 py-1">活動時間</th>
               </tr>
             </thead>
             <tbody>
               {sleepData.map((data, index) => (
                 <tr key={index}>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-1">
                     {data.period}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-1">
                     {data.wakeWindow}
                   </td>
                 </tr>

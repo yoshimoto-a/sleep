@@ -11,8 +11,18 @@ export default function Menu() {
   if (!isLoading && !data) return <div>ユーザー情報なし</div>;
   return (
     <>
-      <h1 className="my-5 text-center text-lg">メニュー</h1>
+      <h1 className="pt-5 text-center text-lg">メニュー</h1>
       <RowItem icon="/_menuIcon/growth.png" link="./growth/" title="発達登録" />
+      <RowItem
+        icon="/_footerIcon/weight.png"
+        link="./weight/"
+        title="体重登録"
+      />
+      <RowItem
+        icon="/_footerIcon/setting.png"
+        link="./wakeWindows/"
+        title="活動時間登録"
+      />
       {/* <RowItem icon="/_menuIcon/chat.png" link="./chat/" title="チャット" /> */}
       {data?.data?.role === "MAIN" && (
         <RowItem

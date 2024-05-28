@@ -10,7 +10,7 @@ interface ItemProps {
 
 export const MenuItem: React.FC<ItemProps> = ({ icon, text, link }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-center w-1/5">
       <Link href={link}>
         <Image
           src={icon}

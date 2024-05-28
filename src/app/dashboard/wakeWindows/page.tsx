@@ -190,13 +190,19 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="text-center text-3xl font-bold mt-6">活動時間設定</h1>
+      <h1 className="pt-5 text-center text-lg">活動時間設定</h1>
       <Guideline></Guideline>
       <form
         onSubmit={handleSubmit}
-        className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 my-4"
+        className="bg-custom-gray shadow-md rounded px-4 pt-6 pb-8 my-4"
       >
         <div className="flex flex-col">
+          <div className="flex flex-row text-red-600 bg-slate-50 mb-2 p-3">
+            <div className="flex items-center justify-center mr-1">※</div>
+            <p className="text-sm p-1">
+              終日一定の活動時間の場合や、お昼寝が1回の場合は基本のみ登録してください
+            </p>
+          </div>
           <div className="flex gap-4">
             <div className="flex-1">
               <Label text="基本の活動時間" htmlFor="basic"></Label>
@@ -222,12 +228,12 @@ export default function Page() {
               </div>
             </div>
             <div className="flex-1">
-              <Label text="寝かしつけ開始は何分前？" htmlFor="basic"></Label>
+              <Label text="寝かしつけ開始(分前)" htmlFor="basic"></Label>
               <Input
                 id="sinceBedtime"
                 type="number"
                 value={String(sinceBedtime)}
-                placeholder=""
+                placeholder="分前"
                 inputMode="numeric"
                 onChange={value => setSinceBedtime(Number(value))}
               ></Input>
@@ -236,11 +242,13 @@ export default function Page() {
         </div>
         <div className="flex flex-col">
           <h2>活動時間詳細設定</h2>
-          <p className="mb-5">詳細登録がある場合、詳細の内容が優先されます</p>
+          <span className="text-sm pb-3">
+            登録がある場合、計算は時間帯別に行われます。
+          </span>
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <Label text="朝寝(7時～11時)" htmlFor="morning" />
+            <Label text="朝寝(7~11時)" htmlFor="morning" />
             <div className="flex gap-1">
               <Input
                 id="morningHour"
@@ -263,7 +271,7 @@ export default function Page() {
             </div>
           </div>
           <div className="flex-1">
-            <Label text="昼寝(11時～15時)" htmlFor="afternoon" />
+            <Label text="昼寝(11~15時)" htmlFor="afternoon" />
             <div className="flex gap-1">
               <Input
                 id="afternoonHour"
@@ -286,7 +294,7 @@ export default function Page() {
             {afternoonMinutesError && <p>{afternoonMinutesError}</p>}{" "}
           </div>
           <div className="flex-1">
-            <Label text="夕寝(15時～18時)" htmlFor="evening" />
+            <Label text="夕寝(15~18時)" htmlFor="evening" />
             <div className="flex gap-1">
               <Input
                 id="eveningHour"

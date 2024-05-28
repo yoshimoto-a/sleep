@@ -264,6 +264,16 @@ export const wakeWindows: WakeWindowsCollection = {
         created: new Date("2024-05-03"),
         updated: new Date("2024-05-03"),
       },
+      {
+        babyId: 9,
+        id: 3,
+        type: "EVENING",
+        time: 0,
+        createUser: 20,
+        changeUser: 20,
+        created: new Date("2024-05-03"),
+        updated: new Date("2024-05-03"),
+      },
     ],
     basicOnly: [
       {

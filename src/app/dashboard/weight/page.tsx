@@ -1,6 +1,5 @@
 "use client";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Footer } from "../_components/footer";
 import { Button } from "./_components/Button";
@@ -20,7 +19,6 @@ export default function Page() {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useVal();
   const { data, error, isLoading, mutate, babyId, dbUserId } = useGetWeight();
-  const router = useRouter();
   const { post } = useApi();
   const noData = data?.status !== 200 || !("data" in data) || !data.data;
   useEffect(() => {
@@ -50,8 +48,8 @@ export default function Page() {
   };
   return (
     <>
-      <h1>体重</h1>
-      <div className="flex justify-center gap-4 pt-10">
+      <h1 className="pt-5 text-center text-lg">体重</h1>
+      <div className="flex justify-center gap-4 pt-5">
         <div className="pl-8 w-1/2">
           <Label htmlFor="measurementDate" text="計測日"></Label>
           <Input
@@ -76,12 +74,12 @@ export default function Page() {
         </div>
       </div>
       <div className="flex justify-center gap-4 pt-5">
-        <Button
+        {/* <Button
           text="成長曲線"
           onclick={() => {
             router.replace("/dashboard/sleep");
           }}
-        ></Button>
+        ></Button> */}
         <Button text="保存" onclick={handleSave}></Button>
       </div>
       <div className="pt-8 w-full flex flex-col items-center">

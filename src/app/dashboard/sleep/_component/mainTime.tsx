@@ -8,6 +8,7 @@ interface PropsItem {
 }
 
 export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
+  console.log(SleepingSituationData?.data);
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
   const { isLoading, data, error } = useGetNextSleepTime();
@@ -29,7 +30,6 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     }
   }, [SleepingSituationData, isLoading]);
 
-  console.log(data, error);
   if (isLoading) return <div>読込み中...</div>;
   if (error) return <div>エラー発生</div>;
 
