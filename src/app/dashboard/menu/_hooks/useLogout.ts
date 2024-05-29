@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { supabase } from "@/utils/supabase";
 
@@ -13,6 +13,6 @@ export const useLogout = () => {
       return;
     }
     router.push("/login/");
-  }, []);
+  }, [router]);
   return { logout };
 };

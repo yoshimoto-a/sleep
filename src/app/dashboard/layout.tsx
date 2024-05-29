@@ -18,9 +18,15 @@ export default function Layout({
 }>) {
   const router = useRouter();
   const { token, session, isLoding } = useSupabaseSession();
+
   const [dbUserId, setDbUserId] = useState<number | null>(null);
   const [babyId, setBabyId] = useState<number | null>(null);
   useEffect(() => {
+    console.log("isLoading:", isLoding);
+    if (!isLoding && session == null) {
+      router.replace("../login");
+      return;
+    }
     const fetcher = async () => {
       try {
         //ユーザー情報の取得
@@ -42,6 +48,7 @@ export default function Layout({
     };
     !isLoding ? fetcher() : null;
   }, [token, session, router, isLoding]);
+
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}

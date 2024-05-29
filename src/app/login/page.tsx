@@ -58,10 +58,10 @@ export default function Page() {
     <>
       <Header />
       <h1 className="text-center text-3xl font-bold mt-6">ログイン</h1>
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <form
           onSubmit={handleSubmit}
-          className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4 pointer-events-auto"
         >
           <div className="mb-4">
             <Input

@@ -23,9 +23,6 @@ export default function Page() {
     setDate(dayjs(date).add(1, "d").toDate());
   };
 
-  // const handleMutate = async () => {
-  //   await mutate();
-  // };
   return (
     <>
       <Header
