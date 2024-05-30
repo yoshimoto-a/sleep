@@ -48,7 +48,7 @@ export default function Page() {
   };
   return (
     <>
-      <h1 className="pt-5 text-center text-lg">体重</h1>
+      <h1 className="pt-10 text-center text-lg">体重</h1>
       <div className="flex justify-center gap-4 pt-5">
         <div className="pl-8 w-1/2">
           <Label htmlFor="measurementDate" text="計測日"></Label>
