@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import { Footer } from "../_components/footer";
+import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
-import { SubmitButton } from "@/app/_components/button";
+import { SubmitButton } from "@/app/_components/submitButton";
 import { getLoginUser } from "@/utils/getLoginUser";
 import { supabase } from "@/utils/supabase";
 
@@ -58,39 +60,37 @@ export default function Page() {
     <>
       <Header />
       <h1 className="text-center text-3xl font-bold mt-6">ログイン</h1>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4 pointer-events-auto"
+      <Form handleSubmit={handleSubmit}>
+        <div className="mb-4">
+          <Input
+            id="email"
+            type="text"
+            value={email}
+            placeholder="メールアドレス"
+            inputMode="email"
+            onChange={value => setEmail(value)}
+          />
+        </div>
+        <div>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            placeholder="パスワード"
+            inputMode="text"
+            onChange={value => setPassword(value)}
+          />
+        </div>
+
+        <Link
+          href="/resetPassword/sendEmail"
+          className="inline-block header-link mb-6"
         >
-          <div className="mb-4">
-            <Input
-              id="email"
-              type="text"
-              value={email}
-              placeholder="メールアドレス"
-              inputMode="email"
-              onChange={value => setEmail(value)}
-            />
-          </div>
-          <div className="mb-6">
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              placeholder="パスワード"
-              inputMode="text"
-              onChange={value => setPassword(value)}
-            />
-            <Link href="/resetPassword/sendEmail" className="header-link">
-              パスワードの再設定はこちら
-            </Link>
-          </div>
-          <div className="text-center">
-            <SubmitButton>送信</SubmitButton>
-          </div>
-        </form>
-      </div>
+          パスワードの再設定はこちら
+        </Link>
+        <SubmitButton>送信</SubmitButton>
+      </Form>
+      <Footer />
     </>
   );
 }

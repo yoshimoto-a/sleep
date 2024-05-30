@@ -7,7 +7,7 @@ import { UserContext } from "../layout";
 import { Guideline } from "./_components/guideline";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
-import { SubmitButton } from "@/app/_components/button";
+import { SubmitButton } from "@/app/_components/submitButton";
 import { Input } from "@/app/_components/input";
 import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";

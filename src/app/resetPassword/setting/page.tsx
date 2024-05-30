@@ -3,8 +3,11 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import { Footer } from "@/app/_components/footer";
+import { Form } from "@/app/_components/form";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
+import { SubmitButton } from "@/app/_components/submitButton";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
@@ -25,32 +28,21 @@ export default function Page() {
     <>
       <Header />
       <h1 className="text-center text-3xl font-bold mt-6">パスワードの設定</h1>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4 pointer-events-auto"
-        >
-          <p className="mb-2 text-sm">新しいパスワード</p>
-          <div className="mb-6">
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              placeholder="パスワード"
-              inputMode="text"
-              onChange={value => setPassword(value)}
-            />
-          </div>
-          <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
-              type="submit"
-            >
-              送信
-            </button>
-          </div>
-        </form>
-      </div>
+      <Form handleSubmit={handleSubmit}>
+        <p className="mb-2 text-sm">新しいパスワード</p>
+        <div className="mb-6">
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            placeholder="パスワード"
+            inputMode="text"
+            onChange={value => setPassword(value)}
+          />
+        </div>
+        <SubmitButton>送信</SubmitButton>
+      </Form>
+      <Footer />
     </>
   );
 }

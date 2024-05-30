@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Footer } from "../_components/footer";
 import { Header } from "../_components/header";
 
 export default function Home() {
@@ -60,11 +63,16 @@ export default function Home() {
       </div>
       <div className="mt-8 flex justify-center">
         <div className="px-5 py-2 w-40 border border-gray-400	 rounded-full text-center">
-          <Link href="https://www.imaneru.com/" className="header-link">
+          <Link
+            href="https://www.imaneru.com/"
+            className="header-link"
+            target="_blank"
+          >
             もっと詳しく
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

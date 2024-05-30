@@ -2,8 +2,11 @@
 
 import React from "react";
 import { useState } from "react";
+import { Footer } from "@/app/_components/footer";
+import { Form } from "@/app/_components/form";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
+import { SubmitButton } from "@/app/_components/submitButton";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
@@ -27,31 +30,20 @@ export default function Page() {
       <p className="text-center mt-6">
         パスワードの設定用URLを下記アドレス宛に送信します
       </p>
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-custom-gray shadow-md rounded flex flex-col items-center justify-center px-8 pt-6 pb-8 w-64 h-64 pointer-events-auto"
-        >
-          <div className="mb-4">
-            <Input
-              id="email"
-              type="text"
-              value={email}
-              inputMode="text"
-              placeholder="メールアドレス"
-              onChange={value => setEmail(value)}
-            />
-          </div>
-          <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
-              type="submit"
-            >
-              送信
-            </button>
-          </div>
-        </form>
-      </div>
+      <Form handleSubmit={handleSubmit}>
+        <div className="mb-4">
+          <Input
+            id="email"
+            type="text"
+            value={email}
+            inputMode="text"
+            placeholder="メールアドレス"
+            onChange={value => setEmail(value)}
+          />
+        </div>
+        <SubmitButton>送信</SubmitButton>
+      </Form>
+      <Footer />
     </>
   );
 }
