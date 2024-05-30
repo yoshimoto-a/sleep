@@ -16,13 +16,11 @@ export const InputAllModal: React.FC<Props> = ({
   setAllIsModalOpen,
 }) => {
   const [dbUserId, babyId] = useContext(UserContext);
-  const { allDatetime, errors, handleChange, validate } =
-    useDatetimeValidation();
-
+  const { allDatetime, errors, handleChange } = useDatetimeValidation();
   const fetcher = useApi();
   const handleSave = async () => {
     if (!babyId || !dbUserId) return;
-    if (!validate()) {
+    if (errors.sleepError !== "" || errors.wakeupError !== "") {
       return;
     }
     const body = {
@@ -47,6 +45,8 @@ export const InputAllModal: React.FC<Props> = ({
 
   return (
     <>
+      <h2 className="py-3 text-center text-2xl">一括登録</h2>
+
       <InputDatetime
         id="bedTime"
         label="寝かしつけ開始"
@@ -74,7 +74,7 @@ export const InputAllModal: React.FC<Props> = ({
           handleChange(new Date(e.target.value), e.target.id as Action);
         }}
       ></InputDatetime>
-      <div>
+      <div className="w-full flex pt-3 gap-5 justify-center">
         <ModalButton
           onClick={() => setAllIsModalOpen(false)}
           text="閉じる"

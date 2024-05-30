@@ -34,31 +34,9 @@ export const useDatetimeValidation = () => {
     }
   };
 
-  const validate = () => {
-    let isValid = true;
-    const newErrors = {
-      sleepError: "",
-      wakeupError: "",
-    };
-
-    if (!allDatetime.sleep) {
-      newErrors.sleepError = "日時は必須です";
-      isValid = false;
-    }
-
-    if (!allDatetime.wakeup) {
-      newErrors.wakeupError = "日時は必須です";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
   return {
     allDatetime,
     errors,
     handleChange,
-    validate,
   };
 };

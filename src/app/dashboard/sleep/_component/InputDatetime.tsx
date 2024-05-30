@@ -15,16 +15,16 @@ export const InputDatetime: React.FC<Props> = ({
   onChange,
 }) => {
   return (
-    <>
-      <label className="flex justify-center">{label}</label>
+    <div className="flex flex-col items-center pb-5">
+      <label>{label}</label>
       <input
         id={id}
         type="datetime-local"
         value={dayjs(date).format("YYYY-MM-DDTHH:mm")}
-        className="block p-2 mx-5 mt-1 border"
+        className="block p-2 border text-center"
         onChange={onChange}
       />
-      <span className="pl-2">{err}</span>
-    </>
+      {err && <span className="text-red-500">{err}</span>}
+    </div>
   );
 };
