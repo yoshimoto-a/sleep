@@ -8,10 +8,12 @@ interface PropsItem {
 }
 
 export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
-  console.log(SleepingSituationData?.data);
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
-  const { isLoading, data, error } = useGetNextSleepTime();
+  const { isLoading, data, error, mutate } = useGetNextSleepTime();
+  useEffect(() => {
+    mutate();
+  }, [SleepingSituationData, mutate]);
   useEffect(() => {
     if (data) {
       setElapsedTime(data.data);

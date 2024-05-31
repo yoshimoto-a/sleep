@@ -22,7 +22,6 @@ export default function Layout({
   const [dbUserId, setDbUserId] = useState<number | null>(null);
   const [babyId, setBabyId] = useState<number | null>(null);
   useEffect(() => {
-    console.log("isLoading:", isLoding);
     if (!isLoding && session == null) {
       router.replace("../login");
       return;

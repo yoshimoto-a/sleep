@@ -122,7 +122,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
           setWakeup(new Date(e.target.value));
         }}
       />
-      <div>
+      <div className="w-full flex pt-3 gap-5 justify-center">
         <ModalButton
           onClick={onClose}
           text="閉じる"

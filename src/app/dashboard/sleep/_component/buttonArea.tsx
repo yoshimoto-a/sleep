@@ -68,11 +68,10 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
       <CustomModal
         isOpen={isAllModalOpen}
         onClose={() => setIsAllModalOpen(false)}
-        className=""
+        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
       >
         <InputAllModal
           setAllIsModalOpen={setIsAllModalOpen}
-          // allDatetime={allDatetime}
           mutate={mutate}
         ></InputAllModal>
       </CustomModal>
