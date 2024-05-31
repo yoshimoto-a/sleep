@@ -25,7 +25,7 @@ export const EditButton: React.FC<Props> = ({ rowItem, mutate }) => {
   return (
     <>
       <button onClick={() => setIsOpen(true)} className="">
-        <Image alt="編集" src="/edit/edit.png" width={15} height={15}></Image>
+        <Image alt="編集" src="/weight/edit.png" width={15} height={15}></Image>
       </button>
       <CustomModal
         isOpen={isOpen}

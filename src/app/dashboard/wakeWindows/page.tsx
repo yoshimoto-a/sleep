@@ -190,7 +190,7 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="pt-5 text-center text-lg">活動時間設定</h1>
+      <h1 className="pt-10 text-center text-lg">活動時間設定</h1>
       <Guideline></Guideline>
       <form
         onSubmit={handleSubmit}

@@ -34,7 +34,7 @@ export default function Home() {
         <div className="m-5 w-2/5">
           <Image
             alt="tsuboneRie"
-            src={"/_topPage/Rie.png"}
+            src={"/_topPage/rie.jpg"}
             width={150}
             height={0}
             layout="intrinsic"
