@@ -2,6 +2,7 @@
 
 import dayjs from "dayjs";
 import { useState } from "react";
+import { Footer } from "../_components/footer";
 import { ButtonArea } from "./_component/buttonArea";
 import { ElapsedTime } from "./_component/elapsedTime";
 import { Header } from "./_component/header";
@@ -47,6 +48,7 @@ export default function Page() {
       <div className="fixed bottom-25 w-full bg-white z-0">
         <ButtonArea mutate={mutate}></ButtonArea>
       </div>
+      <Footer></Footer>
     </>
   );
 }

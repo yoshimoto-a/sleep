@@ -51,7 +51,7 @@ export default function Layout({
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}
-      <Footer />
+      <Footer></Footer>
     </UserContext.Provider>
   );
 }
