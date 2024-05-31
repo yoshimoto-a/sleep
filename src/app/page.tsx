@@ -102,7 +102,7 @@ export default function Home() {
               <br />
               共有できる人数に制限もありません
             </div>
-            <div className="p-5 flex justify-center">
+            <div className="flex justify-center">
               <Image
                 alt="topPage"
                 src={"/_topPage/share.png"}
@@ -123,13 +123,21 @@ export default function Home() {
               <Image
                 alt="weightPage"
                 src={"/_topPage/weight.PNG"}
-                width={150}
+                width={200}
                 height={0}
                 layout="intrinsic"
               ></Image>
             </div>
           </div>
+          <div className="mb-20 flex justify-center">
+            <div className="px-5 p-2 w-40 rounded-full text-center bg-blue-200 ">
+              <Link href="./signup" className="header-link">
+                はじめる
+              </Link>
+            </div>
+          </div>
         </div>
+
         <Footer />
       </div>
     </div>
