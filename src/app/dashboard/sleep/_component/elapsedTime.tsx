@@ -9,6 +9,16 @@ interface PropsItem {
 export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log(currentTime);
+
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
   useEffect(() => {
     if (!data) return;
     switch (data.latestData.action) {
@@ -18,7 +28,7 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
           setElapsedTime(
             FormatDuration(
               data.latestData.record.bedTime,
-              new Date(),
+              currentTime,
               "MinutesOnly"
             )
           );
@@ -29,7 +39,7 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
           setElapsedTime(
             FormatDuration(
               data.latestData.record.sleep,
-              new Date(),
+              currentTime,
               "HourAndMinutes"
             )
           );
@@ -40,13 +50,13 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
           setElapsedTime(
             FormatDuration(
               data.latestData.record.wakeup,
-              new Date(),
+              currentTime,
               "HourAndMinutes"
             )
           );
         break;
     }
-  }, [data]);
+  }, [data, data?.latestData?.action, data?.latestData?.record, currentTime]);
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
