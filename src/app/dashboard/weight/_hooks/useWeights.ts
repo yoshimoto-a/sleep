@@ -4,7 +4,7 @@ import { UserContext } from "../../layout";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
 
-export const useGetWeight = () => {
+export const useWeights = () => {
   const [dbUserId, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
   const shouldFetchData = !isLoding && token;

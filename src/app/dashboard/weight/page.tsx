@@ -2,11 +2,11 @@
 import { Footer } from "../_components/footer";
 import { WeightForm } from "./_components/WeightForm";
 import { WeightList } from "./_components/WeightList";
-import { useGetWeight } from "./_hooks/useGetWeight";
+import { useWeights } from "./_hooks/useWeights";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Page() {
-  const { data, error, isLoading, mutate, babyId, dbUserId } = useGetWeight();
+  const { data, error, isLoading, mutate, babyId, dbUserId } = useWeights();
   const noData = data?.status !== 200 || !("data" in data) || !data.data;
 
   if (noData) return;
