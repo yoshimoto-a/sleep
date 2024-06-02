@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { Footer } from "../_components/footer";
 import { Button } from "./_components/Button";
-import { EditButton } from "./_components/EditButton";
+import { ControlButtomWithModal } from "./_components/ControlButtomWithModal";
 import { Item } from "./_components/Item";
 import { useGetWeight } from "./_hooks/useGetWeight";
 import { useVal } from "./_hooks/useVal";
@@ -110,7 +110,7 @@ export default function Page() {
                     : "-"
                 }
               />
-              <EditButton
+              <ControlButtomWithModal
                 isSubmitting={isSubmitting}
                 rowItem={item}
                 mutate={mutate}

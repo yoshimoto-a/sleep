@@ -12,7 +12,7 @@ interface Props {
   rowItem: Weight;
   mutate: any;
 }
-export const EditButton: React.FC<Props> = ({
+export const ControlButtomWithModal: React.FC<Props> = ({
   isSubmitting,
   rowItem,
   mutate,
