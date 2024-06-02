@@ -15,7 +15,7 @@ interface Props {
 }
 export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
-    useWeightValidation();
+    useWeightValidation(null, new Date());
 
   const handleSave = async () => {
     if (!weight) return;

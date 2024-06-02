@@ -1,7 +1,6 @@
-import dayjs from "dayjs";
 import { useContext } from "react";
-import { useState } from "react";
 import { UserContext } from "../../layout";
+import { useWeightValidation } from "./useWeightValidation";
 import { useApi } from "@/app/_hooks/useApi";
 import { delRequests } from "@/app/_types/apiRequests/dashboard/weight/delReqests";
 import { delResponse } from "@/app/_types/apiRequests/dashboard/weight/delResponse";
@@ -14,24 +13,11 @@ export const useWeightForm = (
   initialDate: Date,
   mutate: any
 ) => {
-  const [weight, setWeight] = useState<number>(initialWeight);
-  const [weightError, setWeightError] = useState("");
-  const [date, setDate] = useState(dayjs(initialDate).format("YYYY-MM-DD"));
+  const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
+    useWeightValidation(initialWeight, initialDate);
   const [dbUserId, babyId] = useContext(UserContext);
   const fetcher = useApi();
 
-  const handleChangeWeight = (val: string) => {
-    if (isNaN(Number(val))) {
-      setWeightError("数値を入力してください");
-      setWeight(Number(val));
-    } else {
-      setWeightError("");
-      setWeight(Number(val));
-    }
-  };
-  const handleChangeDate = (val: string) => {
-    setDate(val);
-  };
   const put = async () => {
     try {
       if (!dbUserId || !weight || !date) return;

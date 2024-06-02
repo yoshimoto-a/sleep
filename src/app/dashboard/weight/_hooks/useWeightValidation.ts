@@ -1,10 +1,13 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 
-export const useWeightValidation = () => {
-  const [weight, setWeight] = useState<number | null>(null);
+export const useWeightValidation = (
+  initialWeight: number | null,
+  initialDate: Date
+) => {
+  const [weight, setWeight] = useState<number | null>(initialWeight);
   const [weightError, setWeightError] = useState("");
-  const [date, setDate] = useState(dayjs(new Date()).format("YYYY-MM-DD"));
+  const [date, setDate] = useState(dayjs(initialDate).format("YYYY-MM-DD"));
 
   const handleChangeWeight = (val: string) => {
     if (isNaN(Number(val))) {
