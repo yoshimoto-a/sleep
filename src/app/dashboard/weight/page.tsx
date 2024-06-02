@@ -6,7 +6,8 @@ import { useWeights } from "./_hooks/useWeights";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Page() {
-  const { data, error, isLoading, mutate, babyId, dbUserId } = useWeights();
+  const { data, error, isLoading, mutate, isSubmitting, createWeight } =
+    useWeights();
   const noData = data?.status !== 200 || !("data" in data) || !data.data;
 
   if (noData) return;
@@ -17,9 +18,8 @@ export default function Page() {
     <>
       <h1 className="pt-10 text-center text-lg">体重</h1>
       <WeightForm
-        babyId={babyId}
-        dbUserId={dbUserId}
-        mutate={mutate}
+        createWeight={createWeight}
+        isSubmitting={isSubmitting}
       ></WeightForm>
       <WeightList data={data} mutate={mutate}></WeightList>
 

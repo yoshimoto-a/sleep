@@ -1,45 +1,25 @@
 "use client";
 import dayjs from "dayjs";
-import { useState } from "react";
 import { useVal } from "../_hooks/useVal";
 import { Button } from "./Button";
 import { Input } from "@/app/_components/input";
 import { Label } from "@/app/_components/label";
-import { useApi } from "@/app/_hooks/useApi";
-import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/postRequest";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/postResponse";
 
 interface Props {
-  mutate: any;
-  dbUserId: number | null;
-  babyId: number | null;
+  isSubmitting: boolean;
+  createWeight: (
+    weight: number,
+    date: string,
+    handleChangeWeight: (val: string) => void
+  ) => void;
 }
-export const WeightForm: React.FC<Props> = ({ mutate, dbUserId, babyId }) => {
+export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useVal();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { post } = useApi();
 
   const handleSave = async () => {
-    if (!dbUserId || !babyId || !weight) return;
-    setIsSubmitting(true);
-    const prams = {
-      data: {
-        babyId,
-        weight,
-        measurementDate: new Date(date),
-        createUser: dbUserId,
-        changeUser: dbUserId,
-      },
-    };
-    try {
-      await post<PostRequests, PostResponse>("/api/dashboard/weight", prams);
-      handleChangeWeight("");
-      mutate();
-    } catch (e) {
-      alert("データの登録に失敗しました");
-    }
-    setIsSubmitting(false);
+    if (!weight) return;
+    createWeight(weight, date, handleChangeWeight);
   };
 
   return (
