@@ -7,7 +7,7 @@ import { IsLoading } from "@/app/_components/isLoading";
 export default function Menu() {
   const { data, error, isLoading } = useGetLoginUser();
   const { logout } = useLogout();
-  if (isLoading) return <IsLoading></IsLoading>;
+  if (isLoading) return <IsLoading />;
   if (error) return <div>エラー発生</div>;
   if (!isLoading && !data) return <div>ユーザー情報なし</div>;
 
@@ -25,7 +25,7 @@ export default function Menu() {
         link="./wakeWindows/"
         title="活動時間登録"
       />
-      {/* <RowItem icon="/_menuIcon/chat.png" link="./chat/" title="チャット" /> */}
+      {/* 追加予定<RowItem icon="/_menuIcon/chat.png" link="./chat/" title="チャット" /> */}
       {data?.data?.role === "MAIN" && (
         <RowItem
           icon="/_menuIcon/subSignup.png"
@@ -33,7 +33,7 @@ export default function Menu() {
           title="サブアカウントの作成"
         />
       )}
-      {/* <RowItem icon="/_menuIcon/graph.png" link="./weight/" title="成長曲線" /> */}
+      {/* 追加予定<RowItem icon="/_menuIcon/graph.png" link="./weight/" title="成長曲線" /> */}
       <RowItem
         icon="/_menuIcon/setting.png"
         link="./setting/"

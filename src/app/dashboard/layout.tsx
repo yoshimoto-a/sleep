@@ -51,12 +51,13 @@ export default function Layout({
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
       {children}
-      <Footer></Footer>
+      <Footer />
     </UserContext.Provider>
   );
 }
 
-/**const router = useRouter();
+/**上手くいかない
+  const router = useRouter();
   // const { data: userData, error, isLoading } = useGetLoginUser();
   const { data, error, isLoading } = useGetBaby();
   const { session, isLoding } = useSupabaseSession();

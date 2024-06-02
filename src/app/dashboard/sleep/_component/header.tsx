@@ -24,7 +24,7 @@ export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
         height={15}
         onClick={onClickPrev}
         className="inline-block"
-      ></Image>
+      />
       <span>{dayjs(date).format("YYYY年M月D日(ddd)")}</span>
       <span className="">{"data" in data && data.data.name}ちゃん</span>
       <span className="">
@@ -41,7 +41,7 @@ export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
           height={15}
           onClick={onClickNext}
           className="inline-block"
-        ></Image>
+        />
       )}
     </div>
   );

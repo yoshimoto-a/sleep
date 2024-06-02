@@ -38,7 +38,7 @@ export default function Home() {
             width={150}
             height={0}
             layout="intrinsic"
-          ></Image>
+          />
         </div>
       </div>
       <div className="m-3">

@@ -14,7 +14,7 @@ import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const [date, setDate] = useState(new Date());
   const { isLoading, data, error, mutate } = useGetData(date);
-  if (isLoading) return <IsLoading></IsLoading>;
+  if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
 
   const handlePrev = () => {
@@ -26,16 +26,13 @@ export default function Page() {
 
   return (
     <>
-      <Header
-        date={date}
-        onClickPrev={handlePrev}
-        onClickNext={handleNext}
-      ></Header>
+      <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
       <div className="flex justify-between mx-5 my-5">
         <MainTime SleepingSituationData={data} />
         <ElapsedTime data={data} />
       </div>
-      {/* <div className="grid grid-cols-10"> */}
+      {/* グラフ作れたらここに*/}
+      {/*<div className="grid grid-cols-10"> */}
       {/* <div className="bg-white col-span-3">グラフ</div> */}
       <div className="relative col-span-7 h-full w-4/5 mx-auto">
         <ShowData
@@ -43,12 +40,12 @@ export default function Page() {
           isLoading={isLoading}
           error={error}
           mutate={mutate}
-        ></ShowData>
+        />
       </div>
       <div className="fixed bottom-25 w-full bg-white z-0">
-        <ButtonArea mutate={mutate}></ButtonArea>
+        <ButtonArea mutate={mutate} />
       </div>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }

@@ -48,7 +48,7 @@ export default function Home() {
                 width={150}
                 height={0}
                 layout="intrinsic"
-              ></Image>
+              />
             </div>
             <div className="mt-8 flex justify-center">
               <div className="px-5 py-2 w-40 rounded-full text-center bg-custom-blue">
@@ -86,7 +86,7 @@ export default function Home() {
                   width={200}
                   height={0}
                   layout="intrinsic"
-                ></Image>
+                />
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function Home() {
                 width={200}
                 height={0}
                 layout="intrinsic"
-              ></Image>
+              />
             </div>
           </div>
           <div className="mb-5 text-center w-full">
@@ -126,7 +126,7 @@ export default function Home() {
                 width={200}
                 height={0}
                 layout="intrinsic"
-              ></Image>
+              />
             </div>
           </div>
           <div className="mb-20 flex justify-center">

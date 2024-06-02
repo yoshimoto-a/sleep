@@ -32,7 +32,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
     setSleep(data.data.sleep);
     setWakeup(data.data.wakeup);
   }, [data]);
-  if (isLoading) return <IsLoading></IsLoading>;
+  if (isLoading) return <IsLoading />;
   if (error) return <div>エラー発生</div>;
 
   const put = async () => {
@@ -135,12 +135,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         ></ModalButton>
       </div>
       <button onClick={handleDelete} className="absolute inset-b-0 right-20">
-        <Image
-          alt="削除"
-          src="/weight/rubbish.png"
-          width={20}
-          height={20}
-        ></Image>
+        <Image alt="削除" src="/weight/rubbish.png" width={20} height={20} />
       </button>
     </>
   );
