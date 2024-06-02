@@ -42,7 +42,7 @@ export const ControlButtomWithModal: React.FC<Props> = ({
         onClose={() => setIsOpen(false)}
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
       >
-        <div className="w-full">
+        <div className="flex flex-col items-center justify-center w-full h-full">
           <Label htmlFor="measurementDate" text="計測日" />
           <Input
             id="measurementDate"
@@ -78,7 +78,7 @@ export const ControlButtomWithModal: React.FC<Props> = ({
             />
             <Button disabled={isSubmitting} text="保存" onclick={put} />
           </div>
-          <button onClick={del} className="absolute inset-b-0 right-20">
+          <button onClick={del} className="absolute bottom-10 right-20">
             <Image
               alt="削除"
               src="/weight/rubbish.png"
