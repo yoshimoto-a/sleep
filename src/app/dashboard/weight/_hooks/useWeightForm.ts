@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { UserContext } from "../../layout";
 import { useWeightValidation } from "./useWeightValidation";
 import { useApi } from "@/app/_hooks/useApi";
-import { delRequests } from "@/app/_types/apiRequests/dashboard/weight/delReqests";
-import { delResponse } from "@/app/_types/apiRequests/dashboard/weight/delResponse";
-import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/weight/updateRequest";
-import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/weight/updateResponse";
+import { DelRequests } from "@/app/_types/apiRequests/dashboard/weight/DelReqests";
+import { DelResponse } from "@/app/_types/apiRequests/dashboard/weight/DelResponse";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/weight/UpdateRequest";
+import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/weight/UpdateResponse";
 
 export const useWeightForm = (
   id: number,
@@ -40,7 +40,7 @@ export const useWeightForm = (
   };
   const del = async () => {
     try {
-      await fetcher.del<delRequests, delResponse>(
+      await fetcher.del<DelRequests, DelResponse>(
         `/api/dashboard/weight?id=${id}`
       );
       mutate();

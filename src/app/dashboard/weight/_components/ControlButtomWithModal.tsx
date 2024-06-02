@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { Input } from "@/app/_components/input";
 import { Label } from "@/app/_components/label";
 import { CustomModal } from "@/app/_components/modal";
-import { Weight } from "@/app/_types/apiRequests/dashboard/weight";
+import { Weight } from "@/app/_types/apiRequests/dashboard/weight/Index";
 
 interface Props {
   isSubmitting: boolean;

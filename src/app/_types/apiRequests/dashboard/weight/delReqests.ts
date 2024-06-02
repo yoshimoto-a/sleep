@@ -1,3 +1,3 @@
-export interface delRequests {
+export interface DelRequests {
   id: number;
 }

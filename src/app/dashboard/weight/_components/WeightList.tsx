@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { ControlButtomWithModal } from "../_components/ControlButtomWithModal";
 import { Item } from "../_components/Item";
 import { dailyIncrease } from "../_utils/dailyIncrease";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
 
 interface Props {
   data: IndexResponse;

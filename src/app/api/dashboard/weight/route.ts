@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/postResponse";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 

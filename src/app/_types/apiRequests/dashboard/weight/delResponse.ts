@@ -1,3 +1,3 @@
-export interface delResponse {
+export interface DelResponse {
   status: number;
 }

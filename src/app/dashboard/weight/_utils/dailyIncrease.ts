@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Weight } from "@/app/_types/apiRequests/dashboard/weight";
+import { Weight } from "@/app/_types/apiRequests/dashboard/weight/Index";
 export const dailyIncrease = (
   currentRowData: Weight,
   previousRowData: Weight
