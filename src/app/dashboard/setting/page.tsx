@@ -28,6 +28,7 @@ export default function Page() {
   const [gender, setGender] = useState<Gender | "">("");
   const [, babyId] = useContext(UserContext);
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     data: wakeWindowsData,
     isLoading: isWakeWindowsLoading,
@@ -47,12 +48,12 @@ export default function Page() {
     }
   }, [isLoding, data]);
 
-  if (isLoading || isWakeWindowsLoading) return <IsLoading></IsLoading>;
+  if (isLoading || isWakeWindowsLoading) return <IsLoading />;
   if (error || wakeWindowsError) return <div>エラー発生</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
     if (token && gender) {
       try {
         const body: Baby = {
@@ -76,6 +77,7 @@ export default function Page() {
         alert("更新に失敗しました");
       }
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -92,6 +94,7 @@ export default function Page() {
               value={babyName}
               placeholder=""
               inputMode="text"
+              disabled={isSubmitting}
               onChange={value => setBabyName(value)}
             />
           </div>
@@ -103,6 +106,7 @@ export default function Page() {
               value={birthday}
               placeholder=""
               inputMode="numeric"
+              disabled={isSubmitting}
               onChange={value => setBirthday(value)}
             />
           </div>
@@ -114,6 +118,7 @@ export default function Page() {
               value={expectedDateOfBirth}
               placeholder=""
               inputMode="numeric"
+              disabled={isSubmitting}
               onChange={value => setExpectedDateOfBirth(value)}
             />
           </div>
@@ -125,6 +130,7 @@ export default function Page() {
               value={birthWeight}
               placeholder=""
               inputMode="numeric"
+              disabled={isSubmitting}
               onChange={value => setBirthWeight(value)}
             />
           </div>
@@ -150,6 +156,7 @@ export default function Page() {
             <button
               className="rounded-full w-32 bg-blue-500 text-white py-2"
               type="submit"
+              disabled={isSubmitting}
             >
               保存
             </button>

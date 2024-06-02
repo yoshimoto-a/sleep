@@ -13,9 +13,11 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const { token } = useSupabaseSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [, babyId] = useContext(UserContext);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (token && babyId) {
       const prams: PostRequests = {
         method: "POST",
@@ -39,6 +41,7 @@ export default function Page() {
         alert("サブアカウント招待に失敗しました");
       }
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -61,6 +64,7 @@ export default function Page() {
               value={email}
               placeholder="メールアドレス"
               inputMode="email"
+              disabled={isSubmitting}
               onChange={value => setEmail(value)}
             />
           </div>

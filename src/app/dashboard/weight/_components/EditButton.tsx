@@ -8,10 +8,15 @@ import { CustomModal } from "@/app/_components/modal";
 import { Weight } from "@/app/_types/apiRequests/dashboard/weight";
 
 interface Props {
+  isSubmitting: boolean;
   rowItem: Weight;
   mutate: any;
 }
-export const EditButton: React.FC<Props> = ({ rowItem, mutate }) => {
+export const EditButton: React.FC<Props> = ({
+  isSubmitting,
+  rowItem,
+  mutate,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     weight,
@@ -25,7 +30,7 @@ export const EditButton: React.FC<Props> = ({ rowItem, mutate }) => {
   return (
     <>
       <button onClick={() => setIsOpen(true)} className="">
-        <Image alt="編集" src="/weight/edit.png" width={15} height={15}></Image>
+        <Image alt="編集" src="/weight/edit.png" width={15} height={15} />
       </button>
       <CustomModal
         isOpen={isOpen}
@@ -33,34 +38,40 @@ export const EditButton: React.FC<Props> = ({ rowItem, mutate }) => {
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
       >
         <div className="w-full">
-          <Label htmlFor="measurementDate" text="計測日"></Label>
+          <Label htmlFor="measurementDate" text="計測日" />
           <Input
             id="measurementDate"
             type="date"
             value={date}
             placeholder=""
             inputMode="numeric"
+            disabled={isSubmitting}
             onChange={val => {
               handleChangeDate(val);
             }}
-          ></Input>
+          />
 
-          <Label htmlFor="weight" text="体重"></Label>
+          <Label htmlFor="weight" text="体重" />
           <Input
             id="weight"
             type="number"
             value={weight ? weight.toString() : ""}
             placeholder="3000g"
             inputMode="numeric"
+            disabled={isSubmitting}
             onChange={val => {
               handleChangeWeight(val);
             }}
-          ></Input>
+          />
           {weightError && <p>{weightError}</p>}
 
           <div>
-            <Button text="キャンセル" onclick={() => setIsOpen(false)}></Button>
-            <Button text="保存" onclick={put}></Button>
+            <Button
+              disabled={isSubmitting}
+              text="キャンセル"
+              onclick={() => setIsOpen(false)}
+            />
+            <Button disabled={isSubmitting} text="保存" onclick={put} />
           </div>
           <button onClick={del} className="absolute inset-b-0 right-20">
             <Image
@@ -68,7 +79,7 @@ export const EditButton: React.FC<Props> = ({ rowItem, mutate }) => {
               src="/weight/rubbish.png"
               width={20}
               height={20}
-            ></Image>
+            />
           </button>
         </div>
       </CustomModal>

@@ -13,8 +13,11 @@ import { supabase } from "@/utils/supabase";
 export default function Page() {
   const router = useRouter();
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       alert("パスワードの再設定に失敗しました");
@@ -23,6 +26,7 @@ export default function Page() {
       alert("再設定に成功しました。ログインしてください");
       router.push("/login/");
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -37,10 +41,11 @@ export default function Page() {
             value={password}
             placeholder="パスワード"
             inputMode="text"
+            disabled={isSubmitting}
             onChange={value => setPassword(value)}
           />
         </div>
-        <SubmitButton>送信</SubmitButton>
+        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
       </Form>
       <Footer />
     </>

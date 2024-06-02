@@ -15,9 +15,9 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const valid = () => {
     let isValid = true;
@@ -46,8 +46,11 @@ export default function Page() {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!valid()) return;
+    setIsSubmitting(true);
+    if (!valid()) {
+      setIsSubmitting(false);
+      return;
+    }
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -66,6 +69,7 @@ export default function Page() {
       setPassword("");
       router.push("/signup/sentEmail/");
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -80,6 +84,7 @@ export default function Page() {
             value={email}
             placeholder="メールアドレス"
             inputMode="email"
+            disabled={isSubmitting}
             onChange={value => setEmail(value)}
           />
           <ErrorMessage message={emailErrorMessage} />
@@ -91,11 +96,12 @@ export default function Page() {
             value={password}
             placeholder="パスワード"
             inputMode="text"
+            disabled={isSubmitting}
             onChange={value => setPassword(value)}
           />
           <ErrorMessage message={passwordErrorMessage} />
         </div>
-        <SubmitButton>送信</SubmitButton>
+        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
       </Form>
 
       <Footer />

@@ -11,10 +11,13 @@ import { supabase } from "@/utils/supabase";
 
 export default function Page() {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3000/resetPassword/setting",
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/setting`,
     });
     if (error) {
       alert("再設定メールの送信に失敗しました");
@@ -22,6 +25,7 @@ export default function Page() {
       setEmail("");
       alert("パスワード設定メールを確認してください");
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -38,10 +42,11 @@ export default function Page() {
             value={email}
             inputMode="text"
             placeholder="メールアドレス"
+            disabled={isSubmitting}
             onChange={value => setEmail(value)}
           />
         </div>
-        <SubmitButton>送信</SubmitButton>
+        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
       </Form>
       <Footer />
     </>

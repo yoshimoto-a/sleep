@@ -26,6 +26,8 @@ export default function Page() {
   const [data, setData] = useState<WakeWindowsData | null>(null);
   const [dbUserId, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const fetcher = useApi();
   const {
     basicHour,
@@ -68,11 +70,12 @@ export default function Page() {
       setting(getData.data);
     }
   }, [isLoading, getData, setting, isLoding]);
-  if (isLoading || isLoding) return <IsLoading></IsLoading>;
+  if (isLoading || isLoding) return <IsLoading />;
   if (error) return <div>データの取得に失敗しました</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (!token || !babyId || !dbUserId) return;
     if (!data) {
       const wakeWindows: PostWakeWindows[] = [
@@ -186,12 +189,13 @@ export default function Page() {
         alert("データ更新に失敗しました");
       }
     }
+    setIsSubmitting(false);
   };
 
   return (
     <>
       <h1 className="pt-10 text-center text-lg">活動時間設定</h1>
-      <Guideline></Guideline>
+      <Guideline />
       <form
         onSubmit={handleSubmit}
         className="bg-custom-gray shadow-md rounded px-4 pt-6 pb-8 my-4"
@@ -205,7 +209,7 @@ export default function Page() {
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <Label text="基本の活動時間" htmlFor="basic"></Label>
+              <Label text="基本の活動時間" htmlFor="basic" />
               <div className="flex gap-1">
                 <Input
                   id="basicHour"
@@ -213,8 +217,9 @@ export default function Page() {
                   value={basicHour?.toString()}
                   placeholder="時間"
                   inputMode="numeric"
+                  disabled={isSubmitting}
                   onChange={value => handleCahngeBasicHour(value)}
-                ></Input>
+                />
                 {basicHourError && <p>{basicHourError}</p>}{" "}
                 <Input
                   id="basicMinutes"
@@ -222,21 +227,23 @@ export default function Page() {
                   value={basicMinutes?.toString()}
                   placeholder="分"
                   inputMode="numeric"
+                  disabled={isSubmitting}
                   onChange={value => handleCahngeBasicMinutes(value)}
-                ></Input>
+                />
                 {basicMinutesError && <p>{basicMinutesError}</p>}{" "}
               </div>
             </div>
             <div className="flex-1">
-              <Label text="寝かしつけ開始(分前)" htmlFor="basic"></Label>
+              <Label text="寝かしつけ開始(分前)" htmlFor="basic" />
               <Input
                 id="sinceBedtime"
                 type="number"
                 value={String(sinceBedtime)}
                 placeholder="分前"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => setSinceBedtime(Number(value))}
-              ></Input>
+              />
             </div>
           </div>
         </div>
@@ -256,6 +263,7 @@ export default function Page() {
                 value={morningHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeMorningHour(value)}
               />
               {morningHourError && <p>{morningHourError}</p>}{" "}
@@ -265,6 +273,7 @@ export default function Page() {
                 value={morningMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeMorningMinutes(value)}
               />
               {morningMinutesError && <p>{morningMinutesError}</p>}{" "}
@@ -279,6 +288,7 @@ export default function Page() {
                 value={afternoonHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeAfternoonHour(value)}
               />
               {afternoonHourError && <p>{afternoonHourError}</p>}{" "}
@@ -288,6 +298,7 @@ export default function Page() {
                 value={afternoonMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeAfternoonMinutes(value)}
               />
             </div>
@@ -302,6 +313,7 @@ export default function Page() {
                 value={eveningHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeEveningHour(value)}
               />
               {eveningMinutesError && <p>{eveningHourError}</p>}{" "}
@@ -311,6 +323,7 @@ export default function Page() {
                 value={eveningMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeEveningMinutes(value)}
               />
               {eveningMinutesError && <p>{eveningMinutesError}</p>}{" "}
@@ -318,7 +331,7 @@ export default function Page() {
           </div>
         </div>
         <div className="text-center">
-          <SubmitButton>保存</SubmitButton>
+          <SubmitButton disabled={isSubmitting}>保存</SubmitButton>
         </div>
       </form>
     </>

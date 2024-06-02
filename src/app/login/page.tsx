@@ -19,9 +19,10 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { token } = useSupabaseSession();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -55,6 +56,7 @@ export default function Page() {
         }
       }
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -68,6 +70,7 @@ export default function Page() {
             value={email}
             placeholder="メールアドレス"
             inputMode="email"
+            disabled={isSubmitting}
             onChange={value => setEmail(value)}
           />
         </div>
@@ -78,6 +81,7 @@ export default function Page() {
             value={password}
             placeholder="パスワード"
             inputMode="text"
+            disabled={isSubmitting}
             onChange={value => setPassword(value)}
           />
         </div>
@@ -88,7 +92,7 @@ export default function Page() {
         >
           パスワードの再設定はこちら
         </Link>
-        <SubmitButton>送信</SubmitButton>
+        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
       </Form>
       <Footer />
     </>
