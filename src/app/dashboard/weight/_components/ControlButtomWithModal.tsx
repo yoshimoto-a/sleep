@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
-import { useWeight } from "../_hooks/useWeight";
+import { useWeightForm } from "../_hooks/useWeightForm";
 import { Button } from "./Button";
 import { Input } from "@/app/_components/input";
 import { Label } from "@/app/_components/label";
@@ -26,7 +26,12 @@ export const ControlButtomWithModal: React.FC<Props> = ({
     handleChangeDate,
     put,
     del,
-  } = useWeight(rowItem.id, rowItem.weight, rowItem.measurementDate, mutate);
+  } = useWeightForm(
+    rowItem.id,
+    rowItem.weight,
+    rowItem.measurementDate,
+    mutate
+  );
   return (
     <>
       <button onClick={() => setIsOpen(true)} className="">

@@ -8,7 +8,7 @@ import { delResponse } from "@/app/_types/apiRequests/dashboard/weight/delRespon
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/weight/updateRequest";
 import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/weight/updateResponse";
 
-export const useWeight = (
+export const useWeightForm = (
   id: number,
   initialWeight: number,
   initialDate: Date,
