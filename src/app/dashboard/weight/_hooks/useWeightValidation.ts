@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 
-export const useVal = () => {
+export const useWeightValidation = () => {
   const [weight, setWeight] = useState<number | null>(null);
   const [weightError, setWeightError] = useState("");
   const [date, setDate] = useState(dayjs(new Date()).format("YYYY-MM-DD"));

@@ -1,6 +1,6 @@
 "use client";
 import dayjs from "dayjs";
-import { useVal } from "../_hooks/useVal";
+import { useWeightValidation } from "../_hooks/useWeightValidation";
 import { Button } from "./Button";
 import { Input } from "@/app/_components/input";
 import { Label } from "@/app/_components/label";
@@ -15,7 +15,7 @@ interface Props {
 }
 export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
-    useVal();
+    useWeightValidation();
 
   const handleSave = async () => {
     if (!weight) return;
