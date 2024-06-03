@@ -62,7 +62,7 @@ export const GET = async (req: NextRequest) => {
         babyId: parseInt(id),
       },
       orderBy: {
-        measurementDate: "asc",
+        measurementDate: "desc",
       },
     });
     return Response.json(<IndexResponse>{ status: 200, data: getWeigth });
