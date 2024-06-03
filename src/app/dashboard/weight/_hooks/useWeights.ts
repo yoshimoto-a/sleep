@@ -9,7 +9,7 @@ import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/PostRequ
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
 
 export const useWeights = () => {
-  const [dbUserId, babyId] = useContext(UserContext);
+  const [dbUserId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { post } = useApi();
@@ -40,7 +40,7 @@ export const useWeights = () => {
     date: string,
     handleChangeWeight: (val: string) => void
   ) => {
-    if (!dbUserId || !babyId) return;
+    if (!dbUserId) return;
     setIsSubmitting(true);
     const prams = {
       data: {
