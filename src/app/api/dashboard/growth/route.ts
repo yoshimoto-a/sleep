@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { checkBabyId } from "../../_utils/checkBabyId";
+import { getBabyId } from "../../_utils/getBabyId";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateRequest";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
@@ -14,21 +14,10 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return Response.json(<IndexResponse>{
-        status: 400,
-        error: "Failed to obtain Id",
-      });
-    const babyIdCheck = await checkBabyId(token, Number(id));
-    if (!babyIdCheck)
-      return Response.json(<ApiResponse>{
-        status: 401,
-        message: "Unauthorized",
-      });
+    const babyId = await getBabyId(token);
     const getGrowth = await prisma.growth.findMany({
       where: {
-        babyId: parseInt(id),
+        babyId,
       },
     });
 
@@ -58,14 +47,6 @@ export const PUT = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: updateRequests = await req.json();
-    const { babyId } = body.data;
-    const babyIdCheck = await checkBabyId(token, babyId);
-    if (!babyIdCheck)
-      return Response.json({
-        status: 401,
-        message: "Unauthorized",
-      });
-
     const { id } = body;
     const { startedAt, archevedAt, changeUser } = body.data;
     await prisma.growth.update({

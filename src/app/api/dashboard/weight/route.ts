@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import { getBabyId } from "../../_utils/getBabyId";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
@@ -11,11 +12,10 @@ export const POST = async (req: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
-
   try {
+    const babyId = await getBabyId(token);
     const body = await req.json();
-    const { babyId, measurementDate, weight, createUser, changeUser } =
-      body.data;
+    const { measurementDate, weight, createUser, changeUser } = body.data;
     const resp = await prisma.weight.create({
       data: {
         babyId,
@@ -51,15 +51,10 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return Response.json(<IndexResponse>{
-        status: 400,
-        error: "Failed to obtain Id",
-      });
+    const babyId = await getBabyId(token);
     const getWeigth = await prisma.weight.findMany({
       where: {
-        babyId: parseInt(id),
+        babyId,
       },
       orderBy: {
         measurementDate: "desc",
