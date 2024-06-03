@@ -14,14 +14,13 @@ export const useWeightForm = (
 ) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useWeightValidation(initialWeight, initialDate);
-  const [dbUserId, babyId] = useContext(UserContext);
+  const [dbUserId] = useContext(UserContext);
   const fetcher = useApi();
 
   const put = async () => {
     try {
       if (!dbUserId || !weight || !date) return;
       const body = {
-        id,
         data: {
           weight: weight,
           measurementDate: new Date(date),
@@ -29,18 +28,18 @@ export const useWeightForm = (
         },
       };
       await fetcher.put<UpdateRequests, UpdateResponse>(
-        "/api/dashboard/weight",
+        `/api/dashboard/weight/${id}`,
         body
       );
-      mutate(`/api/dashboard/weight?id=${babyId}`, body);
+      await mutate();
     } catch (e) {
       alert("更新に失敗しました");
     }
   };
   const del = async () => {
     try {
-      await fetcher.del<DelResponse>(`/api/dashboard/weight?id=${id}`);
-      mutate();
+      await fetcher.del<DelResponse>(`/api/dashboard/weight/${id}`);
+      await mutate();
     } catch (e) {
       alert("削除に失敗しました");
     }
