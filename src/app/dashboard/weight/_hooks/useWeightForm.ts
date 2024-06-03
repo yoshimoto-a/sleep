@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { UserContext } from "../../layout";
 import { useWeightValidation } from "./useWeightValidation";
 import { useApi } from "@/app/_hooks/useApi";
-import { DelRequests } from "@/app/_types/apiRequests/dashboard/weight/DelReqests";
 import { DelResponse } from "@/app/_types/apiRequests/dashboard/weight/DelResponse";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/weight/UpdateRequest";
 import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/weight/UpdateResponse";
@@ -40,9 +39,7 @@ export const useWeightForm = (
   };
   const del = async () => {
     try {
-      await fetcher.del<DelRequests, DelResponse>(
-        `/api/dashboard/weight?id=${id}`
-      );
+      await fetcher.del<DelResponse>(`/api/dashboard/weight?id=${id}`);
       mutate();
     } catch (e) {
       alert("削除に失敗しました");
