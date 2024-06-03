@@ -8,12 +8,12 @@ export interface Weight {
 }
 
 export interface IndexSuccessResponse {
-  status: number;
+  status: 200;
   data: Weight[];
 }
 
 export interface IndexErrorResponse {
-  status: number;
+  status: 400 | 404 | 500;
   error: string;
 }
 
