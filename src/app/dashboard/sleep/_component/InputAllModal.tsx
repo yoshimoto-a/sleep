@@ -15,16 +15,15 @@ export const InputAllModal: React.FC<Props> = ({
   mutate,
   setAllIsModalOpen,
 }) => {
-  const [dbUserId, babyId] = useContext(UserContext);
+  const [dbUserId] = useContext(UserContext);
   const { allDatetime, errors, handleChange } = useDatetimeValidation();
   const fetcher = useApi();
   const handleSave = async () => {
-    if (!babyId || !dbUserId) return;
+    if (!dbUserId) return;
     if (errors.sleepError !== "" || errors.wakeupError !== "") {
       return;
     }
     const body = {
-      babyId,
       bedtime: allDatetime.bedTime,
       sleep: allDatetime.sleep,
       wakeup: allDatetime.wakeup,
