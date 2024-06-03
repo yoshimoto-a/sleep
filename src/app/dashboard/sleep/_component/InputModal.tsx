@@ -8,7 +8,6 @@ import { UserContext } from "../../layout";
 import { useGetDataById } from "../_hooks/useGetDataById";
 import { IsLoading } from "@/app/_components/isLoading";
 import { useApi } from "@/app/_hooks/useApi";
-import { DeleteRequest } from "@/app/_types/apiRequests/dashboard/sleep/deleteRequest";
 import { DeleteResponse } from "@/app/_types/apiRequests/dashboard/sleep/deleteResponse";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/sleep/updateRequest";
 import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/sleep/updateResponse";
@@ -41,14 +40,13 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
     }
     try {
       const body = {
-        id,
         bedtime,
         sleep,
         wakeup,
         changeUser: dbUserId,
       };
       const resp = await fetcher.put<UpdateRequests, UpdateResponse>(
-        "/api/dashboard/sleep",
+        `/api/dashboard/sleep/${id}`,
         body
       );
 
@@ -63,12 +61,8 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
   };
   const del = async () => {
     try {
-      const body = {
-        id,
-      };
-      const resp = await fetcher.del<DeleteRequest, DeleteResponse>(
-        "/api/dashboard/sleep",
-        body
+      const resp = await fetcher.del<DeleteResponse>(
+        `/api/dashboard/sleep/${id}`
       );
       if (resp.status === 200) {
         mutate();
