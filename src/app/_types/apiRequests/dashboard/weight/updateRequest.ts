@@ -5,6 +5,5 @@ export interface Weight {
   changeUser: number;
 }
 export interface UpdateRequests {
-  id: number;
   data: Weight;
 }
