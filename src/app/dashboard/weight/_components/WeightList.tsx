@@ -28,8 +28,8 @@ export const WeightList: React.FC<Props> = ({ data, mutate }) => {
 
             <Item
               item={
-                index !== 0
-                  ? `${dailyIncrease(item, data.data[index - 1])}g/日`
+                index !== data.data.length - 1
+                  ? `${dailyIncrease(item, data.data[index + 1])}g/日`
                   : "-"
               }
             />
