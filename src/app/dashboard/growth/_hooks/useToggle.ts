@@ -83,12 +83,11 @@ export const useToggle = (
       alert("データない");
       return;
     }
-    const { id, babyId, startedAt, archevedAt } = targetData;
+    const { id, startedAt, archevedAt } = targetData;
     !isActive && (date = null);
     const payload = {
       id,
       data: {
-        babyId,
         startedAt: key.includes("Comp") ? startedAt : date,
         archevedAt: key.includes("Comp") ? date : archevedAt,
         changeUser: dbUserId,

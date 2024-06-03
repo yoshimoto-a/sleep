@@ -16,7 +16,7 @@ export const useWeights = () => {
 
   const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
-    if (!token || !babyId) return;
+    if (!token) return;
     const prams = {
       method: "GET",
       headers: {
@@ -24,7 +24,7 @@ export const useWeights = () => {
         Authorization: token,
       },
     };
-    const resp = await fetch(`/api/dashboard/weight?id=${babyId}`, prams);
+    const resp = await fetch("/api/dashboard/weight", prams);
     const data: IndexResponse = await resp.json();
     if (data.status !== 200) {
       throw new Error(data.error);
@@ -32,7 +32,7 @@ export const useWeights = () => {
     return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
-    shouldFetchData ? `/api/dashboard/weight?id=${babyId}` : null,
+    shouldFetchData ? "/api/dashboard/weight" : null,
     fetcher
   );
   const createWeight = async (
@@ -44,7 +44,6 @@ export const useWeights = () => {
     setIsSubmitting(true);
     const prams = {
       data: {
-        babyId,
         weight,
         measurementDate: new Date(date),
         createUser: dbUserId,
