@@ -8,9 +8,7 @@ import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const { data, error, isLoading, mutate, isSubmitting, createWeight } =
     useWeights();
-  const noData = data?.status !== 200 || !("data" in data) || !data.data;
 
-  if (noData) return;
   if (isLoading) return <IsLoading />;
   if (error) return <div>データの取得に失敗しました</div>;
 

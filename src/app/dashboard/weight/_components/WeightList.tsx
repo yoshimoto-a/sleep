@@ -3,15 +3,13 @@ import dayjs from "dayjs";
 import { ControlButtomWithModal } from "../_components/ControlButtomWithModal";
 import { Item } from "../_components/Item";
 import { dailyIncrease } from "../_utils/dailyIncrease";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
+import { IndexSuccessResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
 
 interface Props {
-  data: IndexResponse;
+  data: IndexSuccessResponse | undefined;
   mutate: any;
 }
 export const WeightList: React.FC<Props> = ({ data, mutate }) => {
-  const noData = data?.status !== 200 || !("data" in data) || !data.data;
-
   return (
     <div className="pt-8 w-full flex flex-col items-center">
       <div className="border-b border-slate-600 w-4/5 py-2 flex justify-center gap-4 pr-6">
@@ -19,7 +17,7 @@ export const WeightList: React.FC<Props> = ({ data, mutate }) => {
         <Item item="体重" />
         <Item item="g/日" />
       </div>
-      {!noData ? (
+      {data && data.data.length >= 1 ? (
         data.data.map((item, index) => (
           <div
             key={item.id}
