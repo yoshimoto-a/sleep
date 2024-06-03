@@ -1,5 +1,6 @@
 "use client";
 import dayjs from "dayjs";
+import toast, { Toaster } from "react-hot-toast";
 import { useWeightValidation } from "../_hooks/useWeightValidation";
 import { Button } from "./Button";
 import { Input } from "@/app/_components/input";
@@ -18,12 +19,19 @@ export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
     useWeightValidation(null, new Date());
 
   const handleSave = async () => {
-    if (!weight) return;
+    if (!weight) {
+      toast.error("体重を入力してください");
+      return;
+    }
     createWeight(weight, date, handleChangeWeight);
+    toast.success("登録しました");
   };
 
   return (
     <>
+      <div>
+        <Toaster position="top-center" />
+      </div>
       <div className="flex justify-center gap-4 pt-5">
         <div className="pl-8 w-1/2">
           <Label htmlFor="measurementDate" text="計測日" />
