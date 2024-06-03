@@ -23,12 +23,13 @@ export const InputAcionModal: React.FC<Props> = ({
   const { token } = useSupabaseSession();
   const [dbUserId, babyId] = useContext(UserContext);
   const [datetimeState, setDatetimeState] = useState(datetime);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const modalClose = () => {
     setIsModalOpen(false);
   };
   const saveValue = async () => {
-    modalClose();
+    setIsSubmitting(true);
     if (!token) return;
     const resp = await fetch(`/api/dashboard/${action}`, {
       method: "POST",
@@ -46,6 +47,8 @@ export const InputAcionModal: React.FC<Props> = ({
     data.status !== 200
       ? alert(`登録できませんでした。${data.message}`)
       : mutate();
+    setIsSubmitting(false);
+    modalClose();
   };
   return (
     <>
@@ -55,17 +58,20 @@ export const InputAcionModal: React.FC<Props> = ({
         type="datetime-local"
         defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
         className="block p-2 m-5 border"
+        disabled={isSubmitting}
         onChange={e => setDatetimeState(new Date(e.target.value))}
       />
       <div className="w-full flex justify-between">
         <button
           onClick={modalClose}
+          disabled={isSubmitting}
           className="w-2/5 rounded bg-gray-300 px-4 py-2"
         >
           閉じる
         </button>
         <button
           onClick={saveValue}
+          disabled={isSubmitting}
           className="w-2/5 rounded bg-blue-500 px-4 py-2"
         >
           保存
