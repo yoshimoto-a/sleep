@@ -88,11 +88,11 @@ export default function Home() {
         </li>
       </ul>
       <div className="mb-20 mt-8 flex justify-center">
-        <div className="px-5 py-2 w-40 border border-gray-400	 rounded-full text-center">
-          <Link href="https://www.imaneru.com/" target="_blank">
+        <Link href="https://www.imaneru.com/" target="_blank">
+          <div className="px-5 py-2 w-40 border border-gray-400	 rounded-full text-center">
             もっと見る
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
       <Footer />
     </div>
