@@ -44,8 +44,6 @@ export const InputAllModal: React.FC<Props> = ({
 
   return (
     <>
-      <h2 className="pb-3 text-center text-2xl">一括登録</h2>
-
       <InputDatetime
         id="bedTime"
         label="寝かしつけ開始"
