@@ -18,7 +18,7 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { token, isLoding } = useSupabaseSession();
+  const { token } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,9 +39,8 @@ export default function Page() {
         access_token,
         user: { id },
       } = data.session;
-
-      try {
-        if (!isLoding && token) {
+      if (token) {
+        try {
           const { isRegistered } = await getLoginUser(access_token, id);
           if (!isRegistered) {
             const babyId: number | undefined | null =
@@ -49,15 +48,12 @@ export default function Page() {
             const role = babyId ? "SUB" : "MAIN";
             const resp = await PostUser(id, role, access_token, babyId);
             if (resp.status !== 200) throw new Error("ユーザー登録失敗");
-            router.replace("/dashboard/setting");
+            router.replace("../dashboard/setting");
           }
           router.replace("/dashboard/sleep");
-        } else {
-          throw new Error("token is not found");
+        } catch (e) {
+          alert("ログインに失敗しました");
         }
-      } catch (e) {
-        console.log(e);
-        alert("ログインに失敗しました");
       }
     }
     setIsSubmitting(false);
