@@ -68,7 +68,7 @@ export default function Home() {
           八南助産師会 助産師様向け「乳幼児の睡眠講座」
         </li>
       </ul>
-      <div className="mt-8 flex justify-center">
+      <div className="mb-20 mt-8 flex justify-center">
         <div className="px-5 py-2 w-40 border border-gray-400	 rounded-full text-center">
           <Link
             href="https://www.imaneru.com/"

@@ -75,14 +75,14 @@ export default function Home() {
               <div className="p-5 flex justify-center">
                 <Image
                   alt="topPageImage"
-                  src={"/_topPage/sleep.png"}
+                  src={"/_topPage/sleep.PNG"}
                   width={200}
                   height={0}
                   layout="intrinsic"
                 />
                 <Image
                   alt="topPage"
-                  src={"/_topPage/growth.png"}
+                  src={"/_topPage/growth.PNG"}
                   width={200}
                   height={0}
                   layout="intrinsic"
@@ -105,7 +105,7 @@ export default function Home() {
             <div className="flex justify-center">
               <Image
                 alt="topPage"
-                src={"/_topPage/share.png"}
+                src={"/_topPage/share.PNG"}
                 width={200}
                 height={0}
                 layout="intrinsic"
