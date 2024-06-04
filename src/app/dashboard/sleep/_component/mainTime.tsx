@@ -44,9 +44,8 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
             <Image
               src="/sleep/sleeping.png"
               alt="睡眠中"
-              height={0}
-              width={0}
-              style={{ width: "40px", height: "auto" }}
+              height={40}
+              width={40}
             />
           ) : (
             elapsedTime

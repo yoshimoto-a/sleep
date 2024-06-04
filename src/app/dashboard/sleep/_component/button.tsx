@@ -12,13 +12,7 @@ export const Button: React.FC<Props> = ({ icon, text, onclick, action }) => {
       onClick={() => onclick(action)}
       className="rounded-full bg-custom-blue w-20 h-20 flex flex-col justify-center items-center"
     >
-      <Image
-        src={icon}
-        alt="menu icon"
-        height={0}
-        width={0}
-        style={{ width: "30px", height: "auto" }}
-      />
+      <Image src={icon} alt="menu icon" height={30} width={30} />
       <p className="text-sm">{text}</p>
     </button>
   );
