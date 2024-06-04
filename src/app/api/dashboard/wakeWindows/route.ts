@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { checkBabyId } from "../../_utils/checkBabyId";
+import { getBabyId } from "../../_utils/getBabyId";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
@@ -16,13 +16,7 @@ export const POST = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: PostRequests = await req.json();
-    const { babyId } = body.sleepPrepTime;
-    const babyIdCheck = await checkBabyId(token, babyId);
-    if (!babyIdCheck)
-      return Response.json(<ApiResponse>{
-        status: 401,
-        message: "Unauthorized",
-      });
+    const babyId = await getBabyId(token);
 
     const { wakeWindows } = body;
     await prisma.wakeWindows.createMany({
@@ -64,15 +58,10 @@ export const GET = async (req: NextRequest) => {
         status: 400,
         error: "Failed to obtain Id",
       });
-    const babyIdCheck = await checkBabyId(token, Number(id));
-    if (!babyIdCheck)
-      return Response.json(<ApiResponse>{
-        status: 401,
-        message: "Unauthorized",
-      });
+    const babyId = await getBabyId(token);
     const getWakeWindows = await prisma.wakeWindows.findMany({
       where: {
-        babyId: parseInt(id),
+        babyId,
       },
     });
     const getSleepPrepTime = await prisma.sleepPrepTime.findMany({
@@ -110,14 +99,6 @@ export const PUT = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: UpdateRequests = await req.json();
-    const { babyId } = body.sleepPrepTime;
-    const babyIdCheck = await checkBabyId(token, babyId);
-    if (!babyIdCheck)
-      return Response.json({
-        status: 401,
-        message: "Unauthorized",
-      });
-
     const { id, time, changeUser } = body.sleepPrepTime;
     await prisma.sleepPrepTime.update({
       where: {

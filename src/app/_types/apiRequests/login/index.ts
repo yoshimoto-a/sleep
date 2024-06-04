@@ -8,14 +8,7 @@ export interface LoginUser {
   role: Role;
 }
 
-export interface IndexSuccessResponse {
-  status: number;
+export interface IndexResponse {
+  status: 200;
   data: LoginUser | null;
 }
-
-export interface IndexErrorResponse {
-  status: number;
-  error: string;
-}
-
-export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;

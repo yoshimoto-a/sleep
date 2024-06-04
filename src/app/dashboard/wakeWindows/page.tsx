@@ -1,28 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useState } from "react";
+import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
 import { UserContext } from "../layout";
+import { Guideline } from "./_components/guideline";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
-import { SubmitButton } from "@/app/_components/button";
 import { Input } from "@/app/_components/input";
+import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";
+import { SubmitButton } from "@/app/_components/submitButton";
+import { useApi } from "@/app/_hooks/useApi";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
-import { WakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import { PostWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
 import { SleepPrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
-import { WakeWindows as PutWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
-import { SleepPrepTime as PutSleePrepTime } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
+import { PutWakeWindows } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
+import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
-export interface Data {
-  activityTime: WakeWindows[];
-  sleepPrepTime: SleepPrepTime;
-}
 export default function Page() {
-  const [data, setData] = useState<Data | null>(null);
+  const { data: getData, error, isLoading, mutate } = useGetWakeWindows();
+  const [data, setData] = useState<WakeWindowsData | null>(null);
   const [dbUserId, babyId] = useContext(UserContext);
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetcher = useApi();
   const {
     basicHour,
     basicMinutes,
@@ -53,42 +59,26 @@ export default function Page() {
     setting,
   } = useValidation();
 
-  //初期設定
   useEffect(() => {
-    if (token && babyId) {
-      const fethcer = async () => {
-        const resp = await fetch(`/api/dashboard/wakeWindows?id=${babyId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        });
-        const jsonData = await resp.json();
-        const data: IndexResponse = jsonData;
-        if (data.status !== 200) {
-          alert("データの取得に失敗しました");
-          return;
-        }
-        if (
-          "data" in data &&
-          data.data !== null &&
-          "sleepPrepTime" in data.data
-        ) {
-          setData(data.data);
-          setting(data.data);
-        }
-      };
-      fethcer();
+    if (
+      getData &&
+      "data" in getData &&
+      getData.data !== null &&
+      "sleepPrepTime" in getData.data
+    ) {
+      setData(getData.data);
+      setting(getData.data);
     }
-  }, [token, babyId, setting]);
+  }, [isLoading, getData, setting, isLoding]);
+  if (isLoading || isLoding) return <IsLoading />;
+  if (error) return <div>データの取得に失敗しました</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (!token || !babyId || !dbUserId) return;
     if (!data) {
-      const method = "POST";
-      const wakeWindows: WakeWindows[] = [
+      const wakeWindows: PostWakeWindows[] = [
         {
           babyId,
           type: "ALL",
@@ -124,21 +114,18 @@ export default function Page() {
         changeUser: dbUserId,
         createUser: dbUserId,
       };
-      const prams = {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: { wakeWindows, sleepPrepTime },
-      };
-      const postResp = await fetch("/api/dashboard/wakeWindows", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      const resp = await postResp.json();
+      const prams = { wakeWindows, sleepPrepTime };
+
+      try {
+        await fetcher.post<PostRequests, ApiResponse>(
+          "/api/dashboard/wakeWindows",
+          prams
+        );
+        mutate();
+      } catch (e) {
+        alert("データの登録に失敗しました");
+      }
     } else {
-      const method = "PUT";
       const wakeWindows: PutWakeWindows[] = [];
       data.activityTime.map(item => {
         if (!item.id) return;
@@ -184,40 +171,45 @@ export default function Page() {
         }
       });
       if (!data.sleepPrepTime.id) return;
-      const sleepPrepTime: PutSleePrepTime = {
+      const sleepPrepTime = {
         id: data.sleepPrepTime.id,
         babyId,
         time: sinceBedtime,
         changeUser: dbUserId,
       };
-      const prams = {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: { wakeWindows, sleepPrepTime },
-      };
-      const postResp = await fetch("/api/dashboard/wakeWindows", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      const resp = await postResp.json();
-      console.log(resp);
+      const prams = { wakeWindows, sleepPrepTime };
+
+      try {
+        await fetcher.put<UpdateRequests, ApiResponse>(
+          "/api/dashboard/wakeWindows",
+          prams
+        );
+        mutate();
+      } catch (e) {
+        alert("データ更新に失敗しました");
+      }
     }
+    setIsSubmitting(false);
   };
 
   return (
     <>
-      <h1 className="text-center text-3xl font-bold mt-6">詳細設定</h1>
+      <h1 className="pt-10 text-center text-lg">活動時間設定</h1>
+      <Guideline />
       <form
         onSubmit={handleSubmit}
-        className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 my-4"
+        className="bg-custom-gray shadow-md rounded px-4 pt-6 pb-8 my-4"
       >
         <div className="flex flex-col">
+          <div className="flex flex-row text-red-600 bg-slate-50 mb-2 p-3">
+            <div className="flex items-center justify-center mr-1">※</div>
+            <p className="text-sm p-1">
+              終日一定の活動時間の場合や、お昼寝が1回の場合は基本のみ登録してください
+            </p>
+          </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <Label text="基本の活動時間" htmlFor="basic"></Label>
+              <Label text="基本の活動時間" htmlFor="basic" />
               <div className="flex gap-1">
                 <Input
                   id="basicHour"
@@ -225,8 +217,9 @@ export default function Page() {
                   value={basicHour?.toString()}
                   placeholder="時間"
                   inputMode="numeric"
+                  disabled={isSubmitting}
                   onChange={value => handleCahngeBasicHour(value)}
-                ></Input>
+                />
                 {basicHourError && <p>{basicHourError}</p>}{" "}
                 <Input
                   id="basicMinutes"
@@ -234,31 +227,35 @@ export default function Page() {
                   value={basicMinutes?.toString()}
                   placeholder="分"
                   inputMode="numeric"
+                  disabled={isSubmitting}
                   onChange={value => handleCahngeBasicMinutes(value)}
-                ></Input>
+                />
                 {basicMinutesError && <p>{basicMinutesError}</p>}{" "}
               </div>
             </div>
             <div className="flex-1">
-              <Label text="寝かしつけ開始は何分前？" htmlFor="basic"></Label>
+              <Label text="寝かしつけ開始(分前)" htmlFor="basic" />
               <Input
                 id="sinceBedtime"
                 type="number"
                 value={String(sinceBedtime)}
-                placeholder=""
+                placeholder="分前"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => setSinceBedtime(Number(value))}
-              ></Input>
+              />
             </div>
           </div>
         </div>
         <div className="flex flex-col">
           <h2>活動時間詳細設定</h2>
-          <p className="mb-5">詳細登録がある場合、詳細の内容が優先されます</p>
+          <span className="text-sm pb-3">
+            登録がある場合、計算は時間帯別に行われます。
+          </span>
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <Label text="朝寝(7時～11時)" htmlFor="morning" />
+            <Label text="朝寝(7~11時)" htmlFor="morning" />
             <div className="flex gap-1">
               <Input
                 id="morningHour"
@@ -266,6 +263,7 @@ export default function Page() {
                 value={morningHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeMorningHour(value)}
               />
               {morningHourError && <p>{morningHourError}</p>}{" "}
@@ -275,13 +273,14 @@ export default function Page() {
                 value={morningMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeMorningMinutes(value)}
               />
               {morningMinutesError && <p>{morningMinutesError}</p>}{" "}
             </div>
           </div>
           <div className="flex-1">
-            <Label text="昼寝(11時～15時)" htmlFor="afternoon" />
+            <Label text="昼寝(11~15時)" htmlFor="afternoon" />
             <div className="flex gap-1">
               <Input
                 id="afternoonHour"
@@ -289,6 +288,7 @@ export default function Page() {
                 value={afternoonHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeAfternoonHour(value)}
               />
               {afternoonHourError && <p>{afternoonHourError}</p>}{" "}
@@ -298,13 +298,14 @@ export default function Page() {
                 value={afternoonMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeAfternoonMinutes(value)}
               />
             </div>
             {afternoonMinutesError && <p>{afternoonMinutesError}</p>}{" "}
           </div>
           <div className="flex-1">
-            <Label text="夕寝(15時～18時)" htmlFor="evening" />
+            <Label text="夕寝(15~18時)" htmlFor="evening" />
             <div className="flex gap-1">
               <Input
                 id="eveningHour"
@@ -312,6 +313,7 @@ export default function Page() {
                 value={eveningHour?.toString()}
                 placeholder="時間"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeEveningHour(value)}
               />
               {eveningMinutesError && <p>{eveningHourError}</p>}{" "}
@@ -321,6 +323,7 @@ export default function Page() {
                 value={eveningMinutes?.toString()}
                 placeholder="分"
                 inputMode="numeric"
+                disabled={isSubmitting}
                 onChange={value => handleCahngeEveningMinutes(value)}
               />
               {eveningMinutesError && <p>{eveningMinutesError}</p>}{" "}
@@ -328,7 +331,7 @@ export default function Page() {
           </div>
         </div>
         <div className="text-center">
-          <SubmitButton>保存</SubmitButton>
+          <SubmitButton disabled={isSubmitting}>保存</SubmitButton>
         </div>
       </form>
     </>

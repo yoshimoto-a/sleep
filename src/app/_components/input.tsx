@@ -17,7 +17,7 @@ interface Props {
   value: string;
   placeholder: string;
   inputMode: InputMode;
-
+  disabled: boolean;
   onChange: (value: string) => void;
 }
 
@@ -27,6 +27,7 @@ export const Input: React.FC<Props> = ({
   value,
   placeholder,
   inputMode,
+  disabled,
   onChange,
 }) => {
   return (
@@ -37,6 +38,7 @@ export const Input: React.FC<Props> = ({
       value={value}
       placeholder={placeholder}
       inputMode={inputMode}
+      disabled={disabled}
       onChange={e => onChange(e.target.value)}
     />
   );

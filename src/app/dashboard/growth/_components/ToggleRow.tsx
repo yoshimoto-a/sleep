@@ -1,3 +1,4 @@
+"use client";
 import { ToggleWithInputModal } from "./ToggleWithInputModal";
 interface Props {
   label: string;

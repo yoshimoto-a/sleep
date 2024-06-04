@@ -1,8 +1,8 @@
 "use client";
 import { useEffect } from "react";
+import { useGetGrowth } from "../_hooks/useGetGrowth";
 import { ColumnName } from "./_components/ColumnName";
 import { ToggleRow } from "./_components/ToggleRow";
-import { useGetGrowth } from "./_hooks/useGetGrowth";
 import { useToggle } from "./_hooks/useToggle";
 import { IsLoading } from "@/app/_components/isLoading";
 
@@ -12,16 +12,16 @@ export default function Page() {
   useEffect(() => {
     setData();
   }, [isLoading]);
-  if (isLoading) return <IsLoading></IsLoading>;
+  if (isLoading) return <IsLoading />;
 
   if (error) return "An error has occurred.";
   return (
     <div className="flex flex-col mx-5">
-      <h1>発達記録</h1>
+      <h1 className="pt-10 text-center text-lg">発達記録</h1>
       <div className="flex justify-between items-center gap-4 h-[55px]">
-        <ColumnName title="項目"></ColumnName>
-        <ColumnName title="練習開始"></ColumnName>
-        <ColumnName title="習得"></ColumnName>
+        <ColumnName title="項目" />
+        <ColumnName title="練習開始" />
+        <ColumnName title="習得" />
       </div>
       <ToggleRow
         label="寝返り"
@@ -35,7 +35,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.turningOverCompDate}
         compValue="turningOverComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="寝返り返り"
         isCheckedStart={state.turningOverAndOver}
@@ -48,7 +48,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.turningOverAndOverCompDate}
         compValue="turningOverAndOverComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="ずり這い"
         isCheckedStart={state.crawling}
@@ -61,7 +61,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.crawlingCompDate}
         compValue="crawlingComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="ハイハイ"
         isCheckedStart={state.crawlingOnHandAndKnees}
@@ -74,7 +74,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.crawlingOnHandAndKneesCompDate}
         compValue="crawlingOnHandAndKneesComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="お座り"
         isCheckedStart={state.sitting}
@@ -87,7 +87,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.sittingCompDate}
         compValue="sittingComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="つかまり立ち"
         isCheckedStart={state.pullingUpToStand}
@@ -100,7 +100,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.pullingUpToStandCompDate}
         compValue="pullingUpToStandComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="つたい歩き"
         isCheckedStart={state.cruising}
@@ -113,7 +113,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.cruisingCompDate}
         compValue="cruisingComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="立つ"
         isCheckedStart={state.standing}
@@ -126,7 +126,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.standingCompDate}
         compValue="standingComp"
-      ></ToggleRow>
+      />
       <ToggleRow
         label="歩く"
         isCheckedStart={state.walking}
@@ -139,7 +139,7 @@ export default function Page() {
         onUpdateComp={updateDate}
         compDate={date.walkingCompDate}
         compValue="walkingComp"
-      ></ToggleRow>
+      />
     </div>
   );
 }

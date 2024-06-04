@@ -18,7 +18,7 @@ export const CustomModal: FC<Props> = ({
       isOpen={isOpen}
       onRequestClose={onClose}
       className={className}
-      ariaHideApp={false}
+      ariaHideApp={false} //警告消すために必要
     >
       {children}
     </Modal>

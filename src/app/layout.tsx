@@ -7,9 +7,11 @@ export const metadata: Metadata = {
   description: "睡眠に特化した育児記録アプリ",
 };
 
-const roboto400 = Roboto({
+const roboto = Roboto({
   weight: "400",
-  preload: false,
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto" /**variable使用しないと上手くいかない */,
 });
 export default function RootLayout({
   children,
@@ -19,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`max-w-md mx-auto bg-blue-200 text-gray-800 ${roboto400.className}`}
+        className={`max-w-md mx-auto bg-blue-200 text-gray-800 ${roboto.variable}`}
       >
         {children}
       </body>

@@ -13,7 +13,7 @@ dayjs.tz.setDefault("Asia/Tokyo");
 
 const createNewData = (
   id: number,
-  time: Date,
+  datetime: Date,
   action: string,
   startTime: Date,
   endTime: Date,
@@ -21,13 +21,15 @@ const createNewData = (
 ) => {
   return {
     id,
-    HourAndMinutes: dayjs.tz(time, "Asia/Tokyo").format("HH時mm分"),
+    datetime,
+    HourAndMinutes: dayjs.tz(datetime, "Asia/Tokyo").format("HH時mm分"),
     action: action,
     MinutesOnly: FormatDuration(startTime, endTime, "HourAndMinutes"),
     changer,
   };
 };
 export const formatRecords = (
+  targetDate: Date,
   mappedCompletedRecords: CompletedData[],
   mappedContainNullRecords: ContainNull[],
   containTodayRecords: CompletedData[], //これ要る？？
@@ -50,21 +52,20 @@ export const formatRecords = (
   /*②日付またいで起きた(OR)寝た登録がおわったレコードの処理
    */
   if (containYesterdayRecord.length === 1) {
-    console.log("日付跨ぎデータあり");
     const { id, bedTime, sleep, wakeup, changeUser } =
       containYesterdayRecord[0];
-    if (bedTime && sleep && IsToday(sleep) && wakeup) {
+    if (bedTime && sleep && IsToday(sleep, targetDate) && wakeup) {
       formatedRecords.push(
         createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser),
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
     }
-    if (bedTime && sleep && IsToday(sleep) && !wakeup) {
+    if (bedTime && sleep && IsToday(sleep, targetDate) && !wakeup) {
       formatedRecords.push(
         createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser)
       );
     }
-    if (sleep && !IsToday(sleep) && wakeup) {
+    if (sleep && !IsToday(sleep, targetDate) && wakeup) {
       formatedRecords.push(
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
@@ -73,7 +74,6 @@ export const formatRecords = (
 
   //①当日のみで完結しているデータがある
   if (mappedCompletedRecords.length > 0) {
-    console.log("当日のみで完結してるデータ");
     let yesterdayWakeup: Date;
     if (
       containYesterdayRecord.length === 1 &&
@@ -137,15 +137,65 @@ export const formatRecords = (
       );
     });
   }
-  //①当日データ登録したけど未完成(wakeupは必ずnull)
-  if (mappedContainNullRecords.length === 1) {
-    console.log("未完成データ");
+  //①当日データ登録したけど未完成(wakeupは必ずnull)かつ日付またいで起きた(OR)寝た登録がおわったレコードがある
+  if (
+    mappedContainNullRecords.length === 1 &&
+    containYesterdayRecord.length === 0
+  ) {
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     let wakeup: Date;
-    if (mappedCompletedRecords.length > 1) {
+    if (mappedCompletedRecords.length >= 1) {
       wakeup = mappedCompletedRecords[mappedCompletedRecords.length - 1].wakeup;
     } else {
       wakeup = yesterdayRecord[0].wakeup;
+    }
+    if (bedTime && !sleep) {
+      formatedRecords.push(
+        createNewData(
+          id,
+          bedTime,
+          "寝かしつけ開始",
+          wakeup,
+          bedTime,
+          changeUser
+        )
+      );
+    }
+    if (!bedTime && sleep) {
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", wakeup, sleep, changeUser)
+      );
+    }
+    if (bedTime && sleep) {
+      formatedRecords.push(
+        createNewData(
+          id,
+          bedTime,
+          "寝かしつけ開始",
+          wakeup,
+          bedTime,
+          changeUser
+        )
+      );
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
+      );
+    }
+  }
+
+  //①当日データ登録したけど未完成(wakeupは必ずnull)かつ日付またいで起きた(OR)寝た登録がおわったレコードがない
+  if (
+    mappedContainNullRecords.length === 1 &&
+    containYesterdayRecord.length != 0
+  ) {
+    const { wakeup: yesterdayWakeup } = containYesterdayRecord[0];
+    const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
+    let wakeup: Date;
+    if (mappedCompletedRecords.length >= 1) {
+      wakeup = mappedCompletedRecords[mappedCompletedRecords.length - 1].wakeup;
+    } else {
+      yesterdayWakeup ? (wakeup = yesterdayWakeup) : (wakeup = new Date());
+      //mappedContainNullRecords.length === 1 && containYesterdayRecord.length != 0の式が成り立つとき、elseのケースはあり得ない
     }
 
     if (bedTime && !sleep) {
@@ -178,6 +228,52 @@ export const formatRecords = (
       );
       formatedRecords.push(
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
+      );
+    }
+  }
+  //当日のデータ登録し終えて、翌日に跨いでいるデータ
+  console.log(
+    mappedCompletedRecords,
+    mappedContainNullRecords,
+    containTodayRecords,
+    yesterdayRecord,
+    containYesterdayRecord,
+    containTomorrowRecord
+  );
+  if (
+    mappedContainNullRecords.length === 0 &&
+    containTodayRecords.length !== 0 &&
+    yesterdayRecord.length !== 0 &&
+    containTomorrowRecord.length !== 0 &&
+    containYesterdayRecord.length === 1
+  ) {
+    //当日の完結したデータがない場合に活動時間の計算がおかしい
+    const { wakeup: wakeup } =
+      mappedCompletedRecords.length !== 0
+        ? mappedCompletedRecords[mappedCompletedRecords.length - 1]
+        : containYesterdayRecord[0]; //当日と前日が混ざったレコードにしないといけない
+
+    const { id, bedTime, sleep, changeUser } = containTomorrowRecord[0]; //wakeupは絶対当日ではない
+    if (bedTime && wakeup) {
+      formatedRecords.push(
+        createNewData(
+          id,
+          bedTime,
+          "寝かしつけ開始",
+          wakeup,
+          bedTime,
+          changeUser
+        )
+      );
+    }
+    if (bedTime && sleep && IsToday(sleep, targetDate)) {
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
+      );
+    }
+    if (!bedTime && sleep && IsToday(sleep, targetDate) && wakeup) {
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", wakeup, sleep, changeUser)
       );
     }
   }

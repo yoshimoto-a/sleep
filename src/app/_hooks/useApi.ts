@@ -31,6 +31,7 @@ export const useApi = () => {
     endpoint: string,
     payload: RequestType
   ) => {
+    console.log(payload);
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -79,7 +80,7 @@ export const useApi = () => {
     }
   };
 
-  const del = async <RequestType, ResponseType>(endpoint: string) => {
+  const del = async <ResponseType>(endpoint: string) => {
     try {
       const response = await fetch(endpoint, {
         method: "DELETE",
@@ -93,7 +94,7 @@ export const useApi = () => {
 
       if (response.status !== 200) throw new Error("削除に失敗しました。");
 
-      const data = await response.json();
+      const data: ResponseType = await response.json();
 
       return data;
     } catch (error) {

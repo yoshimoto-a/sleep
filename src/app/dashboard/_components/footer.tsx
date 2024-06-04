@@ -4,17 +4,17 @@ import { MenuItem } from "./menuItem";
 
 export const Footer = () => {
   return (
-    <footer className="fixed bottom-0 w-full px-3 pb-1 pt-3 bg-custom-blue">
+    <footer className="max-w-md w-full fixed bottom-0 px-3 pb-1 pt-3 bg-custom-blue">
       <div className="flex justify-between items-center">
         <MenuItem
-          icon="/_footerIcon/graph.png"
-          text="睡眠ログ"
-          link="/dashboard/graph"
+          icon="/_menuIcon/growth.png"
+          text="発達"
+          link="/dashboard/growth"
         />
         <MenuItem
           icon="/_footerIcon/weight.png"
           text="体重"
-          link="/dashboard/sleep/weight"
+          link="/dashboard/weight"
         />
         <MenuItem
           icon="/_footerIcon/home.png"
@@ -23,8 +23,8 @@ export const Footer = () => {
         />
         <MenuItem
           icon="/_footerIcon/setting.png"
-          text="設定"
-          link="/dashboard/"
+          text="活動時間"
+          link="/dashboard/wakeWindows"
         />
         <MenuItem icon="/_footerIcon/menu.png" text="メニュー" link="./menu" />
       </div>

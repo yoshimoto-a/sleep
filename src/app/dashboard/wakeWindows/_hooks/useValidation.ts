@@ -1,27 +1,26 @@
 import { useState, useCallback } from "react";
-import { Data } from "../page";
+import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
 export const useValidation = () => {
-  const [basicHour, setBasicHour] = useState<string>("");
-  const [basicMinutes, setBasicMinutes] = useState<string>("");
-  const [basicMinutesError, setBasicMinutesError] = useState<string>("");
-  const [basicHourError, setBasicHourError] = useState<string>("");
-  const [morningHour, setMorningHour] = useState<string>("");
-  const [morningHourError, setMorningHourError] = useState<string>("");
-  const [morningMinutes, setMorningMinutes] = useState<string>("");
-  const [morningMinutesError, setMorningMinutesError] = useState<string>("");
-  const [afternoonHour, setAfternoonHour] = useState<string>("");
-  const [afternoonHourError, setAfternoonHourError] = useState<string>("");
-  const [afternoonMinutes, setAfternoonMinutes] = useState<string>("");
-  const [afternoonMinutesError, setAfternoonMinutesError] =
-    useState<string>("");
-  const [eveningHour, setEveningHour] = useState<string>("");
-  const [eveningHourError, setEveningHourError] = useState<string>("");
-  const [eveningMinutes, setEveningMinutes] = useState<string>("");
-  const [eveningMinutesError, setEveningMinutesError] = useState<string>("");
-  const [sinceBedtime, setSinceBedtime] = useState<number>(0);
+  const [basicHour, setBasicHour] = useState("");
+  const [basicMinutes, setBasicMinutes] = useState("");
+  const [basicMinutesError, setBasicMinutesError] = useState("");
+  const [basicHourError, setBasicHourError] = useState("");
+  const [morningHour, setMorningHour] = useState("");
+  const [morningHourError, setMorningHourError] = useState("");
+  const [morningMinutes, setMorningMinutes] = useState("");
+  const [morningMinutesError, setMorningMinutesError] = useState("");
+  const [afternoonHour, setAfternoonHour] = useState("");
+  const [afternoonHourError, setAfternoonHourError] = useState("");
+  const [afternoonMinutes, setAfternoonMinutes] = useState("");
+  const [afternoonMinutesError, setAfternoonMinutesError] = useState("");
+  const [eveningHour, setEveningHour] = useState("");
+  const [eveningHourError, setEveningHourError] = useState("");
+  const [eveningMinutes, setEveningMinutes] = useState("");
+  const [eveningMinutesError, setEveningMinutesError] = useState("");
+  const [sinceBedtime, setSinceBedtime] = useState(0);
 
-  const setting = useCallback((data: Data) => {
+  const setting = useCallback((data: WakeWindowsData) => {
     data.activityTime.map(item => {
       const hours = Math.floor(item.time / 60).toString();
       const minutes = (item.time % 60).toString();

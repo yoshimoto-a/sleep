@@ -2,21 +2,19 @@
  */
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
-export const checkBabyId = async (token: string, babyId: number) => {
+export const getBabyId = async (token: string) => {
   const prisma = await buildPrisma();
-  const { data } = await supabase.auth.getUser(token);
-  if (!data.user) return false;
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error) throw new Error("Unauthorized");
   const user = await prisma.user.findUnique({
     where: {
-      supabaseUserId: data.user.id,
+      supabaseUserId: data?.user?.id,
     },
     include: {
-      baby: {
-        select: {
-          id: true,
-        },
-      },
+      baby: true,
     },
   });
-  return user?.babyId === babyId;
+  if (!user || !user.baby) throw new Error("User not found");
+
+  return user.baby.id;
 };

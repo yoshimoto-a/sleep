@@ -4,6 +4,7 @@ import { ModalButton } from "./ModalButton";
 interface Props {
   closeModal: () => void;
   value: string;
+  date: Date | null | undefined;
   state: boolean;
   updateDate: (key: string, isActive: boolean, date: Date) => void;
 }
@@ -11,10 +12,11 @@ interface Props {
 export const InputDate: React.FC<Props> = ({
   closeModal,
   value,
+  date,
   state,
   updateDate,
 }) => {
-  const [modalDate, setModalDate] = useState(new Date());
+  const [modalDate, setModalDate] = useState(date || new Date());
   const handleSave = () => {
     updateDate(value, state, modalDate);
     closeModal();
@@ -24,7 +26,7 @@ export const InputDate: React.FC<Props> = ({
       <input
         id="date"
         type="date"
-        defaultValue={dayjs(modalDate).format("YYYY-MM-DD")}
+        value={dayjs(modalDate).format("YYYY-MM-DD")}
         className="block p-2 m-5 border"
         onChange={e => {
           if (dayjs(e.target.value).isValid()) {

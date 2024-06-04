@@ -5,7 +5,6 @@ import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../layout";
-import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
@@ -14,9 +13,11 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const { token } = useSupabaseSession();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [, babyId] = useContext(UserContext);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (token && babyId) {
       const prams: PostRequests = {
         method: "POST",
@@ -33,7 +34,6 @@ export default function Page() {
         ...prams,
         body: JSON.stringify(prams.body),
       });
-      console.log(resp);
       if (resp.status === 200) {
         setEmail("");
         router.push("/signup/sentEmail/");
@@ -41,11 +41,11 @@ export default function Page() {
         alert("サブアカウント招待に失敗しました");
       }
     }
+    setIsSubmitting(false);
   };
 
   return (
     <>
-      <Header />
       <h1 className="text-center text-3xl font-bold mt-6">
         サブアカウントの作成
       </h1>
@@ -64,6 +64,7 @@ export default function Page() {
               value={email}
               placeholder="メールアドレス"
               inputMode="email"
+              disabled={isSubmitting}
               onChange={value => setEmail(value)}
             />
           </div>

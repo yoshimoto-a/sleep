@@ -6,6 +6,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Tokyo");
 
-export const ChangeTimeZone = (time: Date) => {
-  return dayjs(time).tz().format();
+export const ChangeTimeZone = (time: Date | null) => {
+  return time ? dayjs(time).tz().format() : null;
 };

@@ -10,7 +10,7 @@ export const IsLoading = () => {
           <span className="h-2.5 w-2.5 bg-gray-500 rounded-full dark:bg-gray-300" />
           <span className="h-2.5 w-2.5 bg-gray-500 rounded-full dark:bg-gray-300" />
         </div>
-        <p className="text-gray-500 dark:text-gray-300">読み込んでいます</p>
+        {/* <p className="text-gray-500 dark:text-gray-300">読み込んでいます</p> */}
       </div>
     </div>
   );

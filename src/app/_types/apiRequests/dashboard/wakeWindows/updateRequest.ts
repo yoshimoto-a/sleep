@@ -1,8 +1,7 @@
 import { Type } from "@prisma/client";
-import { ApiRequest } from "../../apiRequest";
 
 /**活動時間*/
-export interface WakeWindows {
+export interface PutWakeWindows {
   id: number;
   babyId: number;
   time: number;
@@ -16,7 +15,7 @@ export interface SleepPrepTime {
   time: number;
   changeUser: number;
 }
-export interface UpdateRequests extends ApiRequest {
-  wakeWindows: WakeWindows[];
+export interface UpdateRequests {
+  wakeWindows: PutWakeWindows[];
   sleepPrepTime: SleepPrepTime;
 }

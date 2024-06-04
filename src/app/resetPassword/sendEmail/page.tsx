@@ -2,16 +2,22 @@
 
 import React from "react";
 import { useState } from "react";
+import { Footer } from "@/app/_components/footer";
+import { Form } from "@/app/_components/form";
 import { Header } from "@/app/_components/header";
 import { Input } from "@/app/_components/input";
+import { SubmitButton } from "@/app/_components/submitButton";
 import { supabase } from "@/utils/supabase";
 
 export default function Page() {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3000/resetPassword/setting",
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/setting`,
     });
     if (error) {
       alert("再設定メールの送信に失敗しました");
@@ -19,6 +25,7 @@ export default function Page() {
       setEmail("");
       alert("パスワード設定メールを確認してください");
     }
+    setIsSubmitting(false);
   };
   return (
     <>
@@ -27,30 +34,21 @@ export default function Page() {
       <p className="text-center mt-6">
         パスワードの設定用URLを下記アドレス宛に送信します
       </p>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-custom-gray shadow-md rounded flex flex-col items-center justify-center px-8 pt-6 pb-8 w-64 h-64"
-        >
-          <div className="mb-4">
-            <Input
-              id="email"
-              type="text"
-              value={email}
-              placeholder="メールアドレス"
-              onChange={(value) => setEmail(value)}
-            />
-          </div>
-          <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
-              type="submit"
-            >
-              送信
-            </button>
-          </div>
-        </form>
-      </div>
+      <Form handleSubmit={handleSubmit}>
+        <div className="mb-4">
+          <Input
+            id="email"
+            type="text"
+            value={email}
+            inputMode="text"
+            placeholder="メールアドレス"
+            disabled={isSubmitting}
+            onChange={value => setEmail(value)}
+          />
+        </div>
+        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
+      </Form>
+      <Footer />
     </>
   );
 }

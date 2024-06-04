@@ -35,6 +35,7 @@ export const ToggleWithInputModal: React.FC<Props> = ({
         <InputDate
           closeModal={() => setOpenModal(false)}
           value={value}
+          date={date}
           state={isChecked}
           updateDate={onUpdate}
         ></InputDate>
