@@ -1,6 +1,6 @@
 interface Props {
   text: string;
-  disabled: boolean;
+  disabled?: boolean;
   onclick: () => void;
 }
 export const Button: React.FC<Props> = ({ disabled, text, onclick }) => {
