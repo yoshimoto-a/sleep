@@ -56,6 +56,7 @@ export default function Page() {
           throw new Error("token is not found");
         }
       } catch (e) {
+        console.log(e);
         alert("ログインに失敗しました");
       }
     }
