@@ -4,9 +4,9 @@ import useSWR from "swr";
 import { UserContext } from "../../layout";
 import { useApi } from "@/app/_hooks/useApi";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
-import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/PostRequest";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
+import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/postRequest";
+import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/postResponse";
 
 export const useWeights = () => {
   const [dbUserId] = useContext(UserContext);
