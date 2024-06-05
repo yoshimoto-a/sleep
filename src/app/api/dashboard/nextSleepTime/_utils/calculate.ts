@@ -3,10 +3,15 @@ import { WakeWindows } from "@prisma/client";
 import { Baby } from "@prisma/client";
 import { SleepingSituation } from "@prisma/client";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { applyWakeWindows } from "./applyWakeWindows";
 import { shortening } from "./shortening";
 import { timeZone } from "./timeZone";
 import { wakeWindowsShortening } from "./wakeWindowsShortening";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 
 export const calculate = (
   practicing: Growth[],
@@ -17,23 +22,21 @@ export const calculate = (
   sleepingSituation: SleepingSituation[]
 ) => {
   //起床時刻
-  const wakeupTime = dayjs(sleepingSituation[0].wakeup);
+  const wakeupTime = dayjs(sleepingSituation[0].wakeup, "Asia/Tokyo").tz();
 
   //そもそも夜間睡眠の時間ならすぐ寝かせたい
   if (timeZone(wakeupTime) === "night") return "即時";
 
   //月齢と修正月齢
-  const monthAge = dayjs().diff(dayjs(baby.birthday), "month");
-  const correctedMonthAge = dayjs().diff(
-    dayjs(baby.expectedDateOfBirth),
-    "month"
-  );
+  const monthAge = dayjs().tz().diff(dayjs(baby.birthday).tz(), "month");
+  const correctedMonthAge = dayjs()
+    .tz()
+    .diff(dayjs(baby.expectedDateOfBirth).tz(), "month");
 
   //睡眠時間
-  const sleepLength = dayjs(sleepingSituation[0].wakeup).diff(
-    dayjs(sleepingSituation[0].sleep),
-    "minutes"
-  );
+  const sleepLength = dayjs(sleepingSituation[0].wakeup)
+    .tz()
+    .diff(dayjs(sleepingSituation[0].sleep).tz(), "minutes");
 
   //活動時間情報を取りだす
   const { all, morning, noon, evening } = applyWakeWindows(wakeWindows);

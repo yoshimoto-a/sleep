@@ -1,9 +1,14 @@
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { calculate } from "./_utils/calculate";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();

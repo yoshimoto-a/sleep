@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
-import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
 import { SubmitButton } from "@/app/_components/submitButton";
 import { getLoginUser } from "@/utils/getLoginUser";
@@ -18,11 +18,12 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { token } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const toastId = toast.loading("ログイン処理中...");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -31,30 +32,30 @@ export default function Page() {
       alert("ログインに失敗しました");
       return;
     }
-
     setEmail("");
     setPassword("");
-    if (data.session) {
+
+    try {
+      if (!data.session) throw new Error("session情報がありません");
       const {
         access_token,
         user: { id },
       } = data.session;
-      if (token) {
-        try {
-          const { isRegistered } = await getLoginUser(access_token, id);
-          if (!isRegistered) {
-            const babyId: number | undefined | null =
-              data.user?.user_metadata.babyId;
-            const role = babyId ? "SUB" : "MAIN";
-            const resp = await PostUser(id, role, access_token, babyId);
-            if (resp.status !== 200) throw new Error("ユーザー登録失敗");
-            router.replace("../dashboard/setting");
-          }
-          router.replace("/dashboard/sleep");
-        } catch (e) {
-          alert("ログインに失敗しました");
-        }
+      const { isRegistered } = await getLoginUser(access_token, id);
+      if (!isRegistered) {
+        const babyId: number | undefined | null =
+          data.user?.user_metadata.babyId;
+        const role = babyId ? "SUB" : "MAIN";
+        const resp = await PostUser(id, role, access_token, babyId);
+        if (resp.status !== 200) throw new Error("ユーザー登録失敗");
+        router.replace("/dashboard/setting");
       }
+      router.replace("/dashboard/sleep");
+    } catch (e) {
+      toast.error(String(e));
+      router.replace("/");
+    } finally {
+      toast.dismiss(toastId);
     }
     setIsSubmitting(false);
   };
@@ -62,6 +63,9 @@ export default function Page() {
     <>
       <Header />
       <h1 className="text-center text-3xl font-bold mt-6">ログイン</h1>
+      <div>
+        <Toaster position="top-center" />
+      </div>
       <Form handleSubmit={handleSubmit}>
         <div className="mb-4">
           <Input
