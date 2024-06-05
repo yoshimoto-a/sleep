@@ -49,7 +49,7 @@ export default function Page() {
             const role = babyId ? "SUB" : "MAIN";
             const resp = await PostUser(id, role, access_token, babyId);
             if (resp.status !== 200) throw new Error("ユーザー登録失敗");
-            router.replace("../dashboard/setting");
+            router.replace("/dashboard/setting");
           }
           router.replace("/dashboard/sleep");
         } else {
