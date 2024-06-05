@@ -200,11 +200,13 @@ export const GET = async (req: NextRequest) => {
     );
 
     //必要な時に備えて前日以前に起床した最後のレコードを取得しておく
-    const startOfYesterday = dayjs(startOfDay)
+    const startOfYesterday = dayjs
+      .tz(startOfDay, "Asia/Tokyo")
       .subtract(1, "d")
       .startOf("day")
       .toDate();
-    const endOfYesterday = dayjs(startOfDay)
+    const endOfYesterday = dayjs
+      .tz(startOfDay, "Asia/Tokyo")
       .subtract(1, "d")
       .endOf("day")
       .toDate();
@@ -284,11 +286,16 @@ export const GET = async (req: NextRequest) => {
       containYesterdayRecord.map(record => FormatContainNull(record));
 
     //必要な時に備えて翌日に寝たか起きたレコードを取得しておく
-    const startOfTomorrow = dayjs(startOfDay)
+    const startOfTomorrow = dayjs
+      .tz(startOfDay, "Asia/Tokyo")
       .add(1, "d")
       .startOf("day")
       .toDate();
-    const endOfTomorrow = dayjs(startOfDay).add(1, "d").endOf("day").toDate();
+    const endOfTomorrow = dayjs
+      .tz(startOfDay, "Asia/Tokyo")
+      .add(1, "d")
+      .endOf("day")
+      .toDate();
     //当日と翌日が混じったデータ
     //2件以上はあってはいけない。最後のデータになる
     const containTomorrowRecord = await prisma.sleepingSituation.findMany({
