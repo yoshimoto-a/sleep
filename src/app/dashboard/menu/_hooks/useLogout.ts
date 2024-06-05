@@ -9,7 +9,7 @@ export const useLogout = () => {
     if (!result) return;
     const { error } = await supabase.auth.signOut();
     if (error) {
-      alert("ログインに失敗しました");
+      alert("ログアウトに失敗しました");
       return;
     }
     router.push("/login/");
