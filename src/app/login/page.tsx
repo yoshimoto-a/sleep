@@ -31,16 +31,17 @@ export default function Page() {
       alert("ログインに失敗しました");
       return;
     }
-
     setEmail("");
     setPassword("");
-    if (data.session) {
-      const {
-        access_token,
-        user: { id },
-      } = data.session;
-      if (token) {
-        try {
+
+    try {
+      if (data.session) {
+        const {
+          access_token,
+          user: { id },
+        } = data.session;
+
+        if (token) {
           const { isRegistered } = await getLoginUser(access_token, id);
           if (!isRegistered) {
             const babyId: number | undefined | null =
@@ -51,10 +52,14 @@ export default function Page() {
             router.replace("../dashboard/setting");
           }
           router.replace("/dashboard/sleep");
-        } catch (e) {
-          alert("ログインに失敗しました");
+        } else {
+          throw new Error("tokenがありません");
         }
+      } else {
+        throw new Error("session情報がありません");
       }
+    } catch (e) {
+      alert("ログインに失敗しました");
     }
     setIsSubmitting(false);
   };
