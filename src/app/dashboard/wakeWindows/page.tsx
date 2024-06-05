@@ -2,6 +2,7 @@
 
 import { useContext, useEffect } from "react";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
 import { UserContext } from "../layout";
 import { Guideline } from "./_components/guideline";
@@ -76,6 +77,7 @@ export default function Page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const toastId = toast.loading("保存処理中...");
     if (!token || !babyId || !dbUserId) return;
     if (!data) {
       const wakeWindows: PostWakeWindows[] = [
@@ -185,8 +187,11 @@ export default function Page() {
           prams
         );
         mutate();
+        toast.success("保存しました");
       } catch (e) {
-        alert("データ更新に失敗しました");
+        toast.error("保存に失敗しました");
+      } finally {
+        toast.dismiss(toastId);
       }
     }
     setIsSubmitting(false);
@@ -195,6 +200,9 @@ export default function Page() {
   return (
     <>
       <h1 className="pt-10 text-center text-lg">活動時間設定</h1>
+      <div>
+        <Toaster position="top-center" />
+      </div>
       <Guideline />
       <form
         onSubmit={handleSubmit}
