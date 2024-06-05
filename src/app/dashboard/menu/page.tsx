@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useGetLoginUser } from "../_hooks/useGetLoginUser";
 import { RowItem } from "./_components/rowItem";
 import { useLogout } from "./_hooks/useLogout";
@@ -40,7 +41,14 @@ export default function Menu() {
         title="赤ちゃん情報の設定"
       />
       <div onClick={logout}>
-        <RowItem icon="/_menuIcon/logout.png" link="./" title="ログアウト" />
+        <Image
+          src="/_menuIcon/logout.png"
+          alt="logout"
+          height={30}
+          width={30}
+          className="p-2"
+        />
+        <span className="text-lg">ログアウト</span>
       </div>
     </>
   );
