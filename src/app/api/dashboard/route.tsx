@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
@@ -8,7 +10,9 @@ import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
-
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 const FormatContainNull = (record: SleepingSituation) => {
   return {
     id: record.id,
@@ -38,8 +42,8 @@ export const GET = async (req: NextRequest) => {
     const date = params.get("date");
     if (!date)
       return Response.json({ status: 401, message: "date is undefined" });
-    const startOfDay = dayjs(date).startOf("day").toDate();
-    const endOfDay = dayjs(date).endOf("day").toDate();
+    const startOfDay = dayjs.tz(date, "Asia/Tokyo").startOf("day").toDate();
+    const endOfDay = dayjs.tz(date, "Asia/Tokyo").endOf("day").toDate();
 
     //ユーザーに紐づくbabyId取得する
     if (!data.user)
