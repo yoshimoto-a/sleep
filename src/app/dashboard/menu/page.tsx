@@ -40,7 +40,10 @@ export default function Menu() {
         link="./setting/"
         title="赤ちゃん情報の設定"
       />
-      <div onClick={logout}>
+      <div
+        onClick={logout}
+        className="border-b w-4/5 mx-auto pt-5 flex items-center space-x-4"
+      >
         <Image
           src="/_menuIcon/logout.png"
           alt="logout"
