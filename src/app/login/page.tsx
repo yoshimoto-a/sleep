@@ -8,7 +8,6 @@ import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
-import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { PostUser } from "./utils/postUser";
 import { SubmitButton } from "@/app/_components/submitButton";
 import { getLoginUser } from "@/utils/getLoginUser";
@@ -18,8 +17,8 @@ export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { token } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -35,29 +34,21 @@ export default function Page() {
     setPassword("");
 
     try {
-      if (data.session) {
-        const {
-          access_token,
-          user: { id },
-        } = data.session;
-
-        if (token) {
-          const { isRegistered } = await getLoginUser(access_token, id);
-          if (!isRegistered) {
-            const babyId: number | undefined | null =
-              data.user?.user_metadata.babyId;
-            const role = babyId ? "SUB" : "MAIN";
-            const resp = await PostUser(id, role, access_token, babyId);
-            if (resp.status !== 200) throw new Error("ユーザー登録失敗");
-            router.replace("/dashboard/setting");
-          }
-          router.replace("/dashboard/sleep");
-        } else {
-          throw new Error("tokenがありません");
-        }
-      } else {
-        throw new Error("session情報がありません");
+      if (!data.session) throw new Error("session情報がありません");
+      const {
+        access_token,
+        user: { id },
+      } = data.session;
+      const { isRegistered } = await getLoginUser(access_token, id);
+      if (!isRegistered) {
+        const babyId: number | undefined | null =
+          data.user?.user_metadata.babyId;
+        const role = babyId ? "SUB" : "MAIN";
+        const resp = await PostUser(id, role, access_token, babyId);
+        if (resp.status !== 200) throw new Error("ユーザー登録失敗");
+        router.replace("/dashboard/setting");
       }
+      router.replace("/dashboard/sleep");
     } catch (e) {
       alert(String(e));
     }
