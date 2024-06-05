@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
@@ -22,6 +23,7 @@ export default function Page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const toastId = toast.loading("ログイン処理中...");
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -50,7 +52,10 @@ export default function Page() {
       }
       router.replace("/dashboard/sleep");
     } catch (e) {
-      alert(String(e));
+      toast.error(String(e));
+      router.replace("/");
+    } finally {
+      toast.dismiss(toastId);
     }
     setIsSubmitting(false);
   };
@@ -58,6 +63,9 @@ export default function Page() {
     <>
       <Header />
       <h1 className="text-center text-3xl font-bold mt-6">ログイン</h1>
+      <div>
+        <Toaster position="top-center" />
+      </div>
       <Form handleSubmit={handleSubmit}>
         <div className="mb-4">
           <Input
