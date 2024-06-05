@@ -59,7 +59,7 @@ export default function Page() {
         throw new Error("session情報がありません");
       }
     } catch (e) {
-      alert("ログインに失敗しました");
+      alert(String(e));
     }
     setIsSubmitting(false);
   };
