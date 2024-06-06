@@ -6,7 +6,6 @@ import { useContext } from "react";
 import { ModalButton } from "../../growth/_components/ModalButton";
 import { UserContext } from "../../layout";
 import { useGetDataById } from "../_hooks/useGetDataById";
-import { IsLoading } from "@/app/_components/isLoading";
 import { useApi } from "@/app/_hooks/useApi";
 import { DeleteResponse } from "@/app/_types/apiRequests/dashboard/sleep/deleteResponse";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/sleep/updateRequest";
@@ -31,7 +30,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
     setSleep(data.data.sleep);
     setWakeup(data.data.wakeup);
   }, [data]);
-  if (isLoading) return <IsLoading />;
+  if (isLoading) return <div>読込み中</div>;
   if (error) return <div>エラー発生</div>;
 
   const put = async () => {
