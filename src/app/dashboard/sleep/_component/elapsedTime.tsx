@@ -12,8 +12,6 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log(currentTime);
-
       setCurrentTime(new Date());
     }, 60000);
 
