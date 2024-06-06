@@ -39,8 +39,4 @@ export const findLatest = (
       action: "起きた",
     };
   }
-  console.log(
-    "findLatest関数のcontainNullRecords.length" + containNullRecords.length,
-    completedRecords.length
-  );
 };
