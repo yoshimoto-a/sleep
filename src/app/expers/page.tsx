@@ -33,7 +33,7 @@ export default function Home() {
           <Link href="https://instagram.com/imaneru_rie" target="_blank">
             <Image
               alt="Instagram"
-              src={"/_topPage/Instagram_Glyph_Black.png"}
+              src={"/_topPage/Instagram_Glyph_Gradient.png"}
               width={30}
               height={30}
               layout="intrinsic"
