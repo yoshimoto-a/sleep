@@ -16,7 +16,7 @@ export const ShowData: React.FC<Props> = ({
 }) => {
   if (isLoading) return <div>読込み中...</div>;
   if (error) return <div>データ取得失敗</div>;
-  if (!data) return <div>データがありません</div>;
+  if (!data || data.data.length === 0) return <div>データがありません</div>;
   return (
     <div>
       {data.data.map((record, index) => {
