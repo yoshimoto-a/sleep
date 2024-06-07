@@ -3,43 +3,46 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
-import { useContext } from "react";
-import { UserContext } from "../layout";
 import { Input } from "@/app/_components/input";
+import { IsLoading } from "@/app/_components/isLoading";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
 
 export default function Page() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const { token } = useSupabaseSession();
+  const { token, isLoding } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [, babyId] = useContext(UserContext);
+  if (isLoding) {
+    return <IsLoading />;
+  }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!token) {
+      return;
+    }
     setIsSubmitting(true);
-    if (token && babyId) {
-      const prams: PostRequests = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: {
-          email,
-          babyId,
-        },
-      };
-      const resp = await fetch("/api/dashboard/subSignup", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
-      if (resp.status === 200) {
-        setEmail("");
-        router.push("/signup/sentEmail/");
-      } else {
-        alert("サブアカウント招待に失敗しました");
-      }
+    const prams: PostRequests = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: {
+        email,
+      },
+    };
+    const resp = await fetch("/api/dashboard/subSignup", {
+      ...prams,
+      body: JSON.stringify(prams.body),
+    });
+    const data: ApiResponse = await resp.json();
+    if (data.status === 200) {
+      setEmail("");
+      router.push("/signup/sentEmail/");
+    } else {
+      alert(`サブアカウント招待に失敗しました.。${data.message}`);
     }
     setIsSubmitting(false);
   };

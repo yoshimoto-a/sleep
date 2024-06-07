@@ -1,5 +1,7 @@
+import dayjs from "dayjs";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useGetBaby } from "../../_hooks/useBaby";
 import { useGetNextSleepTime } from "../_hooks/useGetNextSleepTime";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 
@@ -11,6 +13,12 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
   const { isLoading, data, error, mutate } = useGetNextSleepTime();
+  const {
+    isLoading: isLoadingBaby,
+    data: babyData,
+    error: babyError,
+  } = useGetBaby();
+
   useEffect(() => {
     mutate();
   }, [SleepingSituationData, mutate]);
@@ -32,8 +40,30 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     }
   }, [SleepingSituationData, isLoading]);
 
-  if (isLoading) return <div>読込み中...</div>;
-  if (error) return <div>エラー発生</div>;
+  //生後6か月以降で早朝起きしている場合、6時過ぎたらお勧めは8時に設定
+  useEffect(() => {
+    if (elapsedTime !== "即時") return;
+    if (
+      babyData &&
+      "data" in babyData &&
+      Math.floor(dayjs().diff(dayjs(babyData.data.birthday), "month")) <= 5
+    )
+      return;
+    const intervalId = setInterval(() => {
+      const now = new Date();
+      const hours = now.getHours();
+
+      if (hours >= 6) {
+        setElapsedTime("8時00分");
+        clearInterval(intervalId);
+      }
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [elapsedTime]);
+
+  if (isLoading || isLoadingBaby) return <div>読込み中...</div>;
+  if (error || babyError) return <div>エラー発生</div>;
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">

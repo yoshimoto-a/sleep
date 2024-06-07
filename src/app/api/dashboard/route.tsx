@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
+import { getBabyId } from "../_utils/getBabyId";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecords } from "./sleep/_utils/formatRecords";
@@ -34,7 +35,7 @@ const FormatNotContainNull = (record: SleepingSituation) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { data, error } = await supabase.auth.getUser(token);
+  const { error } = await supabase.auth.getUser(token);
   if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
     //検索対象の日付を取得する
@@ -46,27 +47,8 @@ export const GET = async (req: NextRequest) => {
     const endOfDay = dayjs.tz(date, "Asia/Tokyo").endOf("day").toDate();
 
     //ユーザーに紐づくbabyId取得する
-    if (!data.user)
-      return Response.json({ status: 400, message: "Userdata is null" });
+    const babyId = await getBabyId(token);
 
-    const user = await prisma.user.findUnique({
-      where: {
-        supabaseUserId: data.user.id,
-      },
-      include: {
-        baby: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    const babyId = user?.babyId;
-
-    if (!babyId)
-      return Response.json({ status: 400, message: "BabyId is null" });
-
-    // console.log("ここまでok");
     //bedtime(null許容)以外すべて当日で完成したデータのみ
     const completedRecords = await prisma.sleepingSituation.findMany({
       where: {
@@ -99,6 +81,7 @@ export const GET = async (req: NextRequest) => {
           },
         ],
       },
+      orderBy: { wakeup: "asc" },
     });
 
     const mappedCompletedRecords: CompletedData[] = completedRecords.map(

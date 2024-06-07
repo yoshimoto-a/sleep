@@ -30,6 +30,7 @@ export default function Page() {
     });
     if (error) {
       alert("ログインに失敗しました");
+      toast.dismiss(toastId);
       return;
     }
     setEmail("");

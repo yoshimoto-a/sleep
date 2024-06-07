@@ -1,28 +1,30 @@
 import { createClient } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
+import { getBabyId } from "../../_utils/getBabyId";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const token = req.headers.get("Authorization") ?? "";
   const { error } = await supabase.auth.getUser(token);
-
   if (error) {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   }
 
   try {
     const body = await req.json();
-    const { email, babyId } = body;
+    const babyId = getBabyId(token);
+    const { email } = body;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
+    console.log(`${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`);
     if (typeof email === "string" && supabaseUrl && supabaseServiceRole) {
       const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole);
-      const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
+      const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
         email,
         {
           data: { babyId },
-          redirectTo: "http://localhost:3000/resetPassword/sendEmail/",
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`,
         }
       );
       if (error) {
