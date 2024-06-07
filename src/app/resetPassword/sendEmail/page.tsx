@@ -19,6 +19,10 @@ export default function Page() {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/setting`,
     });
+    console.log(
+      error,
+      `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/setting`
+    );
     if (error) {
       alert("再設定メールの送信に失敗しました");
     } else {
