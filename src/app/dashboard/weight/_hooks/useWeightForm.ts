@@ -37,6 +37,7 @@ export const useWeightForm = (
     }
   };
   const del = async () => {
+    if (!confirm("削除していいですか？")) return;
     try {
       await fetcher.del<DelResponse>(`/api/dashboard/weight/${id}`);
       await mutate();
