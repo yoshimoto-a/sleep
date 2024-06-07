@@ -26,7 +26,11 @@ export const Footer = () => {
           text="活動時間"
           link="/dashboard/wakeWindows"
         />
-        <MenuItem icon="/_footerIcon/menu.png" text="メニュー" link="./menu" />
+        <MenuItem
+          icon="/_footerIcon/menu.png"
+          text="メニュー"
+          link="/dashboard/menu"
+        />
       </div>
     </footer>
   );
