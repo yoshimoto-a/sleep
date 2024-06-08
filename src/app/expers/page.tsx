@@ -69,24 +69,26 @@ export default function Home() {
       </div>
 
       <h3 className="text-center pt-5 font-medium">実績</h3>
-      <ul className="mt-3 mx-3 list-disc">
-        <li className="text-sm">
-          日本睡眠学会第45回定期学術集会にてポスター発表
-        </li>
-        <li className="text-sm">
-          八王子市親子つどいの広場ゆめきっず「赤ちゃんの睡眠・寝かしつけ講座」
-        </li>
-        <li className="text-sm">
-          八王子市親子ふれあい広場ぽかぽかひろば
-          「赤ちゃんの睡眠・寝かしつけ講座」
-        </li>
-        <li className="text-sm">
-          八南助産師会 助産師様向け「乳幼児の睡眠講座」
-        </li>
-        <li className="text-sm">
-          whip whipスワドル「GUSUMIN」の寝かしつけマニュアル監修
-        </li>
-      </ul>
+      <div className="mt-3 mx-3">
+        <ul className="m-3 list-disc">
+          <li className="text-sm">
+            日本睡眠学会第45回定期学術集会にてポスター発表
+          </li>
+          <li className="text-sm">
+            八王子市親子つどいの広場ゆめきっず「赤ちゃんの睡眠・寝かしつけ講座」
+          </li>
+          <li className="text-sm">
+            八王子市親子ふれあい広場ぽかぽかひろば
+            「赤ちゃんの睡眠・寝かしつけ講座」
+          </li>
+          <li className="text-sm">
+            八南助産師会 助産師様向け「乳幼児の睡眠講座」
+          </li>
+          <li className="text-sm">
+            whip whipスワドル「GUSUMIN」の寝かしつけマニュアル監修
+          </li>
+        </ul>
+      </div>
       <div className="mb-20 mt-8 flex justify-center">
         <Link href="https://www.imaneru.com/" target="_blank">
           <div className="px-5 py-2 w-40 border border-gray-400	 rounded-full text-center">
