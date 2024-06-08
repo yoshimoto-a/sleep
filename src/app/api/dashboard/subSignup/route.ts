@@ -17,14 +17,13 @@ export const POST = async (req: NextRequest) => {
     const { email } = body;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
-    console.log(`${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`);
     if (typeof email === "string" && supabaseUrl && supabaseServiceRole) {
       const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole);
       const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
         email,
         {
           data: { babyId },
-          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`,
+          redirectTo: `${process.env.APP_URL}/resetPassword/sendEmail/`,
         }
       );
       if (error) {
