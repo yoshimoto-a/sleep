@@ -13,17 +13,7 @@ export interface DateState {
   [key: string]: Date | null | undefined;
 }
 
-export const useToggle = (
-  data: IndexResponse | undefined
-): {
-  state: State;
-  handlers: { [key: string]: () => void };
-  date: DateState;
-  setDate: (date: DateState) => void;
-  setState: (state: State) => void;
-  setData: () => void;
-  updateDate: (key: string, isActive: boolean, date: Date) => void;
-} => {
+export const useToggle = (data: IndexResponse | undefined) => {
   const [dbUserId] = useContext(UserContext);
   const apiRequests = useApi();
   const [state, setState] = useState<State>({
@@ -105,6 +95,7 @@ export const useToggle = (
         [key]: nextState,
       }));
       alert("更新失敗");
+      return;
     }
   };
 
