@@ -9,12 +9,15 @@ import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const { isLoading, data, error } = useGetGrowth();
   const { state, handlers, date, setData, updateDate } = useToggle(data);
-  useEffect(() => {
-    setData();
-  }, [isLoading]);
-  if (isLoading) return <IsLoading />;
 
-  if (error) return "An error has occurred.";
+  useEffect(() => {
+    if (isLoading) return;
+    setData();
+  }, [isLoading, setData]);
+
+  if (isLoading) return <IsLoading />;
+  if (error) return "データの取得に失敗しました";
+
   return (
     <div className="flex flex-col mx-5">
       <h1 className="pt-10 text-center text-lg">発達記録</h1>
