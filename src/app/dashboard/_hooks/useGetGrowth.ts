@@ -2,11 +2,7 @@ import useSWR from "swr";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting";
 
-export const useGetGrowth = (): {
-  isLoading: boolean;
-  data: IndexResponse | undefined;
-  error: any;
-} => {
+export const useGetGrowth = () => {
   const { token, isLoding } = useSupabaseSession();
   const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
@@ -20,7 +16,6 @@ export const useGetGrowth = (): {
       };
       const resp = await fetch("/api/dashboard/growth", prams);
       const data: IndexResponse = await resp.json();
-
       return data;
     }
   };
