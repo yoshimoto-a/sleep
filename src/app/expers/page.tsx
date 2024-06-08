@@ -69,7 +69,7 @@ export default function Home() {
       </div>
 
       <h3 className="text-center pt-5 font-medium">実績</h3>
-      <ul className="mt-3 px-3 list-disc">
+      <ul className="mt-3 mx-3 list-disc">
         <li className="text-sm">
           日本睡眠学会第45回定期学術集会にてポスター発表
         </li>
