@@ -1,58 +1,9 @@
 import { type NextRequest } from "next/server";
+import { getBabyId } from "../../_utils/getBabyId";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
-
-export const POST = async (req: NextRequest) => {
-  const prisma = await buildPrisma();
-  const token = req.headers.get("Authorization") ?? "";
-  const { data, error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
-
-  try {
-    const body = await req.json();
-    const { name, birthday, expectedDateOfBirth, birthWeight, gender } = body;
-    const resp = await prisma.baby.create({
-      data: {
-        name,
-        birthday,
-        expectedDateOfBirth,
-        birthWeight,
-        gender,
-      },
-    });
-
-    //出生体重を計測日が誕生日で体重テーブルに登録する→動作確認未済
-    const user = await prisma.user.findUnique({
-      where: {
-        supabaseUserId: data.user.id,
-      },
-    });
-    if (!user) throw new Error("user is not found");
-    const weightResp = await prisma.weight.create({
-      data: {
-        babyId: resp.id,
-        measurementDate: expectedDateOfBirth,
-        weight: birthWeight,
-        createUser: user?.id,
-        changeUser: user?.id,
-      },
-    });
-
-    return Response.json(<PostResponse>{
-      status: 200,
-      message: "success",
-      id: resp.id,
-    });
-  } catch (e) {
-    if (e instanceof Error) {
-      return Response.json(<ApiResponse>{ status: 400, message: e.message });
-    }
-  }
-};
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
@@ -100,13 +51,13 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
+  const { data, error } = await supabase.auth.getUser(token);
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
 
   try {
+    const id = await getBabyId(token);
     const body = await req.json();
-    const { id } = body;
     const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
       body.data;
     await prisma.baby.update({
@@ -121,6 +72,32 @@ export const PUT = async (req: NextRequest) => {
         gender,
       },
     });
+
+    //体重データがない場合は出生体重をweightに登録する
+    const getWeigth = await prisma.weight.findMany({
+      where: {
+        babyId: id,
+      },
+    });
+
+    if (getWeigth.length === 0) {
+      const user = await prisma.user.findUnique({
+        where: {
+          supabaseUserId: data.user.id,
+        },
+      });
+      if (!user) throw new Error("user is not found");
+      await prisma.weight.create({
+        data: {
+          babyId: id,
+          measurementDate: expectedDateOfBirth,
+          weight: birthWeight,
+          createUser: user?.id,
+          changeUser: user?.id,
+        },
+      });
+    }
+
     return Response.json(<ApiResponse>{
       status: 200,
       message: "success",
