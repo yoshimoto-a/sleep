@@ -10,6 +10,7 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -19,6 +20,11 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   }, []);
   useEffect(() => {
     if (!data) return;
+    if (data.data.length === 0) {
+      setAction("");
+      setElapsedTime("データなし");
+      return;
+    }
     switch (data.latestData.action) {
       case "寝かしつけ開始":
         setAction("入眠所要時間");

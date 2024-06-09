@@ -11,34 +11,41 @@ interface PropsItem {
 
 export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   const [action, setAction] = useState<string>("");
-  const [elapsedTime, setElapsedTime] = useState<string | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
+    null
+  );
   const { isLoading, data, error, mutate } = useGetNextSleepTime();
   const {
     isLoading: isLoadingBaby,
     data: babyData,
     error: babyError,
   } = useGetBaby();
-
   useEffect(() => {
     mutate();
   }, [SleepingSituationData, mutate]);
   useEffect(() => {
-    if (data) {
+    if (data && "data" in data) {
       setElapsedTime(data.data);
     }
   }, [data, isLoading]);
 
   useEffect(() => {
-    if (SleepingSituationData) {
-      switch (SleepingSituationData.latestData.action) {
-        case "起きた":
-          setAction("お勧めねんね時刻");
-          break;
-        default:
-          setAction("睡眠中");
-      }
+    if (!SleepingSituationData) {
+      return;
     }
-  }, [SleepingSituationData, isLoading]);
+    if (SleepingSituationData.data.length === 0) {
+      setAction("");
+      setElapsedTime("データなし");
+      return;
+    }
+    switch (SleepingSituationData.latestData.action) {
+      case "起きた":
+        setAction("お勧めねんね時刻");
+        break;
+      default:
+        setAction("睡眠中");
+    }
+  }, [SleepingSituationData, isLoading, error]);
 
   //生後6か月以降で早朝起きしている場合、6時過ぎたらお勧めは8時に設定
   useEffect(() => {
@@ -60,7 +67,7 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     }, 60000);
 
     return () => clearInterval(intervalId);
-  }, [elapsedTime]);
+  }, [elapsedTime, babyData]);
 
   if (isLoading || isLoadingBaby) return <div>読込み中...</div>;
   if (error || babyError) return <div>エラー発生</div>;
