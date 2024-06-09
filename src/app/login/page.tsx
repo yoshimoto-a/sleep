@@ -9,6 +9,7 @@ import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
+import { ApiResponse } from "../_types/apiRequests/apiResponse";
 import { PostUser } from "./utils/postUser";
 import { SubmitButton } from "@/app/_components/submitButton";
 import { getLoginUser } from "@/utils/getLoginUser";
@@ -48,7 +49,8 @@ export default function Page() {
           data.user?.user_metadata.babyId;
         const role = babyId ? "SUB" : "MAIN";
         const resp = await PostUser(id, role, access_token, babyId);
-        if (resp.status !== 200) throw new Error("ユーザー登録失敗");
+        const respData: ApiResponse = await resp.json();
+        if (respData.status !== 200) throw new Error("ユーザー登録失敗");
         router.replace("/dashboard/setting");
       }
       router.replace("/dashboard/sleep");
