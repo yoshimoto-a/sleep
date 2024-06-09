@@ -6,11 +6,9 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import { useContext } from "react";
 import { useGetBaby } from "../_hooks/useBaby";
 import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
-import { UserContext } from "../layout";
-import { PutBaby } from "./_utils/putBaby";
+import { putBaby } from "./_utils/putBaby";
 import { Input } from "@/app/_components/input";
 import { InputRadio } from "@/app/_components/inputRadio";
 import { IsLoading } from "@/app/_components/isLoading";
@@ -26,7 +24,6 @@ export default function Page() {
   const [expectedDateOfBirth, setExpectedDateOfBirth] = useState("");
   const [birthWeight, setBirthWeight] = useState("");
   const [gender, setGender] = useState<Gender | "">("");
-  const [, babyId] = useContext(UserContext);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -63,14 +60,8 @@ export default function Page() {
           birthWeight: parseInt(birthWeight),
           gender,
         };
-        if (babyId) await PutBaby(token, babyId, body);
-        if (
-          wakeWindowsData &&
-          "data" in wakeWindowsData &&
-          wakeWindowsData.data !== null &&
-          "sleepPrepTime" in wakeWindowsData.data &&
-          wakeWindowsData.data.activityTime.length === 0
-        )
+        await putBaby(token, body);
+        if (wakeWindowsData?.data.activityTime.length === 0)
           router.replace("dashboard/wakeWindows");
         router.replace("/dashboard/sleep/");
       } catch (e) {
