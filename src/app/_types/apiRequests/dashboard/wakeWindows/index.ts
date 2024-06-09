@@ -19,7 +19,7 @@ export interface SleepPrepTime {
 }
 
 export interface IndexSuccessResponse {
-  status: number;
+  status: 200;
   data: {
     activityTime: WakeWindows[];
     sleepPrepTime: SleepPrepTime;
@@ -27,7 +27,7 @@ export interface IndexSuccessResponse {
 }
 
 export interface IndexErrorResponse {
-  status: number;
+  status: 204 | 400 | 404 | 500;
   error: string;
 }
 
