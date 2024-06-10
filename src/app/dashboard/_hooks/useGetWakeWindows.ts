@@ -28,7 +28,10 @@ export const useGetWakeWindows = () => {
   };
   const { data, error, isLoading, mutate } = useSWR(
     shouldFetchData ? "/api/dashboard/wakeWindows" : null,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
   );
 
   return { isLoading, data, error, mutate };

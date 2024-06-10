@@ -68,7 +68,7 @@ export default function Page() {
     }
   }, [isLoading, getData, setting]);
   console.log(isLoading); //ちょいちょいtrueになる
-  if (isLoading || isLoding) return <IsLoading />;
+  if (isLoading) return <IsLoading />;
 
   if (error && error?.status !== 204)
     return <div>データの取得に失敗しました</div>;
@@ -77,7 +77,10 @@ export default function Page() {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading("保存処理中...");
-    if (!token || !babyId || !dbUserId) return;
+    if (!token || !babyId || !dbUserId) {
+      toast.dismiss(toastId);
+      return;
+    }
     if (!data) {
       const wakeWindows: PostWakeWindows[] = [
         {
@@ -129,8 +132,12 @@ export default function Page() {
       }
     } else {
       const wakeWindows: PutWakeWindows[] = [];
-      data.activityTime.map(item => {
-        if (!item.id) return;
+      data.activityTime.map((item) => {
+        if (!item.id) {
+          toast.dismiss(toastId);
+
+          return;
+        }
         switch (item.type) {
           case "ALL":
             wakeWindows.push({
@@ -172,7 +179,11 @@ export default function Page() {
             break;
         }
       });
-      if (!data.sleepPrepTime.id) return;
+      if (!data.sleepPrepTime.id) {
+        toast.dismiss(toastId);
+
+        return;
+      }
       const sleepPrepTime = {
         id: data.sleepPrepTime.id,
         babyId,
@@ -225,7 +236,7 @@ export default function Page() {
                   placeholder="時間"
                   inputMode="numeric"
                   disabled={isSubmitting}
-                  onChange={value => handleCahngeBasicHour(value)}
+                  onChange={(value) => handleCahngeBasicHour(value)}
                 />
                 {basicHourError && <p>{basicHourError}</p>}{" "}
                 <Input
@@ -235,7 +246,7 @@ export default function Page() {
                   placeholder="分"
                   inputMode="numeric"
                   disabled={isSubmitting}
-                  onChange={value => handleCahngeBasicMinutes(value)}
+                  onChange={(value) => handleCahngeBasicMinutes(value)}
                 />
                 {basicMinutesError && <p>{basicMinutesError}</p>}{" "}
               </div>
@@ -249,7 +260,7 @@ export default function Page() {
                 placeholder="分前"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => setSinceBedtime(Number(value))}
+                onChange={(value) => setSinceBedtime(Number(value))}
               />
             </div>
           </div>
@@ -271,7 +282,7 @@ export default function Page() {
                 placeholder="時間"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeMorningHour(value)}
+                onChange={(value) => handleCahngeMorningHour(value)}
               />
               {morningHourError && <p>{morningHourError}</p>}{" "}
               <Input
@@ -281,7 +292,7 @@ export default function Page() {
                 placeholder="分"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeMorningMinutes(value)}
+                onChange={(value) => handleCahngeMorningMinutes(value)}
               />
               {morningMinutesError && <p>{morningMinutesError}</p>}{" "}
             </div>
@@ -296,7 +307,7 @@ export default function Page() {
                 placeholder="時間"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeAfternoonHour(value)}
+                onChange={(value) => handleCahngeAfternoonHour(value)}
               />
               {afternoonHourError && <p>{afternoonHourError}</p>}{" "}
               <Input
@@ -306,7 +317,7 @@ export default function Page() {
                 placeholder="分"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeAfternoonMinutes(value)}
+                onChange={(value) => handleCahngeAfternoonMinutes(value)}
               />
             </div>
             {afternoonMinutesError && <p>{afternoonMinutesError}</p>}{" "}
@@ -321,7 +332,7 @@ export default function Page() {
                 placeholder="時間"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeEveningHour(value)}
+                onChange={(value) => handleCahngeEveningHour(value)}
               />
               {eveningMinutesError && <p>{eveningHourError}</p>}{" "}
               <Input
@@ -331,7 +342,7 @@ export default function Page() {
                 placeholder="分"
                 inputMode="numeric"
                 disabled={isSubmitting}
-                onChange={value => handleCahngeEveningMinutes(value)}
+                onChange={(value) => handleCahngeEveningMinutes(value)}
               />
               {eveningMinutesError && <p>{eveningMinutesError}</p>}{" "}
             </div>
