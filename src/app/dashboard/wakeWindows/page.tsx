@@ -67,7 +67,6 @@ export default function Page() {
       setting(getData.data);
     }
   }, [isLoading, getData, setting]);
-  console.log(isLoading); //ちょいちょいtrueになる
   if (isLoading || isLoding) return <IsLoading />;
 
   if (error && error?.status !== 204)
@@ -190,7 +189,6 @@ export default function Page() {
         toast.success("保存しました");
       }
     } catch (e) {
-      console.log(e);
       toast.error("保存に失敗しました");
     } finally {
       toast.dismiss(toastId);
