@@ -48,16 +48,15 @@ export default function Layout({
 
   // //赤ちゃんID取得して初回更新が未済ならページ遷移
   useEffect(() => {
-    if (isLoading || !data) return;
+    if (isLoading || !data || !("data" in data)) return;
     if (babyError) {
       alert("赤ちゃん情報の取得に失敗しました");
       router.replace("/login");
     }
+    setBabyId(data.data.id);
     const fetcher = async () => {
       try {
-        if ("data" in data && !data.data.name) {
-          //作成日・更新日の一致では判別できず。
-          setBabyId(data.data.id);
+        if (data.data.updated === data.data.created) {
           router.replace("/dashboard/setting");
         }
       } catch (e) {
@@ -69,12 +68,12 @@ export default function Layout({
   }, [router, isLoading, data, babyError]);
 
   // //活動時間の設定がなければ設定画面へ
-  useEffect(() => {
-    if (isWakeWindowsLoading) return;
-    if (error?.status === 204) {
-      router.replace("/dashboard/wakeWindows");
-    }
-  }, [router, error, isWakeWindowsLoading]);
+  // useEffect(() => {
+  //   if (isWakeWindowsLoading) return;
+  //   if (error?.status === 204) {
+  //     router.replace("/dashboard/wakeWindows");
+  //   }
+  // }, [router, error, isWakeWindowsLoading]);
 
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
