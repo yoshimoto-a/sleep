@@ -16,11 +16,12 @@ export const useGetNextSleepTime = () => {
     };
     const resp = await fetch("/api/dashboard/nextSleepTime", prams);
     const data: IndexResponse = await resp.json();
-    if (data.status !== 200) {
-      console.log(data);
+
+    if (data.status === 200 || data.error === "no wakeWindowsData") {
+      return data;
+    } else {
       throw new Error("error in fetcher");
     }
-    return data;
   };
   const { data, error, isLoading, mutate } = useSWR(
     shouldFetchData ? "/api/dashboard/nextSleepTime" : null,

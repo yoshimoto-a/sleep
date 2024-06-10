@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useContext } from "react";
 import useSWR from "swr";
-import { UserContext } from "../layout";
 import { GetBaby } from "../setting/_utils/getBaby";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
@@ -40,9 +38,8 @@ export const useBaby = ({ babyId }: { babyId: number | null }) => {
 };
 
 export const useGetBaby = () => {
-  const [, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
-  const shouldFetchData = !isLoding && token && babyId;
+  const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
     if (!token) return;
     const prams = {
@@ -52,7 +49,7 @@ export const useGetBaby = () => {
         Authorization: token,
       },
     };
-    const resp = await fetch(`/api/dashboard/setting?id=${babyId}`, prams);
+    const resp = await fetch(`/api/dashboard/setting`, prams);
     const data: IndexResponse = await resp.json();
     if (data.status !== 200) {
       throw new Error("Failed to get data");
@@ -60,7 +57,7 @@ export const useGetBaby = () => {
     return data;
   };
   const { data, error, isLoading } = useSWR(
-    shouldFetchData ? `/api/dashboard/setting?id=${babyId}` : null,
+    shouldFetchData ? `/api/dashboard/setting` : null,
     fetcher
   );
 

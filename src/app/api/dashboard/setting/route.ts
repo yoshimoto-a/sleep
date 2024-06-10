@@ -12,7 +12,7 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const id = req.nextUrl.searchParams.get("id");
+    const id = await getBabyId(token);
     if (!id)
       return Response.json(<IndexResponse>{
         status: 400,
@@ -20,7 +20,7 @@ export const GET = async (req: NextRequest) => {
       });
     const getBaby = await prisma.baby.findUnique({
       where: {
-        id: parseInt(id),
+        id,
       },
       select: {
         id: true,

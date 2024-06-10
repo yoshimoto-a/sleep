@@ -61,18 +61,17 @@ export default function Page() {
   } = useValidation();
 
   useEffect(() => {
-    if (
-      getData &&
-      "data" in getData &&
-      getData.data !== null &&
-      "sleepPrepTime" in getData.data
-    ) {
+    if (isLoading) return;
+    if (getData) {
       setData(getData.data);
       setting(getData.data);
     }
-  }, [isLoading, getData, setting, isLoding]);
+  }, [isLoading, getData, setting]);
+  console.log(isLoading); //ちょいちょいtrueになる
   if (isLoading || isLoding) return <IsLoading />;
-  if (error) return <div>データの取得に失敗しました</div>;
+
+  if (error && error?.status !== 204)
+    return <div>データの取得に失敗しました</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -124,8 +123,9 @@ export default function Page() {
           prams
         );
         mutate();
+        toast.success("保存しました");
       } catch (e) {
-        alert("データの登録に失敗しました");
+        toast.error("保存に失敗しました");
       }
     } else {
       const wakeWindows: PutWakeWindows[] = [];
@@ -190,10 +190,9 @@ export default function Page() {
         toast.success("保存しました");
       } catch (e) {
         toast.error("保存に失敗しました");
-      } finally {
-        toast.dismiss(toastId);
       }
     }
+    toast.dismiss(toastId);
     setIsSubmitting(false);
   };
 
