@@ -75,125 +75,127 @@ export default function Page() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!token || !babyId || !dbUserId) return;
     setIsSubmitting(true);
     const toastId = toast.loading("保存処理中...");
-    if (!token || !babyId || !dbUserId) return;
-    if (!data) {
-      const wakeWindows: PostWakeWindows[] = [
-        {
+    try {
+      if (!data) {
+        const wakeWindows: PostWakeWindows[] = [
+          {
+            babyId,
+            type: "ALL",
+            time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
+            changeUser: dbUserId,
+            createUser: dbUserId,
+          },
+          {
+            babyId,
+            type: "MORNING",
+            time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
+            changeUser: dbUserId,
+            createUser: dbUserId,
+          },
+          {
+            babyId,
+            type: "NOON",
+            time: convertToMinutes(`${afternoonHour}時間${afternoonMinutes}分`),
+            changeUser: dbUserId,
+            createUser: dbUserId,
+          },
+          {
+            babyId,
+            type: "EVENING",
+            time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
+            changeUser: dbUserId,
+            createUser: dbUserId,
+          },
+        ];
+        const sleepPrepTime: SleepPrepTime = {
           babyId,
-          type: "ALL",
-          time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
+          time: sinceBedtime,
           changeUser: dbUserId,
           createUser: dbUserId,
-        },
-        {
-          babyId,
-          type: "MORNING",
-          time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
-          changeUser: dbUserId,
-          createUser: dbUserId,
-        },
-        {
-          babyId,
-          type: "NOON",
-          time: convertToMinutes(`${afternoonHour}時間${afternoonMinutes}分`),
-          changeUser: dbUserId,
-          createUser: dbUserId,
-        },
-        {
-          babyId,
-          type: "EVENING",
-          time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
-          changeUser: dbUserId,
-          createUser: dbUserId,
-        },
-      ];
-      const sleepPrepTime: SleepPrepTime = {
-        babyId,
-        time: sinceBedtime,
-        changeUser: dbUserId,
-        createUser: dbUserId,
-      };
-      const prams = { wakeWindows, sleepPrepTime };
+        };
+        const prams = { wakeWindows, sleepPrepTime };
 
-      try {
         await fetcher.post<PostRequests, ApiResponse>(
           "/api/dashboard/wakeWindows",
           prams
         );
         mutate();
         toast.success("保存しました");
-      } catch (e) {
-        toast.error("保存に失敗しました");
-      }
-    } else {
-      const wakeWindows: PutWakeWindows[] = [];
-      data.activityTime.map(item => {
-        if (!item.id) return;
-        switch (item.type) {
-          case "ALL":
-            wakeWindows.push({
-              id: item.id,
-              babyId,
-              type: item.type,
-              time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
-              changeUser: dbUserId,
-            });
-            break;
-          case "MORNING":
-            wakeWindows.push({
-              id: item.id,
-              babyId,
-              type: item.type,
-              time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
-              changeUser: dbUserId,
-            });
-            break;
-          case "NOON":
-            wakeWindows.push({
-              id: item.id,
-              babyId,
-              type: item.type,
-              time: convertToMinutes(
-                `${afternoonHour}時間${afternoonMinutes}分`
-              ),
-              changeUser: dbUserId,
-            });
-            break;
-          case "EVENING":
-            wakeWindows.push({
-              id: item.id,
-              babyId,
-              type: item.type,
-              time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
-              changeUser: dbUserId,
-            });
-            break;
+      } else {
+        const wakeWindows: PutWakeWindows[] = [];
+        data.activityTime.map(item => {
+          if (!item.id) {
+            throw new Error("activityTimeのIDなし");
+          }
+          switch (item.type) {
+            case "ALL":
+              wakeWindows.push({
+                id: item.id,
+                babyId,
+                type: item.type,
+                time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
+                changeUser: dbUserId,
+              });
+              break;
+            case "MORNING":
+              wakeWindows.push({
+                id: item.id,
+                babyId,
+                type: item.type,
+                time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
+                changeUser: dbUserId,
+              });
+              break;
+            case "NOON":
+              wakeWindows.push({
+                id: item.id,
+                babyId,
+                type: item.type,
+                time: convertToMinutes(
+                  `${afternoonHour}時間${afternoonMinutes}分`
+                ),
+                changeUser: dbUserId,
+              });
+              break;
+            case "EVENING":
+              wakeWindows.push({
+                id: item.id,
+                babyId,
+                type: item.type,
+                time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
+                changeUser: dbUserId,
+              });
+              break;
+          }
+        });
+        if (!data.sleepPrepTime.id) {
+          throw new Error("sleepPrepTimeのidなし");
         }
-      });
-      if (!data.sleepPrepTime.id) return;
-      const sleepPrepTime = {
-        id: data.sleepPrepTime.id,
-        babyId,
-        time: sinceBedtime,
-        changeUser: dbUserId,
-      };
-      const prams = { wakeWindows, sleepPrepTime };
+        const sleepPrepTime = {
+          id: data.sleepPrepTime.id,
+          babyId,
+          time: sinceBedtime,
+          changeUser: dbUserId,
+        };
+        const prams = { wakeWindows, sleepPrepTime };
 
-      try {
         await fetcher.put<UpdateRequests, ApiResponse>(
           "/api/dashboard/wakeWindows",
           prams
         );
         mutate();
         toast.success("保存しました");
-      } catch (e) {
-        toast.error("保存に失敗しました");
       }
+    } catch (e) {
+      console.log(e);
+      toast.error("保存に失敗しました");
+    } finally {
+      toast.dismiss(toastId);
+      setIsSubmitting(false);
     }
-    toast.dismiss(toastId);
-    setIsSubmitting(false);
   };
 
   return (
