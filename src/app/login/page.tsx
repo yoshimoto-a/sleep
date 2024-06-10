@@ -52,8 +52,9 @@ export default function Page() {
         const respData: ApiResponse = await resp.json();
         if (respData.status !== 200) throw new Error("ユーザー登録失敗");
         router.replace("/dashboard/setting");
+      } else {
+        router.replace("/dashboard/sleep");
       }
-      router.replace("/dashboard/sleep");
     } catch (e) {
       toast.error(String(e));
       router.replace("/");
