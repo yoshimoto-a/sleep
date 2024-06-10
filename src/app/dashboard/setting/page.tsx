@@ -45,8 +45,8 @@ export default function Page() {
     }
   }, [isLoding, data]);
 
-  if (isLoading || isWakeWindowsLoading) return <IsLoading />;
-  if (error || wakeWindowsError) return <div>エラー発生</div>;
+  if (isLoading) return <IsLoading />;
+  if (error) return <div>エラー発生</div>;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,9 +61,11 @@ export default function Page() {
           gender,
         };
         await putBaby(token, body);
-        if (wakeWindowsData?.data.activityTime.length === 0)
-          router.replace("dashboard/wakeWindows");
-        router.replace("/dashboard/sleep/");
+        if (wakeWindowsError?.status === 204) {
+          router.replace("/dashboard/wakeWindows");
+        } else {
+          router.replace("/dashboard/sleep/");
+        }
       } catch (e) {
         alert("更新に失敗しました");
       }
