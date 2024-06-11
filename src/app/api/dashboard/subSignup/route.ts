@@ -19,7 +19,7 @@ export const POST = async (req: NextRequest) => {
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
     if (typeof email === "string" && supabaseUrl && supabaseServiceRole) {
       const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole);
-      const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
+      const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
         email,
         {
           data: { babyId },
