@@ -124,6 +124,5 @@ export const calculate = (
     return noonTime.format("HH時mm分");
   }
 
-  console.log("起床時刻" + wakeupTime.format("YYYY/MM/DD HH:mm"));
   return "ここまで届かないはず";
 };

@@ -24,7 +24,6 @@ export const PostUser = async (
       ...prams,
       body: JSON.stringify(prams.body),
     });
-    console.log(resp);
     return resp;
   } catch (e) {
     throw e;

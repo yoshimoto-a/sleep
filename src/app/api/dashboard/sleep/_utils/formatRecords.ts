@@ -61,6 +61,7 @@ export const formatRecords = (
     containTomorrowRecord.length === 0 &&
     containTodayRecords.length === 0
   ) {
+    console.log("ここきたらOK");
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     if (bedTime && !sleep) {
       formatedRecords.push({

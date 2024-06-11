@@ -4,7 +4,6 @@ import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 
 export const useGetWakeWindows = () => {
   const { token, isLoding } = useSupabaseSession();
-  //console.log(isLoding, token); //変わりなし
   const shouldFetchData = !isLoding && token;
   const fetcher = async () => {
     if (token) {

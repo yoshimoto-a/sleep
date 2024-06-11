@@ -62,6 +62,5 @@ export const shortening = (
 
   //発達状況を元に短縮時間を計算
   shortening += wakeWindowsShortening(practicing, acquisition, walking);
-  // console.log(`短縮 ${shortening}`);
   return shortening;
 };
