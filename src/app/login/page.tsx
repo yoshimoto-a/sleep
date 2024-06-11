@@ -32,6 +32,7 @@ export default function Page() {
     if (error) {
       alert("ログインに失敗しました");
       toast.dismiss(toastId);
+      setIsSubmitting(false);
       return;
     }
     setEmail("");
@@ -60,8 +61,8 @@ export default function Page() {
       router.replace("/");
     } finally {
       toast.dismiss(toastId);
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
   return (
     <>
