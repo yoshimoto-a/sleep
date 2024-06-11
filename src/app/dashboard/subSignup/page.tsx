@@ -14,14 +14,12 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const { token, isLoding } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  if (isLoding) {
-    return <IsLoading />;
-  }
+  if (isLoding) return <IsLoading />;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!token) {
-      return;
-    }
+    if (!token) return;
+
     setIsSubmitting(true);
     const prams: PostRequests = {
       method: "POST",
@@ -33,16 +31,20 @@ export default function Page() {
         email,
       },
     };
-    const resp = await fetch("/api/dashboard/subSignup", {
-      ...prams,
-      body: JSON.stringify(prams.body),
-    });
-    const data: ApiResponse = await resp.json();
-    if (data.status === 200) {
-      setEmail("");
-      router.push("/signup/sentEmail/");
-    } else {
-      alert(`サブアカウント招待に失敗しました.。${data.message}`);
+    try {
+      const resp = await fetch("/api/dashboard/subSignup", {
+        ...prams,
+        body: JSON.stringify(prams.body),
+      });
+      const data: ApiResponse = await resp.json();
+      if (data.status === 200) {
+        setEmail("");
+        router.push("/signup/sentEmail/");
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (e) {
+      alert(`サブアカウント招待に失敗しました.。${e}`);
     }
     setIsSubmitting(false);
   };
