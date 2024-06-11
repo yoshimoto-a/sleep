@@ -9,7 +9,6 @@ import { Guideline } from "./_components/guideline";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
 import { Input } from "@/app/_components/input";
-import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";
 import { SubmitButton } from "@/app/_components/submitButton";
 import { useApi } from "@/app/_hooks/useApi";
@@ -67,7 +66,7 @@ export default function Page() {
       setting(getData.data);
     }
   }, [isLoading, getData, setting]);
-  if (isLoading || isLoding) return <IsLoading />;
+  if (isLoading || isLoding) return;
 
   if (error && error?.status !== 204)
     return <div>データの取得に失敗しました</div>;
