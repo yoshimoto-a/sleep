@@ -20,45 +20,47 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   }, []);
   useEffect(() => {
     if (!data) return;
-    if (data.data.length === 0) {
+    if (!data.latestData) {
       setAction("");
-      setElapsedTime("データなし");
+      setElapsedTime("登録なし");
       return;
-    }
-    switch (data.latestData.action) {
-      case "寝かしつけ開始":
-        setAction("入眠所要時間");
-        if (data.latestData.record.bedTime)
-          setElapsedTime(
-            FormatDuration(
-              data.latestData.record.bedTime,
-              currentTime,
-              "MinutesOnly"
-            )
-          );
-        break;
-      case "寝た":
-        setAction("睡眠時間");
-        if (data.latestData.record.sleep)
-          setElapsedTime(
-            FormatDuration(
-              data.latestData.record.sleep,
-              currentTime,
-              "HourAndMinutes"
-            )
-          );
-        break;
-      case "起きた":
-        setAction("活動時間");
-        if (data.latestData.record.wakeup)
-          setElapsedTime(
-            FormatDuration(
-              data.latestData.record.wakeup,
-              currentTime,
-              "HourAndMinutes"
-            )
-          );
-        break;
+    } else {
+      switch (data.latestData.action) {
+        case "寝かしつけ開始":
+          setAction("入眠所要時間");
+          if (data.latestData.record.bedTime)
+            setElapsedTime(
+              FormatDuration(
+                data.latestData.record.bedTime,
+                currentTime,
+                "MinutesOnly"
+              )
+            );
+          break;
+        case "寝た":
+          setAction("睡眠時間");
+          if (data.latestData.record.sleep)
+            setElapsedTime(
+              FormatDuration(
+                data.latestData.record.sleep,
+                currentTime,
+                "HourAndMinutes"
+              )
+            );
+          break;
+        case "起きた":
+          setAction("活動時間");
+          if (data.latestData.record.wakeup)
+            setElapsedTime(
+              FormatDuration(
+                data.latestData.record.wakeup,
+                currentTime,
+                "HourAndMinutes"
+              )
+            );
+          break;
+      }
+      return;
     }
   }, [data, data?.latestData?.action, data?.latestData?.record, currentTime]);
 
