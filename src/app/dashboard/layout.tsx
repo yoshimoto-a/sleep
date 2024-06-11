@@ -23,7 +23,6 @@ export default function Layout({
   const [babyId, setBabyId] = useState<number | null>(null);
   const { error, isLoading: isWakeWindowsLoading } = useGetWakeWindows();
   const { data, isLoading, error: babyError } = useGetBaby();
-  console.log(data, isLoading);
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
     if (!isLoding && session == null) {
@@ -41,6 +40,7 @@ export default function Layout({
       } catch (e) {
         alert("ユーザー登録の取得に失敗しました");
         router.replace("/login");
+        return;
       }
     };
     fetcher();
@@ -52,16 +52,19 @@ export default function Layout({
     if (babyError) {
       alert("赤ちゃん情報の取得に失敗しました");
       router.replace("/login");
+      return;
     }
     setBabyId(data.data.id);
     const fetcher = async () => {
       try {
         if (data.data.updated === data.data.created) {
           router.replace("/dashboard/setting");
+          return;
         }
       } catch (e) {
         alert("赤ちゃん情報の取得に失敗しました。");
         router.replace("/login");
+        return;
       }
     };
     fetcher();
