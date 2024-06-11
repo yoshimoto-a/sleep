@@ -27,25 +27,27 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     if (data && "data" in data) {
       setElapsedTime(data.data);
     }
-  }, [data, isLoading]);
+  }, [data]);
 
   useEffect(() => {
-    if (!SleepingSituationData) {
-      return;
-    }
-    if (SleepingSituationData.data.length === 0) {
+    if (error && error.error === "no wakeWindowsData") {
+      //活動時間の設定がない
       setAction("");
       setElapsedTime("データなし");
       return;
+    } else {
+      switch (
+        SleepingSituationData &&
+        SleepingSituationData.latestData.action
+      ) {
+        case "起きた":
+          setAction("お勧めねんね時刻");
+          break;
+        default:
+          setAction("睡眠中");
+      }
     }
-    switch (SleepingSituationData.latestData.action) {
-      case "起きた":
-        setAction("お勧めねんね時刻");
-        break;
-      default:
-        setAction("睡眠中");
-    }
-  }, [SleepingSituationData, isLoading, error]);
+  }, [SleepingSituationData, isLoading, error, data]);
 
   //生後6か月以降で早朝起きしている場合、6時過ぎたらお勧めは8時に設定
   useEffect(() => {
@@ -70,7 +72,8 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   }, [elapsedTime, babyData]);
 
   if (isLoading || isLoadingBaby) return <div>読込み中...</div>;
-  if (error || babyError) return <div>エラー発生</div>;
+  console.log(error, babyError);
+  if (babyError) return <div>エラー発生</div>;
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
