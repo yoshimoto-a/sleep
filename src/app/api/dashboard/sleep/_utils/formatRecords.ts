@@ -124,7 +124,6 @@ export const formatRecords = (
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
     }
-    return formatedRecords;
   }
 
   //①当日のみで完結しているデータがある
@@ -191,7 +190,6 @@ export const formatRecords = (
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
     });
-    return formatedRecords;
   }
   //①当日データ登録したけど未完成(wakeupは必ずnull)かつ日付またいで起きた(OR)寝た登録がおわったレコードがある
   if (
@@ -237,7 +235,6 @@ export const formatRecords = (
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
       );
     }
-    return formatedRecords;
   }
 
   //①当日データ登録したけど未完成(wakeupは必ずnull)かつ日付またいで起きた(OR)寝た登録がおわったレコードがない
@@ -287,7 +284,6 @@ export const formatRecords = (
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
       );
     }
-    return formatedRecords;
   }
   //当日のデータ登録し終えて、翌日に跨いでいるデータ
   if (
@@ -326,6 +322,7 @@ export const formatRecords = (
         createNewData(id, sleep, "寝た", wakeup, sleep, changeUser)
       );
     }
-    return formatedRecords;
   }
+
+  return formatedRecords;
 };
