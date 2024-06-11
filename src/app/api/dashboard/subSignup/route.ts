@@ -23,7 +23,7 @@ export const POST = async (req: NextRequest) => {
         email,
         {
           data: { babyId },
-          redirectTo: `${process.env.APP_URL}/resetPassword/sendEmail/`,
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`,
         }
       );
       if (error) {
