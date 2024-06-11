@@ -20,9 +20,11 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     data: babyData,
     error: babyError,
   } = useGetBaby();
+
   useEffect(() => {
     mutate();
   }, [SleepingSituationData, mutate]);
+
   useEffect(() => {
     if (data && "data" in data) {
       setElapsedTime(data.data);
@@ -30,22 +32,26 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   }, [data]);
 
   useEffect(() => {
-    if (error && error.error === "no wakeWindowsData") {
+    if (isLoading || !data) return;
+    if (data?.error === "no wakeWindowsData") {
       //活動時間の設定がない
       setAction("");
-      setElapsedTime("データなし");
+      setElapsedTime("要活動時間");
       return;
-    } else {
-      switch (
-        SleepingSituationData &&
-        SleepingSituationData.latestData.action
-      ) {
-        case "起きた":
-          setAction("お勧めねんね時刻");
-          break;
-        default:
-          setAction("睡眠中");
-      }
+    }
+    if (data?.error === "no sleepingSituationData") {
+      //登録データがない
+      setAction("");
+      setElapsedTime("登録なし");
+      return;
+    }
+    if (!SleepingSituationData) return;
+    switch (SleepingSituationData.latestData.action) {
+      case "起きた":
+        setAction("お勧めねんね時刻");
+        break;
+      default:
+        setAction("睡眠中");
     }
   }, [SleepingSituationData, isLoading, error, data]);
 
@@ -71,9 +77,10 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     return () => clearInterval(intervalId);
   }, [elapsedTime, babyData]);
 
-  if (isLoading || isLoadingBaby) return <div>読込み中...</div>;
-  console.log(error, babyError);
-  if (babyError) return <div>エラー発生</div>;
+  if (isLoading || isLoadingBaby)
+    return <div className="text-center">読込み中...</div>;
+  if ((error && error.error !== "no wakeWindowsData") || babyError)
+    return <div className="text-center">エラー発生</div>;
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
