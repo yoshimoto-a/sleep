@@ -25,20 +25,20 @@ export default function Page() {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading("ログイン処理中...");
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      alert("ログインに失敗しました");
-      toast.dismiss(toastId);
-      setIsSubmitting(false);
-      return;
-    }
-    setEmail("");
-    setPassword("");
-
     try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        alert("ログインに失敗しました");
+        toast.dismiss(toastId);
+        setIsSubmitting(false);
+        return;
+      }
+      setEmail("");
+      setPassword("");
+
       if (!data.session) throw new Error("session情報がありません");
       const {
         access_token,
