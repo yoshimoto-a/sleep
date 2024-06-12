@@ -30,7 +30,8 @@ export const ControlButtomWithModal: React.FC<Props> = ({
     rowItem.id,
     rowItem.weight,
     rowItem.measurementDate,
-    mutate
+    mutate,
+    setIsOpen
   );
   return (
     <>
