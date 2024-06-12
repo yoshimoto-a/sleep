@@ -226,7 +226,6 @@ export default function Page() {
                   disabled={isSubmitting}
                   onChange={value => handleCahngeBasicHour(value)}
                 />
-                {basicHourError && <p>{basicHourError}</p>}{" "}
                 <Input
                   id="basicMinutes"
                   type="text"
@@ -236,8 +235,12 @@ export default function Page() {
                   disabled={isSubmitting}
                   onChange={value => handleCahngeBasicMinutes(value)}
                 />
-                {basicMinutesError && <p>{basicMinutesError}</p>}{" "}
               </div>
+              {basicHourError || basicMinutesError ? (
+                <p>{basicHourError || basicMinutesError}</p>
+              ) : (
+                ""
+              )}
             </div>
             <div className="flex-1">
               <Label text="寝かしつけ開始(分前)" htmlFor="basic" />
@@ -272,7 +275,6 @@ export default function Page() {
                 disabled={isSubmitting}
                 onChange={value => handleCahngeMorningHour(value)}
               />
-              {morningHourError && <p>{morningHourError}</p>}{" "}
               <Input
                 id="morningMinutes"
                 type="text"
@@ -282,8 +284,12 @@ export default function Page() {
                 disabled={isSubmitting}
                 onChange={value => handleCahngeMorningMinutes(value)}
               />
-              {morningMinutesError && <p>{morningMinutesError}</p>}{" "}
             </div>
+            {morningHourError || morningMinutesError ? (
+              <p>{morningHourError || morningMinutesError}</p>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex-1">
             <Label text="昼寝(11~15時)" htmlFor="afternoon" />
@@ -297,7 +303,6 @@ export default function Page() {
                 disabled={isSubmitting}
                 onChange={value => handleCahngeAfternoonHour(value)}
               />
-              {afternoonHourError && <p>{afternoonHourError}</p>}{" "}
               <Input
                 id="afternoonMinutes"
                 type="text"
@@ -308,7 +313,11 @@ export default function Page() {
                 onChange={value => handleCahngeAfternoonMinutes(value)}
               />
             </div>
-            {afternoonMinutesError && <p>{afternoonMinutesError}</p>}{" "}
+            {afternoonHourError || afternoonMinutesError ? (
+              <p>{afternoonHourError || afternoonMinutesError}</p>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex-1">
             <Label text="夕寝(15~18時)" htmlFor="evening" />
@@ -322,7 +331,6 @@ export default function Page() {
                 disabled={isSubmitting}
                 onChange={value => handleCahngeEveningHour(value)}
               />
-              {eveningMinutesError && <p>{eveningHourError}</p>}{" "}
               <Input
                 id="eveningMinutes"
                 type="text"
@@ -332,8 +340,12 @@ export default function Page() {
                 disabled={isSubmitting}
                 onChange={value => handleCahngeEveningMinutes(value)}
               />
-              {eveningMinutesError && <p>{eveningMinutesError}</p>}{" "}
             </div>
+            {eveningMinutesError || eveningHourError ? (
+              <p>{eveningMinutesError || eveningHourError}</p>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="text-center">

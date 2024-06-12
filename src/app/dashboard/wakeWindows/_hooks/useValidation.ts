@@ -2,22 +2,22 @@ import { useState, useCallback } from "react";
 import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
 export const useValidation = () => {
-  const [basicHour, setBasicHour] = useState("0");
-  const [basicMinutes, setBasicMinutes] = useState("0");
-  const [basicMinutesError, setBasicMinutesError] = useState("0");
-  const [basicHourError, setBasicHourError] = useState("0");
-  const [morningHour, setMorningHour] = useState("0");
-  const [morningHourError, setMorningHourError] = useState("0");
-  const [morningMinutes, setMorningMinutes] = useState("0");
-  const [morningMinutesError, setMorningMinutesError] = useState("0");
-  const [afternoonHour, setAfternoonHour] = useState("0");
-  const [afternoonHourError, setAfternoonHourError] = useState("0");
-  const [afternoonMinutes, setAfternoonMinutes] = useState("0");
-  const [afternoonMinutesError, setAfternoonMinutesError] = useState("0");
-  const [eveningHour, setEveningHour] = useState("0");
-  const [eveningHourError, setEveningHourError] = useState("0");
-  const [eveningMinutes, setEveningMinutes] = useState("0");
-  const [eveningMinutesError, setEveningMinutesError] = useState("0");
+  const [basicHour, setBasicHour] = useState("");
+  const [basicMinutes, setBasicMinutes] = useState("");
+  const [basicMinutesError, setBasicMinutesError] = useState("");
+  const [basicHourError, setBasicHourError] = useState("");
+  const [morningHour, setMorningHour] = useState("");
+  const [morningHourError, setMorningHourError] = useState("");
+  const [morningMinutes, setMorningMinutes] = useState("");
+  const [morningMinutesError, setMorningMinutesError] = useState("");
+  const [afternoonHour, setAfternoonHour] = useState("");
+  const [afternoonHourError, setAfternoonHourError] = useState("");
+  const [afternoonMinutes, setAfternoonMinutes] = useState("");
+  const [afternoonMinutesError, setAfternoonMinutesError] = useState("");
+  const [eveningHour, setEveningHour] = useState("");
+  const [eveningHourError, setEveningHourError] = useState("");
+  const [eveningMinutes, setEveningMinutes] = useState("");
+  const [eveningMinutesError, setEveningMinutesError] = useState("");
   const [sinceBedtime, setSinceBedtime] = useState(0);
 
   const setting = useCallback((data: WakeWindowsData) => {
@@ -48,7 +48,7 @@ export const useValidation = () => {
 
   const handleCahngeBasicHour = (val: string) => {
     setBasicHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setBasicHourError("数値を入力してください");
     } else {
       setBasicHourError("");
@@ -56,7 +56,7 @@ export const useValidation = () => {
   };
   const handleCahngeBasicMinutes = (val: string) => {
     setBasicMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setBasicMinutesError("数値を入力してください");
     } else {
       setBasicMinutesError("");
@@ -64,7 +64,7 @@ export const useValidation = () => {
   };
   const handleCahngeMorningHour = (val: string) => {
     setMorningHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setMorningHourError("数値を入力してください");
     } else {
       setMorningHourError("");
@@ -72,7 +72,7 @@ export const useValidation = () => {
   };
   const handleCahngeMorningMinutes = (val: string) => {
     setMorningMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setMorningMinutesError("数値を入力してください");
     } else {
       setMorningMinutesError("");
@@ -80,7 +80,7 @@ export const useValidation = () => {
   };
   const handleCahngeAfternoonHour = (val: string) => {
     setAfternoonHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setAfternoonHourError("数値を入力してください");
     } else {
       setAfternoonHourError("");
@@ -88,7 +88,7 @@ export const useValidation = () => {
   };
   const handleCahngeAfternoonMinutes = (val: string) => {
     setAfternoonMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setAfternoonMinutesError("数値を入力してください");
     } else {
       setAfternoonMinutesError("");
@@ -96,7 +96,7 @@ export const useValidation = () => {
   };
   const handleCahngeEveningHour = (val: string) => {
     setEveningHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setEveningHourError("数値を入力してください");
     } else {
       setEveningHourError("");
@@ -104,7 +104,7 @@ export const useValidation = () => {
   };
   const handleCahngeEveningMinutes = (val: string) => {
     setEveningMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setEveningMinutesError("数値を入力してください");
     } else {
       setEveningMinutesError("");
