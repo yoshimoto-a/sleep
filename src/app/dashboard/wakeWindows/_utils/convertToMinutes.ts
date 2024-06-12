@@ -1,4 +1,6 @@
 export const convertToMinutes = (timeString: string) => {
+  //入力された値が空なら0を返す
+  if (timeString === "時間分") return 0;
   const regex = /(\d+)時間(\d+)分/;
   const match = regex.exec(timeString);
 

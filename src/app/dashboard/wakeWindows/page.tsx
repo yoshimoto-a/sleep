@@ -188,6 +188,7 @@ export default function Page() {
         toast.success("保存しました");
       }
     } catch (e) {
+      console.log(e);
       toast.error("保存に失敗しました");
     } finally {
       toast.dismiss(toastId);
