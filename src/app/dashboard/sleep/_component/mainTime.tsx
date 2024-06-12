@@ -35,13 +35,13 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     if (isLoading || !data) return;
     if (data?.error === "no wakeWindowsData") {
       //活動時間の設定がない
-      setAction("");
-      setElapsedTime("要活動時間");
+      setAction("活動時間");
+      setElapsedTime("登録なし");
       return;
     }
     if (data?.error === "no sleepingSituationData") {
       //登録データがない
-      setAction("");
+      setAction("起きたデータ");
       setElapsedTime("登録なし");
       return;
     }
