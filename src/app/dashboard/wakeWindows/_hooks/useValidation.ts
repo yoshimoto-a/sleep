@@ -2,22 +2,22 @@ import { useState, useCallback } from "react";
 import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 
 export const useValidation = () => {
-  const [basicHour, setBasicHour] = useState("");
-  const [basicMinutes, setBasicMinutes] = useState("");
-  const [basicMinutesError, setBasicMinutesError] = useState("");
-  const [basicHourError, setBasicHourError] = useState("");
-  const [morningHour, setMorningHour] = useState("");
-  const [morningHourError, setMorningHourError] = useState("");
-  const [morningMinutes, setMorningMinutes] = useState("");
-  const [morningMinutesError, setMorningMinutesError] = useState("");
-  const [afternoonHour, setAfternoonHour] = useState("");
-  const [afternoonHourError, setAfternoonHourError] = useState("");
-  const [afternoonMinutes, setAfternoonMinutes] = useState("");
-  const [afternoonMinutesError, setAfternoonMinutesError] = useState("");
-  const [eveningHour, setEveningHour] = useState("");
-  const [eveningHourError, setEveningHourError] = useState("");
-  const [eveningMinutes, setEveningMinutes] = useState("");
-  const [eveningMinutesError, setEveningMinutesError] = useState("");
+  const [basicHour, setBasicHour] = useState("0");
+  const [basicMinutes, setBasicMinutes] = useState("0");
+  const [basicMinutesError, setBasicMinutesError] = useState("0");
+  const [basicHourError, setBasicHourError] = useState("0");
+  const [morningHour, setMorningHour] = useState("0");
+  const [morningHourError, setMorningHourError] = useState("0");
+  const [morningMinutes, setMorningMinutes] = useState("0");
+  const [morningMinutesError, setMorningMinutesError] = useState("0");
+  const [afternoonHour, setAfternoonHour] = useState("0");
+  const [afternoonHourError, setAfternoonHourError] = useState("0");
+  const [afternoonMinutes, setAfternoonMinutes] = useState("0");
+  const [afternoonMinutesError, setAfternoonMinutesError] = useState("0");
+  const [eveningHour, setEveningHour] = useState("0");
+  const [eveningHourError, setEveningHourError] = useState("0");
+  const [eveningMinutes, setEveningMinutes] = useState("0");
+  const [eveningMinutesError, setEveningMinutesError] = useState("0");
   const [sinceBedtime, setSinceBedtime] = useState(0);
 
   const setting = useCallback((data: WakeWindowsData) => {
