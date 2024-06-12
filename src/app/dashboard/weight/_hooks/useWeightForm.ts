@@ -31,7 +31,7 @@ export const useWeightForm = (
         `/api/dashboard/weight/${id}`,
         body
       );
-      await mutate();
+      mutate();
     } catch (e) {
       alert("更新に失敗しました");
     }
@@ -40,7 +40,7 @@ export const useWeightForm = (
     if (!confirm("削除していいですか？")) return;
     try {
       await fetcher.del<DelResponse>(`/api/dashboard/weight/${id}`);
-      await mutate();
+      mutate();
     } catch (e) {
       alert("削除に失敗しました");
     }
