@@ -23,7 +23,6 @@ export default function Page() {
   const handleNext = () => {
     setDate(dayjs(date).add(1, "d").toDate());
   };
-
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
