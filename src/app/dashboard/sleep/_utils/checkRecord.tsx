@@ -38,7 +38,6 @@ export const CheckRecords = async (
           method = "POST";
         }
       } else {
-        console.log(`${data.status} is null!`);
         method = "POST";
       }
       break;

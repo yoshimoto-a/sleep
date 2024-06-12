@@ -11,7 +11,6 @@ export interface Baby {
 }
 export interface UpdateRequests extends ApiRequest {
   body: {
-    id: number;
     data: Baby;
   };
 }

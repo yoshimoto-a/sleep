@@ -48,7 +48,7 @@ export const useValidation = () => {
 
   const handleCahngeBasicHour = (val: string) => {
     setBasicHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setBasicHourError("数値を入力してください");
     } else {
       setBasicHourError("");
@@ -56,7 +56,7 @@ export const useValidation = () => {
   };
   const handleCahngeBasicMinutes = (val: string) => {
     setBasicMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setBasicMinutesError("数値を入力してください");
     } else {
       setBasicMinutesError("");
@@ -64,7 +64,7 @@ export const useValidation = () => {
   };
   const handleCahngeMorningHour = (val: string) => {
     setMorningHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setMorningHourError("数値を入力してください");
     } else {
       setMorningHourError("");
@@ -72,7 +72,7 @@ export const useValidation = () => {
   };
   const handleCahngeMorningMinutes = (val: string) => {
     setMorningMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setMorningMinutesError("数値を入力してください");
     } else {
       setMorningMinutesError("");
@@ -80,7 +80,7 @@ export const useValidation = () => {
   };
   const handleCahngeAfternoonHour = (val: string) => {
     setAfternoonHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setAfternoonHourError("数値を入力してください");
     } else {
       setAfternoonHourError("");
@@ -88,7 +88,7 @@ export const useValidation = () => {
   };
   const handleCahngeAfternoonMinutes = (val: string) => {
     setAfternoonMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setAfternoonMinutesError("数値を入力してください");
     } else {
       setAfternoonMinutesError("");
@@ -96,7 +96,7 @@ export const useValidation = () => {
   };
   const handleCahngeEveningHour = (val: string) => {
     setEveningHour(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setEveningHourError("数値を入力してください");
     } else {
       setEveningHourError("");
@@ -104,7 +104,7 @@ export const useValidation = () => {
   };
   const handleCahngeEveningMinutes = (val: string) => {
     setEveningMinutes(val);
-    if (isNaN(Number(val))) {
+    if (isNaN(Number(val)) || !val) {
       setEveningMinutesError("数値を入力してください");
     } else {
       setEveningMinutesError("");

@@ -20,16 +20,16 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2 pt-10">
-          <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
-            <Link href="./signup" className="header-link">
+          <Link href="/signup" className="header-link">
+            <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
               ユーザー登録
-            </Link>
-          </div>
-          <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
-            <Link href="/login" className="header-link">
+            </div>
+          </Link>
+          <Link href="/login" className="header-link">
+            <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
               ログイン
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
         <div className="bg-gray-100 w-full mt-10">
           <div className="mt-10 text-center w-full">
@@ -51,11 +51,11 @@ export default function Home() {
               />
             </div>
             <div className="mt-8 flex justify-center">
-              <div className="px-5 py-2 w-40 rounded-full text-center bg-custom-blue">
-                <Link href="/expers" className="header-link">
+              <Link href="/expers" className="header-link">
+                <div className="px-5 py-2 w-40 rounded-full text-center bg-custom-blue">
                   もっと詳しく
-                </Link>
-              </div>
+                </div>
+              </Link>
             </div>
           </div>
           <div className="pt-10 text-center w-full">
@@ -130,11 +130,11 @@ export default function Home() {
             </div>
           </div>
           <div className="mb-20 flex justify-center">
-            <div className="px-5 p-2 w-40 rounded-full text-center bg-blue-200 ">
-              <Link href="./signup" className="header-link">
+            <Link href="./signup" className="header-link">
+              <div className="px-5 p-2 w-40 rounded-full text-center bg-blue-200 ">
                 はじめる
-              </Link>
-            </div>
+              </div>
+            </Link>
           </div>
         </div>
 

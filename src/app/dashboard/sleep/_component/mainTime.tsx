@@ -11,7 +11,9 @@ interface PropsItem {
 
 export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   const [action, setAction] = useState<string>("");
-  const [elapsedTime, setElapsedTime] = useState<string | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
+    null
+  );
   const { isLoading, data, error, mutate } = useGetNextSleepTime();
   const {
     isLoading: isLoadingBaby,
@@ -22,23 +24,36 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   useEffect(() => {
     mutate();
   }, [SleepingSituationData, mutate]);
-  useEffect(() => {
-    if (data) {
-      setElapsedTime(data.data);
-    }
-  }, [data, isLoading]);
 
   useEffect(() => {
-    if (SleepingSituationData) {
-      switch (SleepingSituationData.latestData.action) {
-        case "起きた":
-          setAction("お勧めねんね時刻");
-          break;
-        default:
-          setAction("睡眠中");
-      }
+    if (data && "data" in data) {
+      setElapsedTime(data.data);
     }
-  }, [SleepingSituationData, isLoading]);
+  }, [data]);
+
+  useEffect(() => {
+    if (isLoading || !data) return;
+    if (data?.error === "no wakeWindowsData") {
+      //活動時間の設定がない
+      setAction("活動時間");
+      setElapsedTime("登録なし");
+      return;
+    }
+    if (data?.error === "no sleepingSituationData") {
+      //登録データがない
+      setAction("起きたデータ");
+      setElapsedTime("登録なし");
+      return;
+    }
+    if (!SleepingSituationData) return;
+    switch (SleepingSituationData.latestData.action) {
+      case "起きた":
+        setAction("お勧めねんね時刻");
+        break;
+      default:
+        setAction("睡眠中");
+    }
+  }, [SleepingSituationData, isLoading, error, data]);
 
   //生後6か月以降で早朝起きしている場合、6時過ぎたらお勧めは8時に設定
   useEffect(() => {
@@ -60,10 +75,12 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     }, 60000);
 
     return () => clearInterval(intervalId);
-  }, [elapsedTime]);
+  }, [elapsedTime, babyData]);
 
-  if (isLoading || isLoadingBaby) return <div>読込み中...</div>;
-  if (error || babyError) return <div>エラー発生</div>;
+  if (isLoading || isLoadingBaby)
+    return <div className="text-center">読込み中...</div>;
+  if ((error && error.error !== "no wakeWindowsData") || babyError)
+    return <div className="text-center">エラー発生</div>;
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">

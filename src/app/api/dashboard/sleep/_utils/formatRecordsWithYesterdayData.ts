@@ -28,7 +28,7 @@ const createNewData = (
     changer,
   };
 };
-export const formatRecords = (
+export const formatRecordsWithYesterdayData = (
   targetDate: Date,
   mappedCompletedRecords: CompletedData[],
   mappedContainNullRecords: ContainNull[],
@@ -51,6 +51,7 @@ export const formatRecords = (
   if (noRecords) return formatedRecords;
   /*②日付またいで起きた(OR)寝た登録がおわったレコードの処理
    */
+
   if (containYesterdayRecord.length === 1) {
     const { id, bedTime, sleep, wakeup, changeUser } =
       containYesterdayRecord[0];
@@ -73,7 +74,7 @@ export const formatRecords = (
   }
 
   //①当日のみで完結しているデータがある
-  if (mappedCompletedRecords.length > 0) {
+  if (mappedCompletedRecords.length > 0 && yesterdayRecord.length !== 0) {
     let yesterdayWakeup: Date;
     if (
       containYesterdayRecord.length === 1 &&
@@ -137,6 +138,7 @@ export const formatRecords = (
       );
     });
   }
+
   //①当日データ登録したけど未完成(wakeupは必ずnull)かつ日付またいで起きた(OR)寝た登録がおわったレコードがある
   if (
     mappedContainNullRecords.length === 1 &&
@@ -232,14 +234,6 @@ export const formatRecords = (
     }
   }
   //当日のデータ登録し終えて、翌日に跨いでいるデータ
-  console.log(
-    mappedCompletedRecords,
-    mappedContainNullRecords,
-    containTodayRecords,
-    yesterdayRecord,
-    containYesterdayRecord,
-    containTomorrowRecord
-  );
   if (
     mappedContainNullRecords.length === 0 &&
     containTodayRecords.length !== 0 &&
@@ -277,5 +271,6 @@ export const formatRecords = (
       );
     }
   }
+
   return formatedRecords;
 };

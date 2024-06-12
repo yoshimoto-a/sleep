@@ -5,7 +5,8 @@ import { type NextRequest } from "next/server";
 import { getBabyId } from "../_utils/getBabyId";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
-import { formatRecords } from "./sleep/_utils/formatRecords";
+import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
+import { formatRecordsWithoutYesterdayData } from "./sleep/_utils/formatRecordsWithoutYesterdayData";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
@@ -335,15 +336,28 @@ export const GET = async (req: NextRequest) => {
     const mappedContainTomorrowRecord: ContainNull[] =
       containTomorrowRecord.map(record => FormatContainNull(record));
 
-    const formatData = formatRecords(
-      startOfDay,
-      mappedCompletedRecords,
-      mappedContainNullRecords,
-      mappedContainTodayRecords,
-      mappedYesterdayRecord,
-      mappedContainYesterdayRecord,
-      mappedContainTomorrowRecord
-    );
+    //前日以前のデータの有無で呼び出す関数を変える
+    //ユーザーの初期登録が済んで登録し始めた1日目(＝前日のデータがない)
+    let formatData;
+    if (mappedYesterdayRecord.length === 0) {
+      formatData = formatRecordsWithoutYesterdayData(
+        startOfDay,
+        mappedCompletedRecords,
+        mappedContainNullRecords,
+        mappedContainTomorrowRecord
+      );
+    } else {
+      //登録2日目以降(＝前日のデータがある)
+      formatData = formatRecordsWithYesterdayData(
+        startOfDay,
+        mappedCompletedRecords,
+        mappedContainNullRecords,
+        mappedContainTodayRecords,
+        mappedYesterdayRecord,
+        mappedContainYesterdayRecord,
+        mappedContainTomorrowRecord
+      );
+    }
 
     //最新のレコードを探すため、未完成のデータ(常に最新)を日付問わず取得
     const allContainNullRecords = await prisma.sleepingSituation.findMany({

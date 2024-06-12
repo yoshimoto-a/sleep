@@ -31,7 +31,6 @@ export const useApi = () => {
     endpoint: string,
     payload: RequestType
   ) => {
-    console.log(payload);
     try {
       const response = await fetch(endpoint, {
         method: "POST",

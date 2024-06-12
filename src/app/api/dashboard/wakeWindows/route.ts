@@ -52,12 +52,6 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const id = req.nextUrl.searchParams.get("id");
-    if (!id)
-      return Response.json(<IndexResponse>{
-        status: 400,
-        error: "Failed to obtain Id",
-      });
     const babyId = await getBabyId(token);
     const getWakeWindows = await prisma.wakeWindows.findMany({
       where: {
@@ -66,11 +60,11 @@ export const GET = async (req: NextRequest) => {
     });
     const getSleepPrepTime = await prisma.sleepPrepTime.findMany({
       where: {
-        babyId: parseInt(id),
+        babyId,
       },
     });
 
-    if (getWakeWindows && getSleepPrepTime) {
+    if (getWakeWindows.length >= 1 && getSleepPrepTime.length >= 1) {
       return Response.json({
         status: 200,
         data: {
@@ -80,8 +74,8 @@ export const GET = async (req: NextRequest) => {
       });
     } else {
       return Response.json(<IndexResponse>{
-        status: 404,
-        error: "Requested record not found",
+        status: 204,
+        error: "record not found",
       });
     }
   } catch (e) {

@@ -9,6 +9,7 @@ import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
+import { ApiResponse } from "../_types/apiRequests/apiResponse";
 import { PostUser } from "./utils/postUser";
 import { SubmitButton } from "@/app/_components/submitButton";
 import { getLoginUser } from "@/utils/getLoginUser";
@@ -24,19 +25,20 @@ export default function Page() {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading("ログイン処理中...");
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      alert("ログインに失敗しました");
-      toast.dismiss(toastId);
-      return;
-    }
-    setEmail("");
-    setPassword("");
-
     try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        alert("ログインに失敗しました");
+        toast.dismiss(toastId);
+        setIsSubmitting(false);
+        return;
+      }
+      setEmail("");
+      setPassword("");
+
       if (!data.session) throw new Error("session情報がありません");
       const {
         access_token,
@@ -48,17 +50,19 @@ export default function Page() {
           data.user?.user_metadata.babyId;
         const role = babyId ? "SUB" : "MAIN";
         const resp = await PostUser(id, role, access_token, babyId);
-        if (resp.status !== 200) throw new Error("ユーザー登録失敗");
+        const respData: ApiResponse = await resp.json();
+        if (respData.status !== 200) throw new Error("ユーザー登録失敗");
         router.replace("/dashboard/setting");
+      } else {
+        router.replace("/dashboard/sleep");
       }
-      router.replace("/dashboard/sleep");
     } catch (e) {
       toast.error(String(e));
       router.replace("/");
     } finally {
       toast.dismiss(toastId);
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
   return (
     <>

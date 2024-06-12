@@ -1,52 +1,82 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
-import { GetBaby } from "./setting/_utils/getBaby";
+import { useGetBaby } from "./_hooks/useBaby";
+import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
 import { getLoginUser } from "@/utils/getLoginUser";
 
 export const UserContext = createContext<[number | null, number | null]>([
   null,
   null,
 ]);
+
 export default function Layout({
   children,
 }: Readonly<{
-  children: number;
+  children: React.ReactNode;
 }>) {
   const router = useRouter();
   const { token, session, isLoding } = useSupabaseSession();
-
   const [dbUserId, setDbUserId] = useState<number | null>(null);
   const [babyId, setBabyId] = useState<number | null>(null);
+  const { error, isLoading: isWakeWindowsLoading } = useGetWakeWindows();
+  const { data, isLoading, error: babyError } = useGetBaby();
+  // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
     if (!isLoding && session == null) {
-      router.replace("../login");
-      return;
+      router.replace("/login");
     }
+  }, [isLoding, session, router]);
+
+  //ユーザー情報の取得
+  useEffect(() => {
+    if (!session || !token) return;
     const fetcher = async () => {
       try {
-        //ユーザー情報の取得
-        if (!token || !session) return;
-        const { id, babyId } = await getLoginUser(token, session.user.id);
-        if (id && babyId) {
-          setDbUserId(id);
-          setBabyId(babyId);
-          const data = await GetBaby(token, babyId);
-          if ("data" in data && data.data !== null) {
-            const { data: babyData } = data;
-            if (babyData.created === babyData.updated)
-              router.replace("../dashboard/setting");
-          }
-        }
+        const { id } = await getLoginUser(token, session.user.id);
+        setDbUserId(id);
       } catch (e) {
-        alert("ユーザー情報の取得に失敗しました。");
+        alert("ユーザー登録の取得に失敗しました");
+        router.replace("/login");
+        return;
       }
     };
-    !isLoding ? fetcher() : null;
+    fetcher();
   }, [token, session, router, isLoding]);
+
+  // //赤ちゃんID取得して初回更新が未済ならページ遷移
+  useEffect(() => {
+    if (isLoading || !data || !("data" in data)) return;
+    if (babyError) {
+      alert("赤ちゃん情報の取得に失敗しました");
+      router.replace("/login");
+      return;
+    }
+    setBabyId(data.data.id);
+    const fetcher = async () => {
+      try {
+        if (data.data.updated === data.data.created) {
+          router.replace("/dashboard/setting");
+          return;
+        }
+      } catch (e) {
+        alert("赤ちゃん情報の取得に失敗しました。");
+        router.replace("/login");
+        return;
+      }
+    };
+    fetcher();
+  }, [router, isLoading, data, babyError]);
+
+  // //活動時間の設定がなければ設定画面へ
+  // useEffect(() => {
+  //   if (isWakeWindowsLoading) return;
+  //   if (error?.status === 204) {
+  //     router.replace("/dashboard/wakeWindows");
+  //   }
+  // }, [router, error, isWakeWindowsLoading]);
 
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
@@ -55,28 +85,3 @@ export default function Layout({
     </UserContext.Provider>
   );
 }
-
-/**上手くいかない
-  const router = useRouter();
-  // const { data: userData, error, isLoading } = useGetLoginUser();
-  const { data, error, isLoading } = useGetBaby();
-  const { session, isLoding } = useSupabaseSession();
-  // const [dbUserId, setDbUserId] = useState<number | null>(null);
-  // const [babyId, setBabyId] = useState<number | null>(null);
-
-  if (isLoading || isLoding) return <IsLoading></IsLoading>;
-  if (!session) {
-    router.replace("../login");
-  }
-
-  if (error) return <div>エラー発生</div>;
-  if (!data || data.status == 200 || !("data" in data))
-    return <div>データなし</div>;
-  if (data.data.created === data.data.updated)
-    router.replace("../dashboard/setting");
-  return (
-    <>
-      {children}
-      <Footer />
-    </>
-  ); */

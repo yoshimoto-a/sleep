@@ -11,11 +11,6 @@ export const findLatest = (
   containNullRecords: SleepingSituation[], //未完成のデータ※存在したら必ず最新になる
   completedRecords: SleepingSituation[] //完成した最後のデータ
 ): FindLatestResponse | undefined => {
-  console.log(
-    "findLatestの引数" + containNullRecords[0],
-    containNullRecords[1],
-    completedRecords
-  );
   const sleep = containNullRecords.length === 1 && containNullRecords[0].sleep;
   const bedtime =
     containNullRecords.length === 1 && !containNullRecords[0].sleep;

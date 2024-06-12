@@ -35,7 +35,6 @@ export const POST = async (req: NextRequest) => {
       },
     });
     if (records.length === 1) {
-      //console.log(wakeup); 日本時間になっている
       //レコードを更新する場合
       await prisma.sleepingSituation.update({
         where: {

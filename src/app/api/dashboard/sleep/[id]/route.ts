@@ -54,7 +54,6 @@ export const PUT = async (
     });
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e.message);
       return Response.json({ status: 400, message: e.message });
     }
   }

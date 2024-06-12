@@ -10,7 +10,8 @@ export const useWeightForm = (
   id: number,
   initialWeight: number,
   initialDate: Date,
-  mutate: any
+  mutate: any,
+  setIsOpen: (isOpen: boolean) => void
 ) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useWeightValidation(initialWeight, initialDate);
@@ -31,7 +32,8 @@ export const useWeightForm = (
         `/api/dashboard/weight/${id}`,
         body
       );
-      await mutate();
+      mutate();
+      setIsOpen(false);
     } catch (e) {
       alert("更新に失敗しました");
     }
@@ -40,7 +42,8 @@ export const useWeightForm = (
     if (!confirm("削除していいですか？")) return;
     try {
       await fetcher.del<DelResponse>(`/api/dashboard/weight/${id}`);
-      await mutate();
+      mutate();
+      setIsOpen(false);
     } catch (e) {
       alert("削除に失敗しました");
     }

@@ -13,11 +13,10 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const body = await req.json();
-    const babyId = getBabyId(token);
+    const babyId = await getBabyId(token);
     const { email } = body;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
-    console.log(`${process.env.NEXT_PUBLIC_APP_URL}/resetPassword/sendEmail/`);
     if (typeof email === "string" && supabaseUrl && supabaseServiceRole) {
       const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRole);
       const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(

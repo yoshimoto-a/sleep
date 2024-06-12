@@ -23,62 +23,51 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
-    if (!babyId) {
-      //BabyIdをUserテーブルに登録するためにcreate
-      const babyResp = await prisma.baby.create({
-        data: {
-          name: "",
-          birthday: new Date(),
-          birthWeight: 0,
-          expectedDateOfBirth: new Date(),
-          gender: "BOY",
-        },
-      });
-      //userのbabyIdを更新
-      await prisma.user.update({
-        where: {
-          id: userPostResp.id,
-        },
-        data: {
-          babyId: babyResp.id,
-        },
-      });
-    }
-
-    //ここでも成長記録のデータの登録を空で行う→挙動の確認未済
-    const milestoneResp = await prisma.growth.findMany({
-      where: {
-        babyId,
+    //BabyIdをUserテーブルに登録するためにcreate
+    const babyResp = await prisma.baby.create({
+      data: {
+        name: "",
+        birthday: new Date(),
+        birthWeight: 0,
+        expectedDateOfBirth: new Date(),
+        gender: "BOY",
       },
     });
-    if (milestoneResp.length === 0) {
-      const milestones: Milestone[] = [
-        "TURNING_OVER",
-        "TURNING_OVER_AND_OVER",
-        "CRAWLING",
-        "SITTING",
-        "CRAWLING_ON_HANDS_AND_KNEES",
-        "PULLING_UP_TO_STAND",
-        "CRUISING",
-        "STANDING",
-        "WALKING",
-      ];
-      milestones.map(async milestone => {
-        await prisma.growth.create({
-          data: {
-            babyId,
-            milestone,
-            createUser: userPostResp.id,
-            changeUser: userPostResp.id,
-          },
-        });
+    //userのbabyIdを更新
+    await prisma.user.update({
+      where: {
+        id: userPostResp.id,
+      },
+      data: {
+        babyId: babyResp.id,
+      },
+    });
+
+    //ここで成長記録のデータの登録を空で行う
+    const milestones: Milestone[] = [
+      "TURNING_OVER",
+      "TURNING_OVER_AND_OVER",
+      "CRAWLING",
+      "SITTING",
+      "CRAWLING_ON_HANDS_AND_KNEES",
+      "PULLING_UP_TO_STAND",
+      "CRUISING",
+      "STANDING",
+      "WALKING",
+    ];
+    for (const milestone of milestones) {
+      await prisma.growth.create({
+        data: {
+          babyId: babyResp.id,
+          milestone,
+          createUser: userPostResp.id,
+          changeUser: userPostResp.id,
+        },
       });
     }
-
     return Response.json(<ApiResponse>{ status: 200, message: "success" });
   } catch (e) {
     if (e instanceof Error) {
-      console.log(e);
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }

@@ -2,7 +2,7 @@ import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 
-export const PutBaby = async (token: string, babyId: number, body: Baby) => {
+export const putBaby = async (token: string, body: Baby) => {
   const prams: UpdateRequests = {
     method: "PUT",
     headers: {
@@ -10,7 +10,6 @@ export const PutBaby = async (token: string, babyId: number, body: Baby) => {
       Authorization: token,
     },
     body: {
-      id: babyId,
       data: body,
     },
   };
