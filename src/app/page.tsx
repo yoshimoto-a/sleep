@@ -20,7 +20,7 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2 pt-10">
-          <Link href="./signup" className="header-link">
+          <Link href="/signup" className="header-link">
             <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
               ユーザー登録
             </div>
