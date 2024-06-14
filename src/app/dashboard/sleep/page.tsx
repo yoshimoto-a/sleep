@@ -33,7 +33,7 @@ export default function Page() {
       {/* グラフ作れたらここに*/}
       {/*<div className="grid grid-cols-10"> */}
       {/* <div className="bg-white col-span-3">グラフ</div> */}
-      <div className="relative col-span-7 h-full w-4/5 mx-auto">
+      <div className="relative col-span-7 h-full w-4/5 mx-auto mb-[164px]">
         <ShowData
           data={data}
           isLoading={isLoading}

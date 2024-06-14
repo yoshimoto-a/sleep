@@ -19,7 +19,7 @@ export default function Page() {
   if (error) return "データの取得に失敗しました";
 
   return (
-    <div className="flex flex-col mx-5">
+    <div className="flex flex-col mx-5 mb-[68px]">
       <h1 className="pt-10 text-center text-lg">発達記録</h1>
       <div className="flex justify-between items-center gap-4 h-[55px]">
         <ColumnName title="項目" />
