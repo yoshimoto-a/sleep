@@ -74,7 +74,8 @@ export const formatRecordsWithYesterdayData = (
   }
 
   //①当日のみで完結しているデータがある
-  if (mappedCompletedRecords.length > 0 && yesterdayRecord.length !== 0) {
+  // if (mappedCompletedRecords.length > 0 && yesterdayRecord.length !== 0) {
+  if (mappedCompletedRecords.length > 0) {
     let yesterdayWakeup: Date;
     if (
       containYesterdayRecord.length === 1 &&

@@ -183,7 +183,7 @@ export const GET = async (req: NextRequest) => {
       record => FormatNotContainNull(record)
     );
 
-    //必要な時に備えて前日以前に起床した最後のレコードを取得しておく
+    //前日以前に起床した最後のレコードを取得しておく
     const startOfYesterday = dayjs
       .tz(startOfDay, "Asia/Tokyo")
       .subtract(1, "d")
@@ -339,12 +339,16 @@ export const GET = async (req: NextRequest) => {
     //前日以前のデータの有無で呼び出す関数を変える
     //ユーザーの初期登録が済んで登録し始めた1日目(＝前日のデータがない)
     let formatData;
-    if (mappedYesterdayRecord.length === 0) {
+    if (
+      mappedYesterdayRecord.length === 0 &&
+      mappedContainYesterdayRecord.length === 0
+    ) {
       formatData = formatRecordsWithoutYesterdayData(
         startOfDay,
         mappedCompletedRecords,
         mappedContainNullRecords,
-        mappedContainTomorrowRecord
+        mappedContainTomorrowRecord,
+        mappedContainTodayRecords
       );
     } else {
       //登録2日目以降(＝前日のデータがある)

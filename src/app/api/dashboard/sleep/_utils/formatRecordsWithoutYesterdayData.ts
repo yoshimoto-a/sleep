@@ -35,20 +35,54 @@ export const formatRecordsWithoutYesterdayData = (
   targetDate: Date,
   mappedCompletedRecords: CompletedData[],
   mappedContainNullRecords: ContainNull[],
-  containTomorrowRecord: ContainNull[]
+  containTomorrowRecord: ContainNull[],
+  containTodayRecords: CompletedData[]
 ) => {
+  console.log(
+    "mappedCompletedRecords" + mappedCompletedRecords,
+    "mappedContainNullRecords" + mappedContainNullRecords,
+    "containTomorrowRecord" + containTomorrowRecord,
+    "containTodayRecords" + containTodayRecords
+  );
   const formatedRecords: FormatedData[] = [];
   //何も返さないパターン→当日を含むレコードがない場合
   const noRecords =
     mappedCompletedRecords.length === 0 &&
     mappedContainNullRecords.length === 0 &&
-    containTomorrowRecord.length === 0;
+    containTomorrowRecord.length === 0 &&
+    containTodayRecords.length === 0;
 
   if (noRecords) return formatedRecords;
+
+  /**完結しているデータなしで、日付跨ぎしたデータがある(API叩いた前日以前のデータになる)  */
+  if (
+    mappedCompletedRecords.length === 0 &&
+    containTomorrowRecord.length === 1
+  ) {
+    const { id, bedTime, sleep, changeUser } = containTomorrowRecord[0];
+    if (bedTime) {
+      formatedRecords.push(
+        createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser)
+      );
+    }
+    if (!bedTime && sleep) {
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", null, null, changeUser)
+      );
+    }
+    if (bedTime && sleep && IsToday(sleep, targetDate)) {
+      formatedRecords.push(
+        createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
+      );
+    }
+    return formatedRecords;
+  }
+
   /*1件目のデータ登録後で未完成の当日データしかない差分出せない*/
   if (
     mappedContainNullRecords.length === 1 &&
-    mappedCompletedRecords.length === 0
+    mappedCompletedRecords.length === 0 &&
+    containTomorrowRecord.length === 0
   ) {
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     if (bedTime) {
