@@ -344,7 +344,8 @@ export const GET = async (req: NextRequest) => {
         startOfDay,
         mappedCompletedRecords,
         mappedContainNullRecords,
-        mappedContainTomorrowRecord
+        mappedContainTomorrowRecord,
+        mappedContainTodayRecords
       );
     } else {
       //登録2日目以降(＝前日のデータがある)

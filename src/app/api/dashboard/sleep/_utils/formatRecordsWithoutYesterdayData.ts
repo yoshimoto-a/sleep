@@ -35,20 +35,44 @@ export const formatRecordsWithoutYesterdayData = (
   targetDate: Date,
   mappedCompletedRecords: CompletedData[],
   mappedContainNullRecords: ContainNull[],
-  containTomorrowRecord: ContainNull[]
+  containTomorrowRecord: ContainNull[],
+  containTodayRecords: CompletedData[]
 ) => {
   const formatedRecords: FormatedData[] = [];
   //何も返さないパターン→当日を含むレコードがない場合
   const noRecords =
     mappedCompletedRecords.length === 0 &&
     mappedContainNullRecords.length === 0 &&
-    containTomorrowRecord.length === 0;
+    containTomorrowRecord.length === 0 &&
+    containTodayRecords.length === 0;
 
   if (noRecords) return formatedRecords;
+  /**最初のデータが日付跨いでいる場合 */
+  if (containTodayRecords.length !== 0) {
+    const { id, bedTime, sleep, wakeup, changeUser } = containTodayRecords[0];
+    if (bedTime && sleep && IsToday(sleep, targetDate) && wakeup) {
+      formatedRecords.push(
+        createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser),
+        createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
+      );
+    }
+    if (bedTime && sleep && IsToday(sleep, targetDate) && !wakeup) {
+      formatedRecords.push(
+        createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser)
+      );
+    }
+    if (sleep && !IsToday(sleep, targetDate) && wakeup) {
+      formatedRecords.push(
+        createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
+      );
+    }
+  }
+
   /*1件目のデータ登録後で未完成の当日データしかない差分出せない*/
   if (
     mappedContainNullRecords.length === 1 &&
-    mappedCompletedRecords.length === 0
+    mappedCompletedRecords.length === 0 &&
+    containTomorrowRecord.length === 0
   ) {
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     if (bedTime) {
