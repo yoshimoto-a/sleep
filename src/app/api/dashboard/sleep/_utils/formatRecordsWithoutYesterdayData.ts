@@ -38,12 +38,6 @@ export const formatRecordsWithoutYesterdayData = (
   containTomorrowRecord: ContainNull[],
   containTodayRecords: CompletedData[]
 ) => {
-  console.log(
-    "mappedCompletedRecords" + mappedCompletedRecords,
-    "mappedContainNullRecords" + mappedContainNullRecords,
-    "containTomorrowRecord" + containTomorrowRecord,
-    "containTodayRecords" + containTodayRecords
-  );
   const formatedRecords: FormatedData[] = [];
   //何も返さないパターン→当日を含むレコードがない場合
   const noRecords =
@@ -164,14 +158,12 @@ export const formatRecordsWithoutYesterdayData = (
       if (index === 0 && bedTime) {
         formatedRecords.push(
           createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser),
-          createNewData(id, sleep, "寝た", bedTime, sleep, changeUser),
-          createNewData(id, sleep, "起きた", sleep, wakeup, changeUser)
+          createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
         );
       }
       if (index === 0 && !bedTime) {
         formatedRecords.push(
-          createNewData(id, sleep, "寝た", null, null, changeUser),
-          createNewData(id, sleep, "起きた", sleep, wakeup, changeUser)
+          createNewData(id, sleep, "寝た", null, null, changeUser)
         );
       }
       if (index !== 0 && bedTime) {
