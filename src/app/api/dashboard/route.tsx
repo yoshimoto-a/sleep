@@ -7,6 +7,7 @@ import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
 import { formatRecordsWithoutYesterdayData } from "./sleep/_utils/formatRecordsWithoutYesterdayData";
+import { generateChartData } from "./sleep/_utils/generateChartData";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
@@ -428,12 +429,13 @@ export const GET = async (req: NextRequest) => {
     let latestData: FindLatestResponse | undefined;
 
     latestData = findLatest(allContainNullRecords, allCompletedRecords);
-
+    const chartData = generateChartData(formatData, latestData, startOfDay);
     return Response.json({
       status: 200,
       message: "success",
       data: formatData,
       latestData,
+      chartData,
     });
   } catch (e) {
     if (e instanceof Error) {
