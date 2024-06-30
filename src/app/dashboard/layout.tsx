@@ -4,7 +4,6 @@ import React, { useState, useEffect, createContext } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
 import { useGetBaby } from "./_hooks/useBaby";
-import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
 import { getLoginUser } from "@/utils/getLoginUser";
 
 export const UserContext = createContext<[number | null, number | null]>([
@@ -21,7 +20,6 @@ export default function Layout({
   const { token, session, isLoding } = useSupabaseSession();
   const [dbUserId, setDbUserId] = useState<number | null>(null);
   const [babyId, setBabyId] = useState<number | null>(null);
-  const { error, isLoading: isWakeWindowsLoading } = useGetWakeWindows();
   const { data, isLoading, error: babyError } = useGetBaby();
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
@@ -69,14 +67,6 @@ export default function Layout({
     };
     fetcher();
   }, [router, isLoading, data, babyError]);
-
-  // //活動時間の設定がなければ設定画面へ
-  // useEffect(() => {
-  //   if (isWakeWindowsLoading) return;
-  //   if (error?.status === 204) {
-  //     router.replace("/dashboard/wakeWindows");
-  //   }
-  // }, [router, error, isWakeWindowsLoading]);
 
   return (
     <UserContext.Provider value={[dbUserId, babyId]}>
