@@ -31,10 +31,10 @@ export default function Page() {
         <ElapsedTime data={data} />
       </div>
       <div className="grid grid-cols-10">
-        <div className="col-span-3">
-          <Chart chartData={data?.chartData}></Chart>
+        <div className="col-span-2">
+          <Chart chartData={data?.chartData} keyName={data?.keyName}></Chart>
         </div>
-        <div className="relative col-span-7 h-full w-4/5 mx-auto mb-[164px]">
+        <div className="relative col-span-8 h-full w-4/5 mx-auto mb-[164px]">
           <ShowData
             data={data}
             isLoading={isLoading}
