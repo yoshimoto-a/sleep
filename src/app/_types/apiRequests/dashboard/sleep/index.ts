@@ -74,10 +74,10 @@ interface BabyData {
   sleepingSituation: SleepingSituation;
   activityTime: ActivityTime;
 }
+
 export interface ChartData {
-  time: string;
-  sleep: number;
-  awake: number;
+  date: string;
+  [key: string]: number | string;
 }
 export interface IndexSuccessResponse {
   status: number;
@@ -96,5 +96,6 @@ export interface SleepingSituationResponse {
   message: string;
   data: FormatedData[];
   latestData: FindLatestResponse;
-  chartData: ChartData[];
+  chartData: ChartData;
+  keyName: string[];
 }
