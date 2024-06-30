@@ -429,13 +429,18 @@ export const GET = async (req: NextRequest) => {
     let latestData: FindLatestResponse | undefined;
 
     latestData = findLatest(allContainNullRecords, allCompletedRecords);
-    const chartData = generateChartData(formatData, latestData, startOfDay);
+    const { chartData, keyName } = generateChartData(
+      formatData,
+      latestData,
+      startOfDay
+    );
     return Response.json({
       status: 200,
       message: "success",
       data: formatData,
       latestData,
       chartData,
+      keyName,
     });
   } catch (e) {
     if (e instanceof Error) {
