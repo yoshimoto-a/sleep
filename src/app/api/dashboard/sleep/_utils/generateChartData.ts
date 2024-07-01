@@ -38,79 +38,89 @@ export const generateChartData = (
 
   //key名の重複を避けるためにカウントする
   let count = 1;
-  //key
-  const sleep = `${count}:睡眠時間`;
-  const awake = `${count}:活動時間`;
 
   const today = IsToday(new Date(), targetDate);
   if (data.length === 0 && (latestData?.action !== "寝た" || !latestData)) {
     /*描画するものなし→24時間起きてるグラフ */
-    chartData[awake] = 1440;
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = 1440;
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
   if (data.length === 0 && latestData?.action === "寝た") {
     /*当日になってから今現在までずっと寝ている→今から起きてるグラフ*/
-    chartData[sleep] = getMinutesSinceMidnight();
-    keyName.push(sleep);
+    chartData[`${count}:睡眠時間`] = getMinutesSinceMidnight();
+    keyName.push(`${count}:睡眠時間`);
+    count++;
 
-    chartData[awake] = 1440 - getMinutesSinceMidnight();
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = 1440 - getMinutesSinceMidnight();
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
 
+  //当日の記録が1件以上ある場合
   let currentTime = getTimeDifference(startOfDay.toDate(), data[0].datetime);
   if (data[0].action === "起きた") {
-    chartData[sleep] = currentTime;
-    keyName.push(sleep);
-  } else {
-    chartData[awake] = currentTime;
-    keyName.push(awake);
+    chartData[`${count}:睡眠時間`] = currentTime;
+    keyName.push(`${count}:睡眠時間`);
+  } else if (data[0].action === "寝た") {
+    chartData[`${count}:活動時間`] = currentTime;
+    keyName.push(`${count}:活動時間`);
   }
   count++;
   //データが1件で、当日登録されたデータが「寝た」の場合、現在時刻まで寝て、現在時刻以降は終日起きた
   if (data.length === 1 && data[0].action === "寝た") {
-    chartData[sleep] = getTimeDifference(data[0].datetime, new Date());
-    keyName.push(sleep);
+    chartData[`${count}:睡眠時間`] = getTimeDifference(
+      data[0].datetime,
+      new Date()
+    );
+    keyName.push(`${count}:睡眠時間`);
     count++;
 
-    chartData[awake] = getTimeDifference(new Date(), null);
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = getTimeDifference(new Date(), null);
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
   //データが1件で、当日登録されたデータが「起きた」の場合現在時刻以降は終日起きた
   if (data.length === 1 && data[0].action === "起きた") {
-    chartData[awake] = getTimeDifference(data[0].datetime, null);
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = 1440 - currentTime;
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
 
   //データが2件で1つ目のデータが「寝た」の場合
   if (data.length === 2 && data[0].action === "寝た") {
-    chartData[sleep] = getTimeDifference(data[0].datetime, data[1].datetime);
-    keyName.push(sleep);
+    chartData[`${count}:睡眠時間`] = getTimeDifference(
+      data[0].datetime,
+      data[1].datetime
+    );
+    keyName.push(`${count}:睡眠時間`);
     count++;
 
-    chartData[awake] = getTimeDifference(data[1].datetime, null);
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = getTimeDifference(data[1].datetime, null);
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
   //データが2件で1つ目のデータが「起きた」の場合
   if (data.length === 2 && data[0].action === "起きた") {
-    chartData[awake] = getTimeDifference(data[0].datetime, data[1].datetime);
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = getTimeDifference(
+      data[0].datetime,
+      data[1].datetime
+    );
+    keyName.push(`${count}:活動時間`);
     count++;
 
-    chartData[sleep] = getTimeDifference(
+    chartData[`${count}:睡眠時間`] = getTimeDifference(
       data[1].datetime,
       today ? null : endOfDay.toDate()
     );
-    keyName.push(sleep);
+    keyName.push(`${count}:睡眠時間`);
     count++;
 
-    chartData[awake] = getTimeDifference(new Date(), null);
-    keyName.push(awake);
-
+    chartData[`${count}:活動時間`] = getTimeDifference(
+      new Date(),
+      endOfDay.toDate()
+    );
+    keyName.push(`${count}:活動時間`);
     return { chartData, keyName };
   }
 
@@ -118,7 +128,7 @@ export const generateChartData = (
   let total = 0;
   total += currentTime;
   let key = "";
-  data.map((item, index) => {
+  data.forEach((item, index) => {
     currentTime = 0;
     if (index === data.length - 1 && item.action === "起きた") {
       //最後のデータが起きたの場合
@@ -148,8 +158,8 @@ export const generateChartData = (
 
   //対象の日が当日かつ、最後の登録が「寝た」の場合、現在時刻から起きているとする
   if (today && data[data.length - 1].action === "寝た") {
-    chartData[awake] = 1440 - total;
-    keyName.push(awake);
+    chartData[`${count}:活動時間`] = 1440 - total;
+    keyName.push(`${count}:活動時間`);
   }
   return { chartData, keyName };
 };
