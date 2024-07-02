@@ -13,6 +13,8 @@ export class SleepChartDataGenerator {
   private formatedData: FormatedData[];
   private latestData: FindLatestResponse | undefined;
   private targetDate: Date;
+  private chartData: ChartData;
+  private keyName: string[];
   constructor(
     formatedData: FormatedData[],
     latestData: FindLatestResponse | undefined,
@@ -21,227 +23,190 @@ export class SleepChartDataGenerator {
     this.formatedData = formatedData;
     this.latestData = latestData;
     this.targetDate = targetDate;
+    this.chartData = { date: dayjs.tz(this.targetDate).format("YYYY-MM-DD") };
+    this.keyName = [];
+  }
+  private get startOfDay(): dayjs.Dayjs {
+    return dayjs(this.targetDate).startOf("day");
+  }
+
+  private get endOfDay(): dayjs.Dayjs {
+    return dayjs(this.targetDate).endOf("day");
+  }
+
+  private get today(): boolean {
+    return IsToday(new Date(), this.targetDate);
+  }
+
+  private get data(): FormatedData[] {
+    return this.formatedData.filter(item => item.action !== "寝かしつけ開始");
   }
 
   public generateChartData(): { chartData: ChartData; keyName: string[] } {
-    const startOfDay = dayjs(this.targetDate).startOf("day");
-    const endOfDay = dayjs(this.targetDate).endOf("day");
-    const data = this.formatedData.filter(
-      item => item.action !== "寝かしつけ開始"
-    );
-    const chartData: ChartData = {
-      date: dayjs.tz(this.targetDate).format("YYYY-MM-DD"),
-    };
-    const keyName: string[] = [];
-    const today = IsToday(new Date(), this.targetDate);
-    const noDate = data.length === 0;
+    const noDate = this.data.length === 0;
     const latestDataActionAwake = this.latestData?.action !== "寝た";
     if (noDate && (latestDataActionAwake || !this.latestData)) {
-      return this.handleNoData(chartData, keyName);
+      return this.handleNoData();
     }
     if (noDate && latestDataActionAwake) {
-      return this.handleNoDataAwake(chartData, keyName);
+      return this.handleNoDataAwake();
     }
 
-    return this.handleData(
-      chartData,
-      keyName,
-      data,
-      startOfDay,
-      endOfDay,
-      today
-    );
+    return this.handleData();
   }
 
   /*描画するものなし→24時間起きてるグラフ */
-  private handleNoData(
-    chartData: ChartData,
-    keyName: string[]
-  ): { chartData: ChartData; keyName: string[] } {
-    chartData["1:活動時間"] = 1440;
-    keyName.push("1:活動時間");
-    return { chartData, keyName };
+  private handleNoData(): { chartData: ChartData; keyName: string[] } {
+    this.chartData["1:活動時間"] = 1440;
+    this.keyName.push("1:活動時間");
+    return { chartData: this.chartData, keyName: this.keyName };
   }
 
   /*当日になってから今現在までずっと寝ている→今から起きてるグラフ*/
-  private handleNoDataAwake(
-    chartData: ChartData,
-    keyName: string[]
-  ): { chartData: ChartData; keyName: string[] } {
+  private handleNoDataAwake(): { chartData: ChartData; keyName: string[] } {
     let count = 1;
-    chartData[`${count}:睡眠時間`] = this.getMinutesSinceMidnight();
-    keyName.push(`${count}:睡眠時間`);
+    this.chartData[`${count}:睡眠時間`] = this.getMinutesSinceMidnight();
+    this.keyName.push(`${count}:睡眠時間`);
     count++;
-    chartData[`${count}:活動時間`] = 1440 - this.getMinutesSinceMidnight();
-    keyName.push(`${count}:活動時間`);
-    return { chartData, keyName };
+    this.chartData[`${count}:活動時間`] = 1440 - this.getMinutesSinceMidnight();
+    this.keyName.push(`${count}:活動時間`);
+    return { chartData: this.chartData, keyName: this.keyName };
   }
 
-  private handleData(
-    chartData: ChartData,
-    keyName: string[],
-    data: FormatedData[],
-    startOfDay: dayjs.Dayjs,
-    endOfDay: dayjs.Dayjs,
-    today: boolean
-  ): { chartData: ChartData; keyName: string[] } {
+  private handleData(): { chartData: ChartData; keyName: string[] } {
     let count = 1;
     let currentTime = this.getTimeDifference(
-      startOfDay.toDate(),
-      data[0].datetime
+      this.startOfDay.toDate(),
+      this.data[0].datetime
     );
-    if (data[0].action === "起きた") {
-      chartData[`${count}:睡眠時間`] = currentTime;
-      keyName.push(`${count}:睡眠時間`);
-    } else if (data[0].action === "寝た") {
-      chartData[`${count}:活動時間`] = currentTime;
-      keyName.push(`${count}:活動時間`);
+    if (this.data[0].action === "起きた") {
+      this.chartData[`${count}:睡眠時間`] = currentTime;
+      this.keyName.push(`${count}:睡眠時間`);
+    } else if (this.data[0].action === "寝た") {
+      this.chartData[`${count}:活動時間`] = currentTime;
+      this.keyName.push(`${count}:活動時間`);
     }
     count++;
-    if (this.isSingleDataWithAction(data, "寝た")) {
-      return this.handleSingleDataSlept(chartData, keyName, count, data);
+    if (this.isSingleDataWithAction("寝た")) {
+      return this.handleSingleDataSlept(count);
     }
-    if (this.isSingleDataWithAction(data, "起きた")) {
-      return this.handleSingleDataAwake(chartData, keyName, count, currentTime);
+    if (this.isSingleDataWithAction("起きた")) {
+      return this.handleSingleDataAwake(count, currentTime);
     }
-    if (this.isDoubleDataWithAction(data, "寝た")) {
-      return this.handleDoubleDataSlept(chartData, keyName, count, data);
+    if (this.isDoubleDataWithAction("寝た")) {
+      return this.handleDoubleDataSlept(count);
     }
-    if (this.isDoubleDataWithAction(data, "起きた")) {
-      return this.handleDoubleDataAwake(
-        chartData,
-        keyName,
-        count,
-        data,
-        endOfDay,
-        today
-      );
+    if (this.isDoubleDataWithAction("起きた")) {
+      return this.handleDoubleDataAwake(count);
     }
-    return this.handleMultipleData(
-      chartData,
-      keyName,
-      count,
-      data,
-      endOfDay,
-      today,
-      currentTime
-    );
+    return this.handleMultipleData(count, currentTime);
   }
-  private handleSingleDataSlept(
-    chartData: ChartData,
-    keyName: string[],
-    count: number,
-    data: FormatedData[]
-  ): { chartData: ChartData; keyName: string[] } {
-    chartData[`${count}:睡眠時間`] = this.getTimeDifference(
-      data[0].datetime,
+  private handleSingleDataSlept(count: number): {
+    chartData: ChartData;
+    keyName: string[];
+  } {
+    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+      this.data[0].datetime,
       new Date()
     );
-    keyName.push(`${count}:睡眠時間`);
+    this.keyName.push(`${count}:睡眠時間`);
     count++;
-    chartData[`${count}:活動時間`] = this.getTimeDifference(new Date(), null);
-    keyName.push(`${count}:活動時間`);
-    return { chartData, keyName };
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
+      new Date(),
+      null
+    );
+    this.keyName.push(`${count}:活動時間`);
+    return { chartData: this.chartData, keyName: this.keyName };
   }
   private handleSingleDataAwake(
-    chartData: ChartData,
-    keyName: string[],
     count: number,
     currentTime: number
   ): { chartData: ChartData; keyName: string[] } {
-    chartData[`${count}:活動時間`] = 1440 - currentTime;
-    keyName.push(`${count}:活動時間`);
-    return { chartData, keyName };
+    this.chartData[`${count}:活動時間`] = 1440 - currentTime;
+    this.keyName.push(`${count}:活動時間`);
+    return { chartData: this.chartData, keyName: this.keyName };
   }
-  private handleDoubleDataSlept(
-    chartData: ChartData,
-    keyName: string[],
-    count: number,
-    data: FormatedData[]
-  ): { chartData: ChartData; keyName: string[] } {
-    chartData[`${count}:睡眠時間`] = this.getTimeDifference(
-      data[0].datetime,
-      data[1].datetime
+  private handleDoubleDataSlept(count: number): {
+    chartData: ChartData;
+    keyName: string[];
+  } {
+    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+      this.data[0].datetime,
+      this.data[1].datetime
     );
-    keyName.push(`${count}:睡眠時間`);
+    this.keyName.push(`${count}:睡眠時間`);
     count++;
-    chartData[`${count}:活動時間`] = this.getTimeDifference(
-      data[1].datetime,
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
+      this.data[1].datetime,
       null
     );
-    keyName.push(`${count}:活動時間`);
-    return { chartData, keyName };
+    this.keyName.push(`${count}:活動時間`);
+    return { chartData: this.chartData, keyName: this.keyName };
   }
 
-  private handleDoubleDataAwake(
-    chartData: ChartData,
-    keyName: string[],
-    count: number,
-    data: FormatedData[],
-    endOfDay: dayjs.Dayjs,
-    today: boolean
-  ): { chartData: ChartData; keyName: string[] } {
-    chartData[`${count}:活動時間`] = this.getTimeDifference(
-      data[0].datetime,
-      data[1].datetime
+  private handleDoubleDataAwake(count: number): {
+    chartData: ChartData;
+    keyName: string[];
+  } {
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
+      this.data[0].datetime,
+      this.data[1].datetime
     );
-    keyName.push(`${count}:活動時間`);
+    this.keyName.push(`${count}:活動時間`);
     count++;
-    chartData[`${count}:睡眠時間`] = this.getTimeDifference(
-      data[1].datetime,
-      today ? null : endOfDay.toDate()
+    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+      this.data[1].datetime,
+      this.today ? null : this.endOfDay.toDate()
     );
-    keyName.push(`${count}:睡眠時間`);
+    this.keyName.push(`${count}:睡眠時間`);
     count++;
-    chartData[`${count}:活動時間`] = this.getTimeDifference(
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
       new Date(),
-      endOfDay.toDate()
+      this.endOfDay.toDate()
     );
-    keyName.push(`${count}:活動時間`);
-    return { chartData, keyName };
+    this.keyName.push(`${count}:活動時間`);
+    return { chartData: this.chartData, keyName: this.keyName };
   }
   private handleMultipleData(
-    chartData: ChartData,
-    keyName: string[],
     count: number,
-    data: FormatedData[],
-    endOfDay: dayjs.Dayjs,
-    today: boolean,
     currentTime: number
   ): { chartData: ChartData; keyName: string[] } {
     let total = currentTime;
     let key = "";
-    data.forEach((item, index) => {
+    this.data.forEach((item, index) => {
       currentTime = 0;
-      if (index === data.length - 1 && item.action === "起きた") {
-        currentTime = this.getTimeDifference(item.datetime, endOfDay.toDate());
-      } else if (index === data.length - 1 && item.action === "寝た") {
+      if (index === this.data.length - 1 && item.action === "起きた") {
         currentTime = this.getTimeDifference(
           item.datetime,
-          today ? null : endOfDay.toDate()
+          this.endOfDay.toDate()
+        );
+      } else if (index === this.data.length - 1 && item.action === "寝た") {
+        currentTime = this.getTimeDifference(
+          item.datetime,
+          this.today ? null : this.endOfDay.toDate()
         );
       } else {
         currentTime = this.getTimeDifference(
           item.datetime,
-          data[index + 1].datetime
+          this.data[index + 1].datetime
         );
       }
       if (item.action === "寝た") {
         key = `${count}:睡眠時間`;
-        chartData[key] = currentTime;
+        this.chartData[key] = currentTime;
       } else {
         key = `${count}:活動時間`;
-        chartData[key] = currentTime;
+        this.chartData[key] = currentTime;
       }
-      keyName.push(key);
+      this.keyName.push(key);
       count++;
       total += currentTime;
     });
-    if (today && data[data.length - 1].action === "寝た") {
-      chartData[`${count}:活動時間`] = 1440 - total;
-      keyName.push(`${count}:活動時間`);
+    if (this.today && this.data[this.data.length - 1].action === "寝た") {
+      this.chartData[`${count}:活動時間`] = 1440 - total;
+      this.keyName.push(`${count}:活動時間`);
     }
-    return { chartData, keyName };
+    return { chartData: this.chartData, keyName: this.keyName };
   }
 
   private getTimeDifference(startTime: Date, endTime: Date | null): number {
@@ -252,16 +217,10 @@ export class SleepChartDataGenerator {
   private getMinutesSinceMidnight(): number {
     return dayjs.tz().diff(dayjs.tz().startOf("day"), "minute");
   }
-  private isSingleDataWithAction(
-    data: FormatedData[],
-    action: string
-  ): boolean {
-    return data.length === 1 && data[0].action === action;
+  private isSingleDataWithAction(action: string): boolean {
+    return this.data.length === 1 && this.data[0].action === action;
   }
-  private isDoubleDataWithAction(
-    data: FormatedData[],
-    action: string
-  ): boolean {
-    return data.length === 2 && data[0].action === action;
+  private isDoubleDataWithAction(action: string): boolean {
+    return this.data.length === 2 && this.data[0].action === action;
   }
 }
