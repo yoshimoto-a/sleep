@@ -3,16 +3,17 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { getBabyId } from "../_utils/getBabyId";
+import { SleepChartDataGenerator } from "./sleep/_utils/SleepChartDataGenerator";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
 import { formatRecordsWithoutYesterdayData } from "./sleep/_utils/formatRecordsWithoutYesterdayData";
-import { generateChartData } from "./sleep/_utils/generateChartData";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Tokyo");
@@ -429,11 +430,13 @@ export const GET = async (req: NextRequest) => {
     let latestData: FindLatestResponse | undefined;
 
     latestData = findLatest(allContainNullRecords, allCompletedRecords);
-    const { chartData, keyName } = generateChartData(
+    const sleepChartDataGenerator = new SleepChartDataGenerator(
       formatData,
       latestData,
       startOfDay
     );
+    const { chartData, keyName } = sleepChartDataGenerator.generateChartData();
+
     return Response.json({
       status: 200,
       message: "success",
