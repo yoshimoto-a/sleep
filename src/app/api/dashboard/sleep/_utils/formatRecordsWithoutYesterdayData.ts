@@ -56,7 +56,7 @@ export const formatRecordsWithoutYesterdayData = (
     const { id, bedTime, sleep, changeUser } = containTomorrowRecord[0];
     if (bedTime) {
       formatedRecords.push(
-        createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser)
+        createNewData(id, bedTime, "寝かしつけ", null, null, changeUser)
       );
     }
     if (!bedTime && sleep) {
@@ -81,7 +81,7 @@ export const formatRecordsWithoutYesterdayData = (
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     if (bedTime) {
       formatedRecords.push(
-        createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser)
+        createNewData(id, bedTime, "寝かしつけ", null, null, changeUser)
       );
     }
     if (!bedTime && sleep) {
@@ -105,7 +105,7 @@ export const formatRecordsWithoutYesterdayData = (
       const { id, bedTime, sleep, wakeup, changeUser } = record;
       if (index === 0 && bedTime) {
         formatedRecords.push(
-          createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser),
+          createNewData(id, bedTime, "寝かしつけ", null, null, changeUser),
           createNewData(id, sleep, "寝た", bedTime, sleep, changeUser),
           createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
         );
@@ -121,7 +121,7 @@ export const formatRecordsWithoutYesterdayData = (
           createNewData(
             id,
             bedTime,
-            "寝かしつけ開始",
+            "寝かしつけ",
             records[index - 1].wakeup,
             bedTime,
             changeUser
@@ -157,7 +157,7 @@ export const formatRecordsWithoutYesterdayData = (
       const { id, bedTime, sleep, wakeup, changeUser } = record;
       if (index === 0 && bedTime) {
         formatedRecords.push(
-          createNewData(id, bedTime, "寝かしつけ開始", null, null, changeUser),
+          createNewData(id, bedTime, "寝かしつけ", null, null, changeUser),
           createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
         );
       }
@@ -171,7 +171,7 @@ export const formatRecordsWithoutYesterdayData = (
           createNewData(
             id,
             bedTime,
-            "寝かしつけ開始",
+            "寝かしつけ",
             records[index - 1].wakeup,
             bedTime,
             changeUser
@@ -204,14 +204,7 @@ export const formatRecordsWithoutYesterdayData = (
     const { id, bedTime, sleep, changeUser } = mappedContainNullRecords[0];
     if (bedTime) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
     if (!bedTime && sleep) {
@@ -236,14 +229,7 @@ export const formatRecordsWithoutYesterdayData = (
     const { id, bedTime, sleep, changeUser } = containTomorrowRecord[0]; //wakeupは絶対当日ではない
     if (bedTime && wakeup) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
     if (bedTime && sleep && IsToday(sleep, targetDate)) {
