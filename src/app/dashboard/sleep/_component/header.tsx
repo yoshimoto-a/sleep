@@ -16,7 +16,7 @@ export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
   if (error) return <div>エラー発生</div>;
 
   return (
-    <div className="flex justify-between mt-10 mx-5">
+    <div className="flex justify-between mt-5 mx-5">
       <Image
         src="/sleep/left.png"
         alt="left icon"
