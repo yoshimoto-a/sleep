@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { Footer } from "../_components/footer";
 import { Chart } from "./_component/Chart";
+import { TotalSleepTime } from "./_component/TotalSleepTime";
 import { ButtonArea } from "./_component/buttonArea";
 import { ElapsedTime } from "./_component/elapsedTime";
 import { Header } from "./_component/header";
@@ -30,11 +31,16 @@ export default function Page() {
         <MainTime SleepingSituationData={data} />
         <ElapsedTime data={data} />
       </div>
-      <div className="grid grid-cols-10">
-        <div className="col-span-2">
+      <div className="grid grid-cols-10 mx-1">
+        <div className="col-span-3 flex flex-col items-center">
           <Chart chartData={data?.chartData} keyName={data?.keyName}></Chart>
+          <div className="flex justify-center w-full mt-2">
+            <TotalSleepTime
+              totalSleepTime={data?.totalSleepTime}
+            ></TotalSleepTime>
+          </div>
         </div>
-        <div className="relative col-span-8 h-full w-4/5 mx-auto mb-[164px]">
+        <div className="relative col-span-7 h-full w-full mx-auto mb-[164px]">
           <ShowData
             data={data}
             isLoading={isLoading}

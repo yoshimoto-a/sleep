@@ -8,6 +8,7 @@ import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
 import { formatRecordsWithoutYesterdayData } from "./sleep/_utils/formatRecordsWithoutYesterdayData";
+import { getTotalSleepTime } from "./sleep/_utils/getTotalSleepTime";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
@@ -436,6 +437,7 @@ export const GET = async (req: NextRequest) => {
       startOfDay
     );
     const { chartData, keyName } = sleepChartDataGenerator.generateChartData();
+    const totalSleepTime = getTotalSleepTime(chartData);
 
     return Response.json({
       status: 200,
@@ -444,6 +446,7 @@ export const GET = async (req: NextRequest) => {
       latestData,
       chartData,
       keyName,
+      totalSleepTime,
     });
   } catch (e) {
     if (e instanceof Error) {
