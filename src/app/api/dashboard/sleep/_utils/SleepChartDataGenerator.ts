@@ -39,7 +39,7 @@ export class SleepChartDataGenerator {
   }
 
   private get data() {
-    return this.formatedData.filter(item => item.action !== "寝かしつけ開始");
+    return this.formatedData.filter(item => item.action !== "寝かしつけ");
   }
 
   public generateChartData() {
