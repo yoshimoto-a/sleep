@@ -98,4 +98,5 @@ export interface SleepingSituationResponse {
   latestData: FindLatestResponse;
   chartData: ChartData;
   keyName: string[];
+  totalSleepTime: number;
 }
