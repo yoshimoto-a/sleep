@@ -92,7 +92,7 @@ export const formatRecordsWithYesterdayData = (
           createNewData(
             id,
             bedTime,
-            "寝かしつけ開始",
+            "寝かしつけ",
             yesterdayWakeup,
             bedTime,
             changeUser
@@ -112,7 +112,7 @@ export const formatRecordsWithYesterdayData = (
           createNewData(
             id,
             bedTime,
-            "寝かしつけ開始",
+            "寝かしつけ",
             records[index - 1].wakeup,
             bedTime,
             changeUser
@@ -154,14 +154,7 @@ export const formatRecordsWithYesterdayData = (
     }
     if (bedTime && !sleep) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
     if (!bedTime && sleep) {
@@ -171,14 +164,7 @@ export const formatRecordsWithYesterdayData = (
     }
     if (bedTime && sleep) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
       formatedRecords.push(
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
@@ -203,14 +189,7 @@ export const formatRecordsWithYesterdayData = (
 
     if (bedTime && !sleep) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
     if (!bedTime && sleep) {
@@ -220,14 +199,7 @@ export const formatRecordsWithYesterdayData = (
     }
     if (bedTime && sleep) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
       formatedRecords.push(
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
@@ -251,14 +223,7 @@ export const formatRecordsWithYesterdayData = (
     const { id, bedTime, sleep, changeUser } = containTomorrowRecord[0]; //wakeupは絶対当日ではない
     if (bedTime && wakeup) {
       formatedRecords.push(
-        createNewData(
-          id,
-          bedTime,
-          "寝かしつけ開始",
-          wakeup,
-          bedTime,
-          changeUser
-        )
+        createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
     if (bedTime && sleep && IsToday(sleep, targetDate)) {

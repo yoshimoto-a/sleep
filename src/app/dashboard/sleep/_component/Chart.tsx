@@ -26,11 +26,11 @@ export const Chart: React.FC<Props> = ({ chartData, keyName }) => {
   return (
     <BarChart
       width={100}
-      height={450}
+      height={300}
       data={[chartData]}
       layout="horizontal"
       barSize={20}
-      margin={{ top: 10, right: 5, left: 5, bottom: 10 }}
+      margin={{ top: 10, right: 5, left: 0, bottom: 10 }}
     >
       <XAxis type="category" dataKey="date" hide />
       <YAxis

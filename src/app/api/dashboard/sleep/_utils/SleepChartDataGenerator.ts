@@ -27,11 +27,11 @@ export class SleepChartDataGenerator {
     this.keyName = [];
   }
   private get startOfDay() {
-    return dayjs(this.targetDate).startOf("day");
+    return dayjs.tz(this.targetDate).startOf("day");
   }
 
   private get endOfDay() {
-    return dayjs(this.targetDate).endOf("day");
+    return dayjs.tz(this.targetDate).endOf("day");
   }
 
   private get today() {
