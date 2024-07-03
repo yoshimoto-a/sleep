@@ -3,6 +3,7 @@
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Footer } from "../_components/footer";
+import { Chart } from "./_component/Chart";
 import { ButtonArea } from "./_component/buttonArea";
 import { ElapsedTime } from "./_component/elapsedTime";
 import { Header } from "./_component/header";
@@ -16,7 +17,6 @@ export default function Page() {
   const { isLoading, data, error, mutate } = useGetData(date);
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
-
   const handlePrev = () => {
     setDate(dayjs(date).add(-1, "d").toDate());
   };
@@ -30,16 +30,18 @@ export default function Page() {
         <MainTime SleepingSituationData={data} />
         <ElapsedTime data={data} />
       </div>
-      {/* グラフ作れたらここに*/}
-      {/*<div className="grid grid-cols-10"> */}
-      {/* <div className="bg-white col-span-3">グラフ</div> */}
-      <div className="relative col-span-7 h-full w-4/5 mx-auto mb-[164px]">
-        <ShowData
-          data={data}
-          isLoading={isLoading}
-          error={error}
-          mutate={mutate}
-        />
+      <div className="grid grid-cols-10">
+        <div className="col-span-2">
+          <Chart chartData={data?.chartData} keyName={data?.keyName}></Chart>
+        </div>
+        <div className="relative col-span-8 h-full w-4/5 mx-auto mb-[164px]">
+          <ShowData
+            data={data}
+            isLoading={isLoading}
+            error={error}
+            mutate={mutate}
+          />
+        </div>
       </div>
       <div className="fixed bottom-25 w-full bg-white z-0">
         <ButtonArea mutate={mutate} />
