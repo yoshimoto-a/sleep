@@ -14,7 +14,7 @@ export default function Page() {
 
   return (
     <>
-      <h1 className="pt-10 text-center text-lg">体重</h1>
+      <h1 className="pt-5 text-center text-lg">体重</h1>
       <WeightForm
         createWeight={createWeight}
         isSubmitting={isSubmitting}

@@ -7,9 +7,15 @@ export interface Weight {
   changeUser: number;
 }
 
+export interface WeightGraph {
+  monthAge: number;
+  weight: number;
+}
+
 export interface IndexSuccessResponse {
   status: 200;
   data: Weight[];
+  graphData: WeightGraph[];
 }
 
 export interface IndexErrorResponse {
