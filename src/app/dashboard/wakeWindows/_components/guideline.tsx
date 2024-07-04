@@ -29,7 +29,7 @@ export const Guideline = () => {
     },
     {
       period: "12～18か月",
-      wakeWindow: "3時間",
+      wakeWindow: "~6時間",
     },
     {
       period: "18か月 – 3歳",
@@ -80,7 +80,7 @@ export const Guideline = () => {
             </tbody>
           </table>
           <div>
-            出典: 「 子供の睡眠の問題を解決する」、R.
+            参考：「 子供の睡眠の問題を解決する」、R.
             ファーバー医師、「健康的な睡眠習慣」、「ハッピー チャイルド」、M.
             ワイスブルース医師
           </div>
