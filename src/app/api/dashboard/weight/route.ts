@@ -53,22 +53,24 @@ export const GET = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const babyId = await getBabyId(token);
-    const data = await prisma.weight.findMany({
-      where: {
-        babyId,
-      },
-      orderBy: {
-        measurementDate: "desc",
-      },
-    });
-    const baby = await prisma.baby.findUnique({
-      where: {
-        id: babyId,
-      },
-      select: {
-        birthday: true,
-      },
-    });
+    const [data, baby] = await Promise.all([
+      prisma.weight.findMany({
+        where: {
+          babyId,
+        },
+        orderBy: {
+          measurementDate: "desc",
+        },
+      }),
+      prisma.baby.findUnique({
+        where: {
+          id: babyId,
+        },
+        select: {
+          birthday: true,
+        },
+      }),
+    ]);
     const graphData = formatGraphData(data, baby?.birthday);
     return Response.json(<IndexResponse>{ status: 200, data, graphData });
   } catch (e) {
