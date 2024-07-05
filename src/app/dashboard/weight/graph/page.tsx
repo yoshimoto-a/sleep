@@ -10,10 +10,11 @@ export default function Page() {
   if (isLoading) return <IsLoading />;
   if (error)
     return <div className="text-center">データの取得に失敗しました</div>;
+  if (!data) return <div className="text-center">データがありません</div>;
   return (
     <>
       <h1 className="pt-5 text-center text-lg">体重グラフ</h1>
-      <Graph data={data?.graphData}></Graph>
+      <Graph data={data.graphData}></Graph>
       <Footer />
     </>
   );

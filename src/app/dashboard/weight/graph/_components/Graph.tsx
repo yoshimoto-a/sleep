@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { WeightGraph } from "@/app/_types/apiRequests/dashboard/weight/Index";
 interface Props {
-  data: WeightGraph[] | undefined;
+  data: WeightGraph[];
 }
 export const Graph: React.FC<Props> = ({ data }) => {
   const yTicks = Array.from({ length: 13 }, (_, i) => i * 1000);
