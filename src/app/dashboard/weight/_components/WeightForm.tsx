@@ -1,5 +1,7 @@
 "use client";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
+
 import toast, { Toaster } from "react-hot-toast";
 import { useWeightValidation } from "../_hooks/useWeightValidation";
 import { Button } from "./Button";
@@ -17,6 +19,7 @@ interface Props {
 export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useWeightValidation(null, new Date());
+  const router = useRouter();
 
   const handleSave = async () => {
     if (!weight) {
@@ -60,13 +63,12 @@ export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
         </div>
       </div>
       <div className="flex justify-center gap-4 pt-5">
-        {/* 体重のグラフ描画が完成したらこのボタンから遷移させる
         <Button
-          text="成長曲線"
+          text="体重推移"
           onclick={() => {
-            router.replace("/dashboard/sleep");
+            router.replace("/dashboard/weight/graph");
           }}
-        /> */}
+        />
         <Button disabled={isSubmitting} text="保存" onclick={handleSave} />
       </div>
     </>
