@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getBabyId } from "../../_utils/getBabyId";
+import { formatGraphData } from "./_utils/formatGraphData";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
@@ -52,15 +53,26 @@ export const GET = async (req: NextRequest) => {
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const babyId = await getBabyId(token);
-    const getWeigth = await prisma.weight.findMany({
-      where: {
-        babyId,
-      },
-      orderBy: {
-        measurementDate: "desc",
-      },
-    });
-    return Response.json(<IndexResponse>{ status: 200, data: getWeigth });
+    const [data, baby] = await Promise.all([
+      prisma.weight.findMany({
+        where: {
+          babyId,
+        },
+        orderBy: {
+          measurementDate: "desc",
+        },
+      }),
+      prisma.baby.findUnique({
+        where: {
+          id: babyId,
+        },
+        select: {
+          birthday: true,
+        },
+      }),
+    ]);
+    const graphData = formatGraphData(data, baby?.birthday);
+    return Response.json(<IndexResponse>{ status: 200, data, graphData });
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
