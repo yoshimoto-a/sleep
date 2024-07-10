@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { FindLatestResponse } from "./findLatest";
-import { IsToday } from "./isToday";
+import { isToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 dayjs.extend(utc);
@@ -35,7 +35,7 @@ export class SleepChartDataGenerator {
   }
 
   private get today() {
-    return IsToday(new Date(), this.targetDate);
+    return isToday(new Date(), this.targetDate);
   }
 
   private get data() {

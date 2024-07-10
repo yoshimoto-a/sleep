@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { IsToday } from "./isToday";
+import { isToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
@@ -55,18 +55,18 @@ export const formatRecordsWithYesterdayData = (
   if (containYesterdayRecord.length === 1) {
     const { id, bedTime, sleep, wakeup, changeUser } =
       containYesterdayRecord[0];
-    if (bedTime && sleep && IsToday(sleep, targetDate) && wakeup) {
+    if (bedTime && sleep && isToday(sleep, targetDate) && wakeup) {
       formatedRecords.push(
         createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser),
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
     }
-    if (bedTime && sleep && IsToday(sleep, targetDate) && !wakeup) {
+    if (bedTime && sleep && isToday(sleep, targetDate) && !wakeup) {
       formatedRecords.push(
         createNewData(id, bedTime, "寝た", bedTime, sleep, changeUser)
       );
     }
-    if (sleep && !IsToday(sleep, targetDate) && wakeup) {
+    if (sleep && !isToday(sleep, targetDate) && wakeup) {
       formatedRecords.push(
         createNewData(id, wakeup, "起きた", sleep, wakeup, changeUser)
       );
@@ -226,12 +226,12 @@ export const formatRecordsWithYesterdayData = (
         createNewData(id, bedTime, "寝かしつけ", wakeup, bedTime, changeUser)
       );
     }
-    if (bedTime && sleep && IsToday(sleep, targetDate)) {
+    if (bedTime && sleep && isToday(sleep, targetDate)) {
       formatedRecords.push(
         createNewData(id, sleep, "寝た", bedTime, sleep, changeUser)
       );
     }
-    if (!bedTime && sleep && IsToday(sleep, targetDate) && wakeup) {
+    if (!bedTime && sleep && isToday(sleep, targetDate) && wakeup) {
       formatedRecords.push(
         createNewData(id, sleep, "寝た", wakeup, sleep, changeUser)
       );
