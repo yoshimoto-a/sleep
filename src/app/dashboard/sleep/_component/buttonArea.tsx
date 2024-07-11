@@ -27,7 +27,7 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
   };
   return (
     <>
-      <div className="max-w-md w-full fixed bottom-16 w-full px-3 py-2 flex justify-between items-center z-50">
+      <div className="max-w-md fixed bottom-16 w-full px-3 py-2 flex justify-between items-center z-50">
         <Button
           icon="/_buttonIcon/all.png"
           text="一括登録"
