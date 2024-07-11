@@ -15,6 +15,11 @@ export default function Menu() {
   return (
     <>
       <h1 className="pt-5 text-center text-lg">メニュー</h1>
+      <RowItem
+        icon="/_menuIcon/barChart.png"
+        link="./weeklySleepChart/"
+        title="週間ログ"
+      />
       <RowItem icon="/_menuIcon/growth.png" link="./growth/" title="発達登録" />
       <RowItem
         icon="/_footerIcon/weight.png"
