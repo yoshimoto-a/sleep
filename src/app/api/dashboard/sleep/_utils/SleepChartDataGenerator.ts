@@ -23,7 +23,7 @@ export class SleepChartDataGenerator {
     this.formatedData = formatedData;
     this.latestData = latestData;
     this.targetDate = targetDate;
-    this.chartData = { date: dayjs.tz(this.targetDate).format("YYYY-MM-DD") };
+    this.chartData = { date: dayjs.tz(this.targetDate).format("M/D") };
     this.keyName = [];
   }
   private get startOfDay() {
@@ -144,17 +144,12 @@ export class SleepChartDataGenerator {
       this.today ? null : this.endOfDay.toDate()
     );
     this.keyName.push(`${count}:睡眠時間`);
-    count++;
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
-      new Date(),
-      this.endOfDay.toDate()
-    );
-    this.keyName.push(`${count}:活動時間`);
     return { chartData: this.chartData, keyName: this.keyName };
   }
   private handleMultipleData(count: number, currentTime: number) {
     let total = currentTime;
     let key = "";
+
     this.data.forEach((item, index) => {
       currentTime = 0;
       if (index === this.data.length - 1 && item.action === "起きた") {
