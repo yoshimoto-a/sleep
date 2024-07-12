@@ -3,7 +3,7 @@ import { Footer } from "../_components/footer";
 import { Header } from "./_component/Header";
 import { WeeklyChart } from "./_component/WeeklyChart";
 import { useWeeklyNavigation } from "./_hooks/useWeeklyNavigation";
-import { useWeeklySleepChart } from "./useWeeklySleepChart";
+import { useWeeklySleepChart } from "./_hooks/useWeeklySleepChart";
 import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const { date, onClickNext, onClickPrev } = useWeeklyNavigation();
