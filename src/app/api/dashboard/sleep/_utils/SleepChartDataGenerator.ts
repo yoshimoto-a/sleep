@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { FindLatestResponse } from "./findLatest";
-import { IsToday } from "./isToday";
+import { isToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 dayjs.extend(utc);
@@ -23,7 +23,7 @@ export class SleepChartDataGenerator {
     this.formatedData = formatedData;
     this.latestData = latestData;
     this.targetDate = targetDate;
-    this.chartData = { date: dayjs.tz(this.targetDate).format("YYYY-MM-DD") };
+    this.chartData = { date: dayjs.tz(this.targetDate).format("M/D") };
     this.keyName = [];
   }
   private get startOfDay() {
@@ -35,7 +35,7 @@ export class SleepChartDataGenerator {
   }
 
   private get today() {
-    return IsToday(new Date(), this.targetDate);
+    return isToday(new Date(), this.targetDate);
   }
 
   private get data() {
@@ -144,17 +144,12 @@ export class SleepChartDataGenerator {
       this.today ? null : this.endOfDay.toDate()
     );
     this.keyName.push(`${count}:睡眠時間`);
-    count++;
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
-      new Date(),
-      this.endOfDay.toDate()
-    );
-    this.keyName.push(`${count}:活動時間`);
     return { chartData: this.chartData, keyName: this.keyName };
   }
   private handleMultipleData(count: number, currentTime: number) {
     let total = currentTime;
     let key = "";
+
     this.data.forEach((item, index) => {
       currentTime = 0;
       if (index === this.data.length - 1 && item.action === "起きた") {
