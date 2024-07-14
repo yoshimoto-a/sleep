@@ -3,7 +3,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { getBabyId } from "../_utils/getBabyId";
-import { SleepChartDataGenerator } from "./sleep/_utils/SleepChartDataGenerator";
+import { SleepChartDataGenerator } from "../_utils/SleepChartDataGenerator";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
