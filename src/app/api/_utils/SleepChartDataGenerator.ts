@@ -1,13 +1,8 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import { FindLatestResponse } from "./findLatest";
-import { isToday } from "./isToday";
+import { dayjs } from "../_utils/dayjs";
+import { FindLatestResponse } from "../dashboard/sleep/_utils/findLatest";
+import { isToday } from "../dashboard/sleep/_utils/isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Tokyo");
 
 export class SleepChartDataGenerator {
   private formatedData: FormatedData[];
@@ -95,7 +90,7 @@ export class SleepChartDataGenerator {
       return this.handleDoubleDataSlept(count);
     }
     if (this.isDoubleDataWithAction("起きた")) {
-      return this.handleDoubleDataAwake(count);
+      return this.handleDoubleDataAwake(count, currentTime);
     }
     return this.handleMultipleData(count, currentTime);
   }
@@ -132,18 +127,37 @@ export class SleepChartDataGenerator {
     return { chartData: this.chartData, keyName: this.keyName };
   }
 
-  private handleDoubleDataAwake(count: number) {
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
-      this.data[0].datetime,
-      this.data[1].datetime
+  private handleDoubleDataAwake(count: number, currentTime: number) {
+    let total = currentTime;
+
+    const calculateTimeDifference = (start: Date, end: Date | null) => {
+      return this.getTimeDifference(start, end);
+    };
+
+    const addChartData = (key: string, value: number) => {
+      this.chartData[key] = value;
+      this.keyName.push(key);
+      total += value;
+    };
+
+    addChartData(
+      `${count}:活動時間`,
+      calculateTimeDifference(this.data[0].datetime, this.data[1].datetime)
     );
-    this.keyName.push(`${count}:活動時間`);
     count++;
-    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
-      this.data[1].datetime,
-      this.today ? null : this.endOfDay.toDate()
+
+    addChartData(
+      `${count}:睡眠時間`,
+      calculateTimeDifference(
+        this.data[1].datetime,
+        this.today ? null : this.endOfDay.toDate()
+      )
     );
-    this.keyName.push(`${count}:睡眠時間`);
+
+    if (this.today) {
+      addChartData(`${count}:活動時間`, 1440 - total);
+    }
+
     return { chartData: this.chartData, keyName: this.keyName };
   }
   private handleMultipleData(count: number, currentTime: number) {
