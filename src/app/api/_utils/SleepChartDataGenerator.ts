@@ -90,7 +90,7 @@ export class SleepChartDataGenerator {
       return this.handleDoubleDataSlept(count);
     }
     if (this.isDoubleDataWithAction("起きた")) {
-      return this.handleDoubleDataAwake(count);
+      return this.handleDoubleDataAwake(count, currentTime);
     }
     return this.handleMultipleData(count, currentTime);
   }
@@ -127,8 +127,8 @@ export class SleepChartDataGenerator {
     return { chartData: this.chartData, keyName: this.keyName };
   }
 
-  private handleDoubleDataAwake(count: number) {
-    let total = 0;
+  private handleDoubleDataAwake(count: number, currentTime: number) {
+    let total = currentTime;
 
     const calculateTimeDifference = (start: Date, end: Date | null) => {
       return this.getTimeDifference(start, end);
@@ -155,7 +155,7 @@ export class SleepChartDataGenerator {
     );
 
     if (this.today) {
-      this.chartData[`${count}:活動時間`] = 1440 - total;
+      addChartData(`${count}:活動時間`, 1440 - total);
     }
 
     return { chartData: this.chartData, keyName: this.keyName };
