@@ -11,14 +11,7 @@ interface Baby {
   created: Date;
   updated: Date;
 }
-export interface IndexSuccessResponse {
-  status: number;
+export interface IndexResponse {
+  status: 200;
   data: Baby;
 }
-
-export interface IndexErrorResponse {
-  status: number;
-  error: string;
-}
-
-export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
