@@ -23,9 +23,6 @@ export const useFetch = <T>(path: string) => {
     const data: T = await resp.json();
     return data;
   };
-  const { data, error, isLoading, mutate } = useSWR(
-    shouldFetchData ? `/api/${path}` : null,
-    fetcher
-  );
-  return { data, error, isLoading, mutate };
+  const results = useSWR(shouldFetchData ? `/api/${path}` : null, fetcher);
+  return results;
 };
