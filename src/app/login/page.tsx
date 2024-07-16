@@ -6,13 +6,12 @@ import { Toaster } from "react-hot-toast";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
-import { Input } from "../_components/input";
+import { Input } from "./_components/Input";
 import { useLoginForm } from "./_hooks/useLoginForm";
 import { SubmitButton } from "@/app/_components/submitButton";
 
 export default function Page() {
-  const { isSubmitting, handleSubmit, email, setEmail, password, setPassword } =
-    useLoginForm();
+  const { register, handleSubmit, isSubmitting, errors } = useLoginForm();
   return (
     <>
       <Header />
@@ -23,24 +22,35 @@ export default function Page() {
       <Form handleSubmit={handleSubmit}>
         <div className="mb-4">
           <Input
-            id="email"
+            name="email"
             type="text"
-            value={email}
             placeholder="メールアドレス"
             inputMode="email"
-            disabled={isSubmitting}
-            onChange={value => setEmail(value)}
+            isSubmitting={isSubmitting}
+            validation={{
+              required: "メールアドレスは必須です",
+              pattern: {
+                value:
+                  /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                message: "メールアドレスの形式が不正です。",
+              },
+            }}
+            register={register}
+            errors={errors}
           />
         </div>
         <div>
           <Input
-            id="password"
+            name="password"
             type="password"
-            value={password}
             placeholder="パスワード"
             inputMode="text"
-            disabled={isSubmitting}
-            onChange={value => setPassword(value)}
+            isSubmitting={isSubmitting}
+            validation={{
+              required: "パスワードを入力してください",
+            }}
+            register={register}
+            errors={errors}
           />
         </div>
 
