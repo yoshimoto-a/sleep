@@ -31,7 +31,7 @@ export const Input: React.FC<Props> = ({
 }) => {
   const errorMessage = errors[name]?.message;
   return (
-    <>
+    <div className="mb-4">
       <input
         className="bg-custom-gray py-2 px-3 text-gray-700 leading-tight w-full"
         id={name}
@@ -43,6 +43,6 @@ export const Input: React.FC<Props> = ({
       {errors[name] && typeof errorMessage === "string" && (
         <p className="mb-2 text-sm text-red-500">{errorMessage}</p>
       )}
-    </>
+    </div>
   );
 };

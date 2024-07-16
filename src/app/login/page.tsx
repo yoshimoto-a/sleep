@@ -20,39 +20,35 @@ export default function Page() {
         <Toaster position="top-center" />
       </div>
       <Form handleSubmit={handleSubmit}>
-        <div className="mb-4">
-          <Input
-            name="email"
-            type="text"
-            placeholder="メールアドレス"
-            inputMode="email"
-            isSubmitting={isSubmitting}
-            validation={{
-              required: "メールアドレスは必須です",
-              pattern: {
-                value:
-                  /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                message: "メールアドレスの形式が不正です。",
-              },
-            }}
-            register={register}
-            errors={errors}
-          />
-        </div>
-        <div>
-          <Input
-            name="password"
-            type="password"
-            placeholder="パスワード"
-            inputMode="text"
-            isSubmitting={isSubmitting}
-            validation={{
-              required: "パスワードを入力してください",
-            }}
-            register={register}
-            errors={errors}
-          />
-        </div>
+        <Input
+          name="email"
+          type="text"
+          placeholder="メールアドレス"
+          inputMode="email"
+          isSubmitting={isSubmitting}
+          validation={{
+            required: "メールアドレスは必須です",
+            pattern: {
+              value:
+                /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+              message: "メールアドレスの形式が不正です。",
+            },
+          }}
+          register={register}
+          errors={errors}
+        />
+        <Input
+          name="password"
+          type="password"
+          placeholder="パスワード"
+          inputMode="text"
+          isSubmitting={isSubmitting}
+          validation={{
+            required: "パスワードを入力してください",
+          }}
+          register={register}
+          errors={errors}
+        />
 
         <Link
           href="/resetPassword/sendEmail"
