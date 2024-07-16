@@ -7,19 +7,31 @@ import { supabase } from "@/utils/supabase";
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
+  const { data, error } = await supabase.auth.getUser(token);
 
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
 
   try {
-    const body = await req.json();
-    const { supabaseUserId, role, babyId } = body;
+    //登録があるかどうか確認する
+    const getUser = await prisma.user.findUnique({
+      where: {
+        supabaseUserId: data.user.id,
+      },
+    });
+    if (getUser) {
+      //既に登録あれば何もしない
+      return Response.json(<ApiResponse>{
+        status: 200,
+        message: "success",
+        userExists: true,
+      });
+    }
     const userPostResp = await prisma.user.create({
       data: {
-        supabaseUserId,
-        role,
-        babyId,
+        supabaseUserId: data.user.id,
+        role: data.user.user_metadata.babyId ? "SUB" : "MAIN",
+        babyId: data.user.user_metadata.babyId,
       },
     });
 
@@ -65,7 +77,11 @@ export const POST = async (req: NextRequest) => {
         },
       });
     }
-    return Response.json(<ApiResponse>{ status: 200, message: "success" });
+    return Response.json(<ApiResponse>{
+      status: 200,
+      message: "success",
+      userExists: false,
+    });
   } catch (e) {
     if (e instanceof Error) {
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
