@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateRequest";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
@@ -14,7 +14,7 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const getGrowth = await prisma.growth.findMany({
       where: {
         babyId,
@@ -48,7 +48,8 @@ export const PUT = async (req: NextRequest) => {
   try {
     const body: updateRequests = await req.json();
     const { id } = body;
-    const { startedAt, archevedAt, changeUser } = body.data;
+    const { userId } = await getUserAndBabyIds(token);
+    const { startedAt, archevedAt } = body.data;
     await prisma.growth.update({
       where: {
         id,
@@ -56,7 +57,7 @@ export const PUT = async (req: NextRequest) => {
       data: {
         startedAt,
         archevedAt,
-        changeUser,
+        changeUser: userId,
       },
     });
     return Response.json(<PostResponse>{

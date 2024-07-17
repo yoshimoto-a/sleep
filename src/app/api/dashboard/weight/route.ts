@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { formatGraphData } from "./_utils/formatGraphData";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
@@ -14,16 +14,16 @@ export const POST = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId, userId } = await getUserAndBabyIds(token);
     const body = await req.json();
-    const { measurementDate, weight, createUser, changeUser } = body.data;
+    const { measurementDate, weight } = body.data;
     const resp = await prisma.weight.create({
       data: {
         babyId,
         measurementDate,
         weight,
-        createUser,
-        changeUser,
+        createUser: userId,
+        changeUser: userId,
       },
     });
     return Response.json(<PostResponse>{
@@ -52,7 +52,7 @@ export const GET = async (req: NextRequest) => {
   if (error)
     return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const [data, baby] = await Promise.all([
       prisma.weight.findMany({
         where: {

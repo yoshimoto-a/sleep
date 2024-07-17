@@ -2,7 +2,7 @@ import { SleepingSituation } from "@prisma/client";
 import { type NextRequest } from "next/server";
 import { SleepChartDataGenerator } from "../../_utils/SleepChartDataGenerator";
 import { dayjs } from "../../_utils/dayjs";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { FindLatestResponse } from "../sleep/_utils/findLatest";
 import { getTotalSleepTime } from "../sleep/_utils/getTotalSleepTime";
 import { findLatestData } from "./_utils/findLatestData";
@@ -36,7 +36,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     //ユーザーに紐づくbabyId取得する
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const endOfDay = date.endOf("day").toDate();
     const startOfRange = date.subtract(6, "day").startOf("day").toDate();
 

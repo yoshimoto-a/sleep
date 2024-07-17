@@ -3,7 +3,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { SleepChartDataGenerator } from "../_utils/SleepChartDataGenerator";
-import { getBabyId } from "../_utils/getBabyId";
+import { getUserAndBabyIds } from "../_utils/getUserAndBabyIds";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
@@ -51,7 +51,7 @@ export const GET = async (req: NextRequest) => {
     const endOfDay = dayjs.tz(date, "Asia/Tokyo").endOf("day").toDate();
 
     //ユーザーに紐づくbabyId取得する
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
 
     //bedtime(null許容)以外すべて当日で完成したデータのみ
     const completedRecords = await prisma.sleepingSituation.findMany({

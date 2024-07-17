@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 
@@ -9,15 +9,15 @@ export const GET = async (req: NextRequest) => {
   const { error } = await supabase.auth.getUser(token);
   if (error) return Response.json({ status: 401, message: "Unauthorized" });
   try {
-    const id = await getBabyId(token);
-    if (!id)
+    const { babyId } = await getUserAndBabyIds(token);
+    if (!babyId)
       return Response.json({
         status: 400,
         error: "Failed to obtain Id",
       });
     const getBaby = await prisma.baby.findUnique({
       where: {
-        id,
+        id: babyId,
       },
       select: {
         id: true,
@@ -52,13 +52,13 @@ export const PUT = async (req: NextRequest) => {
   if (error) return Response.json({ status: 401, message: "Unauthorized" });
 
   try {
-    const id = await getBabyId(token);
+    const { babyId, userId } = await getUserAndBabyIds(token);
     const body = await req.json();
     const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
       body.data;
     await prisma.baby.update({
       where: {
-        id,
+        id: babyId,
       },
       data: {
         name,
@@ -72,24 +72,18 @@ export const PUT = async (req: NextRequest) => {
     //体重データがない場合は出生体重をweightに登録する
     const getWeigth = await prisma.weight.findMany({
       where: {
-        babyId: id,
+        babyId,
       },
     });
 
     if (getWeigth.length === 0) {
-      const user = await prisma.user.findUnique({
-        where: {
-          supabaseUserId: data.user.id,
-        },
-      });
-      if (!user) throw new Error("user is not found");
       await prisma.weight.create({
         data: {
-          babyId: id,
+          babyId,
           measurementDate: expectedDateOfBirth,
           weight: birthWeight,
-          createUser: user?.id,
-          changeUser: user?.id,
+          createUser: userId,
+          changeUser: userId,
         },
       });
     }

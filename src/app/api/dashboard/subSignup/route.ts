@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { supabase } from "@/utils/supabase";
 
@@ -13,7 +13,7 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const body = await req.json();
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const { email } = body;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE;
