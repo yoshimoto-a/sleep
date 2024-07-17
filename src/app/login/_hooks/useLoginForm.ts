@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ApiResponse } from "../../_types/apiRequests/login/PostResponse";
 import { useApi } from "@/app/_hooks/useApi";
-import { PostRequests } from "@/app/_types/apiRequests/login/PostRequest";
+import { PostRequests } from "@/app/_types/apiRequests/login/postRequest";
 import { supabase } from "@/utils/supabase";
 
 type LoginFormInputs = {
