@@ -5,14 +5,10 @@ import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetti
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const { babyId } = await getUserAndBabyIds(token);
     const getGrowth = await prisma.growth.findMany({
@@ -34,6 +30,9 @@ export const GET = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
   }
@@ -42,9 +41,6 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: updateRequests = await req.json();
     const { id } = body;
@@ -66,6 +62,9 @@ export const PUT = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }

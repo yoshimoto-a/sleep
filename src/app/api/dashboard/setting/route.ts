@@ -1,13 +1,10 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) return Response.json({ status: 401, message: "Unauthorized" });
   try {
     const { babyId } = await getUserAndBabyIds(token);
     if (!babyId)
@@ -40,6 +37,9 @@ export const GET = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, error: e.message });
     }
   }
@@ -48,8 +48,6 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { data, error } = await supabase.auth.getUser(token);
-  if (error) return Response.json({ status: 401, message: "Unauthorized" });
 
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
@@ -94,6 +92,9 @@ export const PUT = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, message: e.message });
     }
   }

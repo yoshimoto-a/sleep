@@ -2,14 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) {
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
-  }
 
   try {
     const body = await req.json();
@@ -34,6 +29,9 @@ export const POST = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }

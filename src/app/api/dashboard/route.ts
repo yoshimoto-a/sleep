@@ -13,7 +13,6 @@ import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -39,8 +38,6 @@ const FormatNotContainNull = (record: SleepingSituation) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
     //検索対象の日付を取得する
     const params = req.nextUrl.searchParams;
@@ -450,6 +447,9 @@ export const GET = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, message: e.message });
     }
   }

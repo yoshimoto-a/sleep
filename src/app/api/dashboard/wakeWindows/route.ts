@@ -6,14 +6,10 @@ import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: PostRequests = await req.json();
     const { babyId, userId } = await getUserAndBabyIds(token);
@@ -40,6 +36,9 @@ export const POST = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }
@@ -48,9 +47,6 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const { babyId } = await getUserAndBabyIds(token);
     const getWakeWindows = await prisma.wakeWindows.findMany({
@@ -80,6 +76,9 @@ export const GET = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
   }
@@ -88,9 +87,6 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: UpdateRequests = await req.json();
     const { id, time } = body.sleepPrepTime;
@@ -125,6 +121,9 @@ export const PUT = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }
