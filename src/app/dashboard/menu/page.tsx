@@ -1,16 +1,16 @@
 "use client";
 import Image from "next/image";
-import { useGetLoginUser } from "../_hooks/useGetLoginUser";
+import { useGetLoginUser } from "../../_hooks/useGetLoginUser";
 import { RowItem } from "./_components/rowItem";
 import { useLogout } from "./_hooks/useLogout";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Menu() {
-  const { data, error, isLoading } = useGetLoginUser();
+  const { role, error, isLoading } = useGetLoginUser();
   const { logout } = useLogout();
   if (isLoading) return <IsLoading />;
   if (error) return <div>エラー発生</div>;
-  if (!isLoading && !data) return <div>ユーザー情報なし</div>;
+  if (!isLoading && !role) return <div>ユーザー情報なし</div>;
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function Menu() {
         title="活動時間登録"
       />
       {/* 追加予定<RowItem icon="/_menuIcon/chat.png" link="./chat/" title="チャット" /> */}
-      {data?.data?.role === "MAIN" && (
+      {role === "MAIN" && (
         <RowItem
           icon="/_menuIcon/subSignup.png"
           link="./subSignup/"

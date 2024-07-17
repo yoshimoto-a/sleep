@@ -1,7 +1,5 @@
 import { type NextRequest } from "next/server";
 import { getBabyId } from "../../_utils/getBabyId";
-import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/setting";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 
@@ -9,12 +7,11 @@ export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
   const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
+  if (error) return Response.json({ status: 401, message: "Unauthorized" });
   try {
     const id = await getBabyId(token);
     if (!id)
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 400,
         error: "Failed to obtain Id",
       });
@@ -34,16 +31,16 @@ export const GET = async (req: NextRequest) => {
       },
     });
     if (getBaby) {
-      return Response.json(<IndexResponse>{ status: 200, data: getBaby });
+      return Response.json({ status: 200, data: getBaby });
     } else {
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 404,
         error: "Requested record not found",
       });
     }
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json(<IndexResponse>{ status: 400, error: e.message });
+      return Response.json({ status: 400, error: e.message });
     }
   }
 };
@@ -52,8 +49,7 @@ export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
   const { data, error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
+  if (error) return Response.json({ status: 401, message: "Unauthorized" });
 
   try {
     const id = await getBabyId(token);
@@ -98,13 +94,13 @@ export const PUT = async (req: NextRequest) => {
       });
     }
 
-    return Response.json(<ApiResponse>{
+    return Response.json({
       status: 200,
       message: "success",
     });
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json(<ApiResponse>{ status: 400, message: e.message });
+      return Response.json({ status: 400, message: e.message });
     }
   }
 };
