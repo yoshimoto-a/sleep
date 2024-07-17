@@ -1,7 +1,5 @@
 import dayjs from "dayjs";
-import { useContext } from "react";
 import { useState } from "react";
-import { UserContext } from "../../layout";
 import { Action } from "../_types/action";
 import { checkType } from "../_utils/checkType";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
@@ -21,7 +19,6 @@ export const InputAcionModal: React.FC<Props> = ({
   setIsModalOpen,
 }) => {
   const { token } = useSupabaseSession();
-  const [dbUserId, babyId] = useContext(UserContext);
   const [datetimeState, setDatetimeState] = useState(datetime);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,9 +35,7 @@ export const InputAcionModal: React.FC<Props> = ({
         Authorization: token,
       },
       body: JSON.stringify({
-        babyId,
         [action]: datetimeState,
-        createUser: dbUserId,
       }),
     });
     const data: PostResponse = await resp.json();

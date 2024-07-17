@@ -2,9 +2,7 @@
 import dayjs from "dayjs";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useContext } from "react";
 import { ModalButton } from "../../growth/_components/ModalButton";
-import { UserContext } from "../../layout";
 import { useGetDataById } from "../_hooks/useGetDataById";
 import { useApi } from "@/app/_hooks/useApi";
 import { DeleteResponse } from "@/app/_types/apiRequests/dashboard/sleep/deleteResponse";
@@ -23,7 +21,6 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
   const [sleep, setSleep] = useState<Date | null>(null);
   const [wakeup, setWakeup] = useState<Date | null>(null);
   const fetcher = useApi();
-  const [dbUserId] = useContext(UserContext);
   useEffect(() => {
     if (!data) return;
     setBedtime(data.data.bedTime);
@@ -34,7 +31,6 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
   if (error) return <div>エラー発生</div>;
 
   const put = async () => {
-    if (!dbUserId) return;
     if (!sleep || !wakeup) {
     }
     try {
@@ -42,7 +38,6 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         bedtime,
         sleep,
         wakeup,
-        changeUser: dbUserId,
       };
       const resp = await fetcher.put<UpdateRequests, UpdateResponse>(
         `/api/dashboard/sleep/${id}`,

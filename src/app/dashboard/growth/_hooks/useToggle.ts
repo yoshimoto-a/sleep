@@ -1,6 +1,4 @@
 import { useCallback, useState } from "react";
-import { useContext } from "react";
-import { UserContext } from "../../layout";
 import { findMilestone } from "../_utils/findMilestone";
 import { useApi } from "@/app/_hooks/useApi";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting";
@@ -14,7 +12,6 @@ export interface DateState {
 }
 
 export const useToggle = (data: IndexResponse | undefined) => {
-  const [dbUserId] = useContext(UserContext);
   const apiRequests = useApi();
   const [state, setState] = useState<State>({
     turningOver: false,
@@ -61,7 +58,6 @@ export const useToggle = (data: IndexResponse | undefined) => {
     isActive: boolean,
     date: Date | null
   ) => {
-    if (!dbUserId) return;
     setDate(prevDates => ({
       ...prevDates,
       [`${key}Date`]: isActive ? date : null,
@@ -80,7 +76,6 @@ export const useToggle = (data: IndexResponse | undefined) => {
       data: {
         startedAt: key.includes("Comp") ? startedAt : date,
         archevedAt: key.includes("Comp") ? date : archevedAt,
-        changeUser: dbUserId,
       },
     };
     const resp = await apiRequests.put<updateRequests, UpdateResponse>(

@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import { ModalButton } from "../../growth/_components/ModalButton";
-import { UserContext } from "../../layout";
 import { useDatetimeValidation } from "../_hooks/useDatetimeValidation";
 import { Action } from "../_types/action";
 import { InputDatetime } from "./InputDatetime";
@@ -15,11 +13,9 @@ export const InputAllModal: React.FC<Props> = ({
   mutate,
   setAllIsModalOpen,
 }) => {
-  const [dbUserId] = useContext(UserContext);
   const { allDatetime, errors, handleChange } = useDatetimeValidation();
   const fetcher = useApi();
   const handleSave = async () => {
-    if (!dbUserId) return;
     if (errors.sleepError !== "" || errors.wakeupError !== "") {
       return;
     }
@@ -27,8 +23,6 @@ export const InputAllModal: React.FC<Props> = ({
       bedtime: allDatetime.bedTime,
       sleep: allDatetime.sleep,
       wakeup: allDatetime.wakeup,
-      createUser: dbUserId,
-      changeUser: dbUserId,
     };
     try {
       await fetcher.post<PostRequest, PostResonse>(
