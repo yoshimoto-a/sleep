@@ -1,15 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, createContext } from "react";
+import React, { useEffect } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
-import { useGetBaby } from "./_hooks/useBaby";
-import { getLoginUser } from "@/utils/getLoginUser";
-
-export const UserContext = createContext<[number | null, number | null]>([
-  null,
-  null,
-]);
+import { useGetBaby } from "./_hooks/useGetBaby";
 
 export default function Layout({
   children,
@@ -17,61 +11,34 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
-  const { token, session, isLoding } = useSupabaseSession();
-  const [dbUserId, setDbUserId] = useState<number | null>(null);
-  const [babyId, setBabyId] = useState<number | null>(null);
-  const { data, isLoading, error: babyError } = useGetBaby();
+  const { session, isLoding } = useSupabaseSession();
+  const { data, isLoading, error } = useGetBaby();
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
     if (!isLoding && session == null) {
       router.replace("/login");
+      return;
     }
   }, [isLoding, session, router]);
 
-  //ユーザー情報の取得
+  //初回更新が未済なら設定画面へリダイレクト
   useEffect(() => {
-    if (!session || !token) return;
-    const fetcher = async () => {
-      try {
-        const { id } = await getLoginUser(token, session.user.id);
-        setDbUserId(id);
-      } catch (e) {
-        alert("ユーザー登録の取得に失敗しました");
-        router.replace("/login");
-        return;
-      }
-    };
-    fetcher();
-  }, [token, session, router, isLoding]);
-
-  // //赤ちゃんID取得して初回更新が未済ならページ遷移
-  useEffect(() => {
-    if (isLoading || !data || !("data" in data)) return;
-    if (babyError) {
-      alert("赤ちゃん情報の取得に失敗しました");
+    if (isLoading) return;
+    if (error) {
       router.replace("/login");
       return;
     }
-    setBabyId(data.data.id);
-    const fetcher = async () => {
-      try {
-        if (data.data.updated === data.data.created) {
-          router.replace("/dashboard/setting");
-          return;
-        }
-      } catch (e) {
-        alert("赤ちゃん情報の取得に失敗しました。");
-        router.replace("/login");
-        return;
-      }
-    };
-    fetcher();
-  }, [router, isLoading, data, babyError]);
+    //dataがundefindeでここまで来る挙動を確認したため「data&&」追加
+    if (data && data.data.updated === data.data.created) {
+      router.replace("/dashboard/setting");
+      return;
+    }
+  }, [isLoading, error, router, data]);
 
   return (
-    <UserContext.Provider value={[dbUserId, babyId]}>
+    <>
       {children}
       <Footer />
-    </UserContext.Provider>
+    </>
   );
 }
