@@ -2,7 +2,7 @@
 import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
 import Image from "next/image";
-import { useGetBaby } from "../../_hooks/useBaby";
+import { useGetBaby } from "../../_hooks/useGetBaby";
 
 interface Props {
   date: Date;
