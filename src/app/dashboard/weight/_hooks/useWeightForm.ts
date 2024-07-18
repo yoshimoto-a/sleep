@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { UserContext } from "../../layout";
 import { useWeightValidation } from "./useWeightValidation";
 import { useApi } from "@/app/_hooks/useApi";
 import { DelResponse } from "@/app/_types/apiRequests/dashboard/weight/DelResponse";
@@ -15,17 +13,15 @@ export const useWeightForm = (
 ) => {
   const { weight, weightError, date, handleChangeWeight, handleChangeDate } =
     useWeightValidation(initialWeight, initialDate);
-  const [dbUserId] = useContext(UserContext);
   const fetcher = useApi();
 
   const put = async () => {
     try {
-      if (!dbUserId || !weight || !date) return;
+      if (!weight || !date) return;
       const body = {
         data: {
           weight: weight,
           measurementDate: new Date(date),
-          changeUser: dbUserId,
         },
       };
       await fetcher.put<UpdateRequests, UpdateResponse>(

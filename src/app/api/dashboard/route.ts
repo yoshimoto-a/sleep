@@ -3,7 +3,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
 import { SleepChartDataGenerator } from "../_utils/SleepChartDataGenerator";
-import { getBabyId } from "../_utils/getBabyId";
+import { getUserAndBabyIds } from "../_utils/getUserAndBabyIds";
 import { findLatest } from "./sleep/_utils/findLatest";
 import { FindLatestResponse } from "./sleep/_utils/findLatest";
 import { formatRecordsWithYesterdayData } from "./sleep/_utils/formatRecordsWithYesterdayData";
@@ -13,7 +13,6 @@ import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -39,8 +38,6 @@ const FormatNotContainNull = (record: SleepingSituation) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
     //検索対象の日付を取得する
     const params = req.nextUrl.searchParams;
@@ -51,7 +48,7 @@ export const GET = async (req: NextRequest) => {
     const endOfDay = dayjs.tz(date, "Asia/Tokyo").endOf("day").toDate();
 
     //ユーザーに紐づくbabyId取得する
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
 
     //bedtime(null許容)以外すべて当日で完成したデータのみ
     const completedRecords = await prisma.sleepingSituation.findMany({
@@ -450,6 +447,9 @@ export const GET = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, message: e.message });
     }
   }

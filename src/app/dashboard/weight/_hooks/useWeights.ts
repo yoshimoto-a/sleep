@@ -1,7 +1,5 @@
-import { useContext } from "react";
 import { useState } from "react";
 import useSWR from "swr";
-import { UserContext } from "../../layout";
 import { useApi } from "@/app/_hooks/useApi";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
@@ -9,7 +7,6 @@ import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/PostRequ
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
 
 export const useWeights = () => {
-  const [dbUserId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { post } = useApi();
@@ -40,14 +37,11 @@ export const useWeights = () => {
     date: string,
     handleChangeWeight: (val: string) => void
   ) => {
-    if (!dbUserId) return;
     setIsSubmitting(true);
     const prams = {
       data: {
         weight,
         measurementDate: new Date(date),
-        createUser: dbUserId,
-        changeUser: dbUserId,
       },
     };
     try {

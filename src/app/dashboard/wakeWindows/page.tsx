@@ -1,10 +1,9 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
-import { UserContext } from "../layout";
 import { Guideline } from "./_components/guideline";
 import { useValidation } from "./_hooks/useValidation";
 import { convertToMinutes } from "./_utils/convertToMinutes";
@@ -24,7 +23,6 @@ import { WakeWindowsData } from "@/app/_types/dashboard/wakeWindowsData";
 export default function Page() {
   const { data: getData, error, isLoading, mutate } = useGetWakeWindows();
   const [data, setData] = useState<WakeWindowsData | null>(null);
-  const [dbUserId, babyId] = useContext(UserContext);
   const { token, isLoding } = useSupabaseSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,46 +71,31 @@ export default function Page() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!token || !babyId || !dbUserId) return;
+    if (!token) return;
     setIsSubmitting(true);
     const toastId = toast.loading("保存処理中...");
     try {
       if (!data) {
         const wakeWindows: PostWakeWindows[] = [
           {
-            babyId,
             type: "ALL",
             time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
-            changeUser: dbUserId,
-            createUser: dbUserId,
           },
           {
-            babyId,
             type: "MORNING",
             time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
-            changeUser: dbUserId,
-            createUser: dbUserId,
           },
           {
-            babyId,
             type: "NOON",
             time: convertToMinutes(`${afternoonHour}時間${afternoonMinutes}分`),
-            changeUser: dbUserId,
-            createUser: dbUserId,
           },
           {
-            babyId,
             type: "EVENING",
             time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
-            changeUser: dbUserId,
-            createUser: dbUserId,
           },
         ];
         const sleepPrepTime: SleepPrepTime = {
-          babyId,
           time: sinceBedtime,
-          changeUser: dbUserId,
-          createUser: dbUserId,
         };
         const prams = { wakeWindows, sleepPrepTime };
 
@@ -132,39 +115,31 @@ export default function Page() {
             case "ALL":
               wakeWindows.push({
                 id: item.id,
-                babyId,
                 type: item.type,
                 time: convertToMinutes(`${basicHour}時間${basicMinutes}分`),
-                changeUser: dbUserId,
               });
               break;
             case "MORNING":
               wakeWindows.push({
                 id: item.id,
-                babyId,
                 type: item.type,
                 time: convertToMinutes(`${morningHour}時間${morningMinutes}分`),
-                changeUser: dbUserId,
               });
               break;
             case "NOON":
               wakeWindows.push({
                 id: item.id,
-                babyId,
                 type: item.type,
                 time: convertToMinutes(
                   `${afternoonHour}時間${afternoonMinutes}分`
                 ),
-                changeUser: dbUserId,
               });
               break;
             case "EVENING":
               wakeWindows.push({
                 id: item.id,
-                babyId,
                 type: item.type,
                 time: convertToMinutes(`${eveningHour}時間${eveningMinutes}分`),
-                changeUser: dbUserId,
               });
               break;
           }
@@ -174,9 +149,7 @@ export default function Page() {
         }
         const sleepPrepTime = {
           id: data.sleepPrepTime.id,
-          babyId,
           time: sinceBedtime,
-          changeUser: dbUserId,
         };
         const prams = { wakeWindows, sleepPrepTime };
 

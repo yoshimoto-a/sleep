@@ -2,7 +2,7 @@ import { SleepingSituation } from "@prisma/client";
 import { type NextRequest } from "next/server";
 import { SleepChartDataGenerator } from "../../_utils/SleepChartDataGenerator";
 import { dayjs } from "../../_utils/dayjs";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { FindLatestResponse } from "../sleep/_utils/findLatest";
 import { getTotalSleepTime } from "../sleep/_utils/getTotalSleepTime";
 import { findLatestData } from "./_utils/findLatestData";
@@ -13,13 +13,10 @@ import {
   FormatedData,
 } from "@/app/_types/apiRequests/dashboard/sleep";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
     //検索対象の日付を取得する
     const params = req.nextUrl.searchParams;
@@ -36,7 +33,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     //ユーザーに紐づくbabyId取得する
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const endOfDay = date.endOf("day").toDate();
     const startOfRange = date.subtract(6, "day").startOf("day").toDate();
 
@@ -135,6 +132,9 @@ export const GET = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, message: e.message });
     }
   }

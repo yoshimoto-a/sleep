@@ -3,7 +3,7 @@
 import dayjs from "dayjs";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useGetBaby } from "../../_hooks/useBaby";
+import { useGetBaby } from "../../_hooks/useGetBaby";
 import { useGetNextSleepTime } from "../_hooks/useGetNextSleepTime";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 

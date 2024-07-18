@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import { useGetBaby } from "../_hooks/useBaby";
+import { useGetBaby } from "../_hooks/useGetBaby";
 import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
 import { putBaby } from "./_utils/putBaby";
 import { Input } from "@/app/_components/input";

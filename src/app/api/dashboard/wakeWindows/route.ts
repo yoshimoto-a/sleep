@@ -1,37 +1,33 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: PostRequests = await req.json();
-    const babyId = await getBabyId(token);
+    const { babyId, userId } = await getUserAndBabyIds(token);
 
     const { wakeWindows } = body;
     await prisma.wakeWindows.createMany({
       data: wakeWindows.map(record => {
-        const { time, type, createUser, changeUser, babyId } = record;
-        return { time, type, createUser, changeUser, babyId };
+        const { time, type } = record;
+        return { time, type, createUser: userId, changeUser: userId, babyId };
       }),
     });
-    const { time, createUser, changeUser } = body.sleepPrepTime;
+    const { time } = body.sleepPrepTime;
     await prisma.sleepPrepTime.create({
       data: {
         babyId,
         time,
-        createUser,
-        changeUser,
+        createUser: userId,
+        changeUser: userId,
       },
     });
     return Response.json(<PostResponse>{
@@ -40,6 +36,9 @@ export const POST = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }
@@ -48,11 +47,8 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const getWakeWindows = await prisma.wakeWindows.findMany({
       where: {
         babyId,
@@ -80,6 +76,9 @@ export const GET = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
   }
@@ -88,31 +87,30 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: UpdateRequests = await req.json();
-    const { id, time, changeUser } = body.sleepPrepTime;
+    const { id, time } = body.sleepPrepTime;
+    const { userId } = await getUserAndBabyIds(token);
+
     await prisma.sleepPrepTime.update({
       where: {
         id,
       },
       data: {
         time,
-        changeUser,
+        changeUser: userId,
       },
     });
     const { wakeWindows } = body;
     wakeWindows.map(async item => {
-      const { id, time, changeUser } = item;
+      const { id, time } = item;
       await prisma.wakeWindows.update({
         where: {
           id,
         },
         data: {
           time,
-          changeUser,
+          changeUser: userId,
         },
       });
     });
@@ -123,6 +121,9 @@ export const PUT = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }

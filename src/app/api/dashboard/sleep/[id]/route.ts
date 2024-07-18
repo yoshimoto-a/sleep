@@ -1,4 +1,5 @@
 import { type NextRequest } from "next/server";
+import { getUserAndBabyIds } from "../../../_utils/getUserAndBabyIds";
 import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
@@ -9,12 +10,12 @@ export const PUT = async (
 ) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) Response.json({ status: 401, message: "Unauthorized" });
+
   try {
+    const { userId } = await getUserAndBabyIds(token);
     const id = params.id;
     const body = await req.json();
-    const { bedtime, sleep, wakeup, changeUser } = body;
+    const { bedtime, sleep, wakeup } = body;
 
     await prisma.sleepingSituation.update({
       where: {
@@ -24,7 +25,7 @@ export const PUT = async (
         bedTime: ChangeTimeZone(bedtime),
         sleep: ChangeTimeZone(sleep),
         wakeup: ChangeTimeZone(wakeup),
-        changeUser,
+        changeUser: userId,
       },
     });
 
@@ -54,7 +55,10 @@ export const PUT = async (
     });
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json({ status: 400, message: e.message });
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
+      return Response.json({ status: 400, error: e.message });
     }
   }
 };
@@ -69,7 +73,6 @@ export const DELETE = async (
   if (error) return Response.json({ status: 401, message: "Unauthorized" });
   try {
     const id = params.id;
-
     await prisma.sleepingSituation.delete({
       where: {
         id: parseInt(id),

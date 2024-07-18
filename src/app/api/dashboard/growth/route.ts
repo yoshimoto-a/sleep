@@ -1,20 +1,16 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateRequest";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId } = await getUserAndBabyIds(token);
     const getGrowth = await prisma.growth.findMany({
       where: {
         babyId,
@@ -34,6 +30,9 @@ export const GET = async (req: NextRequest) => {
     }
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<IndexResponse>{ status: 400, error: e.message });
     }
   }
@@ -42,13 +41,11 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
   try {
     const body: updateRequests = await req.json();
     const { id } = body;
-    const { startedAt, archevedAt, changeUser } = body.data;
+    const { userId } = await getUserAndBabyIds(token);
+    const { startedAt, archevedAt } = body.data;
     await prisma.growth.update({
       where: {
         id,
@@ -56,7 +53,7 @@ export const PUT = async (req: NextRequest) => {
       data: {
         startedAt,
         archevedAt,
-        changeUser,
+        changeUser: userId,
       },
     });
     return Response.json(<PostResponse>{
@@ -65,6 +62,9 @@ export const PUT = async (req: NextRequest) => {
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }

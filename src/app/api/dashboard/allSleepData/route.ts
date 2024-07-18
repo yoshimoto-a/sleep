@@ -1,32 +1,32 @@
 import { type NextRequest } from "next/server";
-import { getBabyId } from "../../_utils/getBabyId";
+import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { PostRequest } from "@/app/_types/apiRequests/dashboard/allSleepData/postRequest";
 import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
-import { supabase } from "@/utils/supabase";
 
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error) Response.json({ status: 401, message: "Unauthorized" });
   try {
-    const babyId = await getBabyId(token);
+    const { babyId, userId } = await getUserAndBabyIds(token);
     const body: PostRequest = await req.json();
-    const { bedtime, sleep, wakeup, createUser, changeUser } = body;
+    const { bedtime, sleep, wakeup } = body;
     const resp = await prisma.sleepingSituation.create({
       data: {
         babyId,
         bedTime: ChangeTimeZone(bedtime),
         sleep: ChangeTimeZone(sleep),
         wakeup: ChangeTimeZone(wakeup),
-        createUser,
-        changeUser,
+        createUser: userId,
+        changeUser: userId,
       },
     });
     return Response.json({ status: 200, id: resp.id });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json({ status: 400, error: e.message });
     }
   }
