@@ -7,8 +7,6 @@ export interface Growth {
   milestone: Milestone;
   startedAt: Date;
   archevedAt: Date;
-  createUser: number;
-  changeUser: number;
 }
 export interface PostRequests extends ApiRequest {
   body: {
