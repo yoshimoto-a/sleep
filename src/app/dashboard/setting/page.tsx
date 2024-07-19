@@ -3,11 +3,11 @@
 
 import { Gender } from "@prisma/client";
 import React from "react";
+import { FormSection } from "./_components/FormSection";
 import { useBaby } from "./_hooks/useBaby";
-import { Input } from "@/app/_components/input";
 import { InputRadio } from "@/app/_components/inputRadio";
 import { IsLoading } from "@/app/_components/isLoading";
-import { Label } from "@/app/_components/label";
+import { SubmitButton } from "@/app/_components/submitButton";
 export default function Page() {
   const {
     isSubmitting,
@@ -24,6 +24,7 @@ export default function Page() {
     setBirthWeight,
     gender,
     setGender,
+    errors,
   } = useBaby();
 
   if (isLoading) return <IsLoading />;
@@ -31,59 +32,57 @@ export default function Page() {
 
   return (
     <>
-      <div className="absolute inset-0 flex items-center justify-center">
+      <h1 className="text-center text-3xl font-bold my-6">設定</h1>
+      <div className="flex items-center justify-center">
         <form
           onSubmit={handleSubmit}
           className="bg-custom-gray shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          <Label text="ニックネーム" htmlFor="babyName" />
-          <div className="mb-4">
-            <Input
-              id="babyName"
-              type="text"
-              value={babyName}
-              placeholder=""
-              inputMode="text"
-              disabled={isSubmitting}
-              onChange={value => setBabyName(value)}
-            />
-          </div>
-          <Label text="生年月日" htmlFor="birthday" />
-          <div className="mb-4">
-            <Input
-              id="birthday"
-              type="date"
-              value={birthday}
-              placeholder=""
-              inputMode="numeric"
-              disabled={isSubmitting}
-              onChange={value => setBirthday(value)}
-            />
-          </div>
-          <Label text="出産予定日" htmlFor="expectedDateOfBirth" />
-          <div className="mb-4">
-            <Input
-              id="expectedDateOfBirth"
-              type="date"
-              value={expectedDateOfBirth}
-              placeholder=""
-              inputMode="numeric"
-              disabled={isSubmitting}
-              onChange={value => setExpectedDateOfBirth(value)}
-            />
-          </div>
-          <Label text="出生体重" htmlFor="birthWeight" />
-          <div className="mb-4">
-            <Input
-              id="birthWeight"
-              type="text"
-              value={birthWeight}
-              placeholder=""
-              inputMode="numeric"
-              disabled={isSubmitting}
-              onChange={value => setBirthWeight(value)}
-            />
-          </div>
+          <FormSection
+            label="ニックネーム"
+            id="babyName"
+            disabled={isSubmitting}
+            inputMode="text"
+            onChange={value => setBabyName(value)}
+            placeholder=""
+            type="text"
+            value={babyName}
+            error={errors.babyName}
+          />
+
+          <FormSection
+            label="生年月日"
+            id="birthday"
+            disabled={isSubmitting}
+            inputMode="numeric"
+            onChange={value => setBirthday(value)}
+            placeholder=""
+            type="date"
+            value={birthday}
+            error={errors.birthday}
+          />
+          <FormSection
+            label="出産予定日"
+            id="expectedDateOfBirth"
+            disabled={isSubmitting}
+            inputMode="numeric"
+            onChange={value => setExpectedDateOfBirth(value)}
+            placeholder=""
+            type="date"
+            value={expectedDateOfBirth}
+            error={errors.expectedDateOfBirth}
+          />
+          <FormSection
+            label="出生体重"
+            id="birthWeight"
+            disabled={isSubmitting}
+            inputMode="numeric"
+            onChange={value => setBirthWeight(value)}
+            placeholder=""
+            type="text"
+            value={birthWeight}
+            error={errors.birthWeight}
+          />
           <div className="mb-6">
             <InputRadio
               id="boy"
@@ -101,16 +100,11 @@ export default function Page() {
               checkedValue={gender}
               onChange={() => setGender(Gender.GIRL)}
             />
+            {errors.gender && (
+              <div className="text-red-500">{errors.gender}</div>
+            )}
           </div>
-          <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              保存
-            </button>
-          </div>
+          <SubmitButton disabled={isSubmitting}>保存</SubmitButton>
         </form>
       </div>
     </>
