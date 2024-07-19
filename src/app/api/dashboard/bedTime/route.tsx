@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/bedTime/Postequests";
 import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 
@@ -8,11 +9,11 @@ export const POST = async (req: NextRequest) => {
   const token = req.headers.get("Authorization") ?? "";
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
-    const body = await req.json();
+    const body: PostRequests = await req.json();
     const { bedTime: time } = body;
     const bedTime = ChangeTimeZone(time);
     //登録出来ないパターンが存在しないか確認する
-    //wakeupがmull
+    //wakeupがnull
     const records = await prisma.sleepingSituation.findMany({
       where: {
         babyId,
@@ -22,7 +23,8 @@ export const POST = async (req: NextRequest) => {
     if (records.length !== 0) {
       return Response.json({
         status: 400,
-        message: "There is incomplete data",
+        message:
+          "寝た～起きたまで完成していないデータがあります。過去データの場合は一括登録をご使用ください。",
       });
     }
     //レコードを登録する

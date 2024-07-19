@@ -1,9 +1,9 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../../_utils/getUserAndBabyIds";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/sleep/updateRequest";
 import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
-
 export const PUT = async (
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -14,7 +14,7 @@ export const PUT = async (
   try {
     const { userId } = await getUserAndBabyIds(token);
     const id = params.id;
-    const body = await req.json();
+    const body: UpdateRequests = await req.json();
     const { bedtime, sleep, wakeup } = body;
 
     await prisma.sleepingSituation.update({

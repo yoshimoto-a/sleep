@@ -2,12 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
 
 export const POST = async (req: NextRequest) => {
   const token = req.headers.get("Authorization") ?? "";
 
   try {
-    const body = await req.json();
+    const body: PostRequests = await req.json();
     const { babyId } = await getUserAndBabyIds(token);
     const { email } = body;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

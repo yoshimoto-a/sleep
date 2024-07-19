@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
 import { buildPrisma } from "@/utils/prisema";
 
 export const GET = async (req: NextRequest) => {
@@ -51,7 +52,7 @@ export const PUT = async (req: NextRequest) => {
 
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
-    const body = await req.json();
+    const body: UpdateRequests = await req.json();
     const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
       body.data;
     await prisma.baby.update({

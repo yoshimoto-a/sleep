@@ -1,6 +1,8 @@
 import { type NextRequest } from "next/server";
+import { getUserAndBabyIds } from "../../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
+import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/weight/UpdateRequest";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 
@@ -10,14 +12,12 @@ export const PUT = async (
 ) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
-  const { error } = await supabase.auth.getUser(token);
-  if (error)
-    return Response.json(<ApiResponse>{ status: 401, message: "Unauthorized" });
 
   try {
-    const body = await req.json();
+    const { userId } = await getUserAndBabyIds(token);
+    const body: UpdateRequests = await req.json();
     const id = params.id;
-    const { measurementDate, weight, changeUser } = body.data;
+    const { measurementDate, weight } = body;
     await prisma.weight.update({
       where: {
         id: parseInt(id),
@@ -25,7 +25,7 @@ export const PUT = async (
       data: {
         measurementDate,
         weight,
-        changeUser,
+        changeUser: userId,
       },
     });
     return Response.json(<ApiResponse>{
@@ -34,6 +34,9 @@ export const PUT = async (
     });
   } catch (e) {
     if (e instanceof Error) {
+      if (e.message.includes("Unauthorized")) {
+        return Response.json({ status: 401, error: e.message });
+      }
       return Response.json(<ApiResponse>{ status: 400, message: e.message });
     }
   }
