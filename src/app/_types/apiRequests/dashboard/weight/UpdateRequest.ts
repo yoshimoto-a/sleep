@@ -1,8 +1,5 @@
 //体重テーブル
-export interface Weight {
+export interface UpdateRequests {
   weight: number;
   measurementDate: Date;
-}
-export interface UpdateRequests {
-  data: Weight;
 }

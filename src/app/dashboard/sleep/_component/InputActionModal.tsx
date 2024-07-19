@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Action } from "../_types/action";
 import { checkType } from "../_utils/checkType";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { PostResponse } from "@/app/_types/apiRequests/dashboard/sleep/postResponse";
+import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 
 interface Props {
   mutate: any;
@@ -38,7 +38,7 @@ export const InputAcionModal: React.FC<Props> = ({
         [action]: datetimeState,
       }),
     });
-    const data: PostResponse = await resp.json();
+    const data: ApiResponse = await resp.json();
     data.status !== 200
       ? alert(`登録できませんでした。${data.message}`)
       : mutate();

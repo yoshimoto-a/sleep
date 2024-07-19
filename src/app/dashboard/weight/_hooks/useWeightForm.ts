@@ -19,10 +19,8 @@ export const useWeightForm = (
     try {
       if (!weight || !date) return;
       const body = {
-        data: {
-          weight: weight,
-          measurementDate: new Date(date),
-        },
+        weight: weight,
+        measurementDate: new Date(date),
       };
       await fetcher.put<UpdateRequests, UpdateResponse>(
         `/api/dashboard/weight/${id}`,

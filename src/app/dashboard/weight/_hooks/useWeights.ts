@@ -39,10 +39,8 @@ export const useWeights = () => {
   ) => {
     setIsSubmitting(true);
     const prams = {
-      data: {
-        weight,
-        measurementDate: new Date(date),
-      },
+      weight,
+      measurementDate: new Date(date),
     };
     try {
       await post<PostRequests, PostResponse>("/api/dashboard/weight", prams);

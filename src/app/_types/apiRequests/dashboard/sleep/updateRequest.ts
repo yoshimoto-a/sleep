@@ -1,5 +1,5 @@
 export interface UpdateRequests {
-  bedtime: Date | null | undefined;
-  sleep: Date | null | undefined;
-  wakeup: Date | null | undefined;
+  bedtime: Date | null;
+  sleep: Date | null;
+  wakeup: Date | null;
 }

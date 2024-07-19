@@ -7,7 +7,6 @@ import { Input } from "@/app/_components/input";
 import { IsLoading } from "@/app/_components/isLoading";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-import { PostRequests } from "@/app/_types/apiRequests/dashboard/subSignup/postRequest";
 
 export default function Page() {
   const router = useRouter();
@@ -21,21 +20,16 @@ export default function Page() {
     if (!token) return;
 
     setIsSubmitting(true);
-    const prams: PostRequests = {
+    const prams = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: {
-        email,
-      },
+      body: JSON.stringify({ email }),
     };
     try {
-      const resp = await fetch("/api/dashboard/subSignup", {
-        ...prams,
-        body: JSON.stringify(prams.body),
-      });
+      const resp = await fetch("/api/dashboard/subSignup", prams);
       const data: ApiResponse = await resp.json();
       if (data.status === 200) {
         setEmail("");
@@ -77,6 +71,7 @@ export default function Page() {
             <button
               className="rounded-full w-32 bg-blue-500 text-white py-2"
               type="submit"
+              disabled={isSubmitting}
             >
               送信
             </button>

@@ -3,16 +3,16 @@ import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { formatGraphData } from "./_utils/formatGraphData";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { IndexResponse } from "@/app/_types/apiRequests/dashboard/weight/Index";
+import { PostRequests } from "@/app/_types/apiRequests/dashboard/weight/PostRequest";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/weight/PostResponse";
 import { buildPrisma } from "@/utils/prisema";
-
 export const POST = async (req: NextRequest) => {
   const prisma = await buildPrisma();
   const token = req.headers.get("Authorization") ?? "";
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
-    const body = await req.json();
-    const { measurementDate, weight } = body.data;
+    const body: PostRequests = await req.json();
+    const { measurementDate, weight } = body;
     const resp = await prisma.weight.create({
       data: {
         babyId,

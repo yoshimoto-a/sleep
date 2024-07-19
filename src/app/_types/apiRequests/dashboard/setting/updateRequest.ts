@@ -2,17 +2,12 @@ import { Gender } from "@prisma/client";
 import { ApiRequest } from "../../apiRequest";
 
 /**現在の月齢を表示*/
-export interface Baby {
-  name: String;
+export interface UpdateRequests {
+  name: string;
   birthday: Date;
   expectedDateOfBirth: Date;
   birthWeight: number;
   gender: Gender;
-}
-export interface UpdateRequests extends ApiRequest {
-  body: {
-    data: Baby;
-  };
 }
 
 /**赤ちゃん初回登録時に赤ちゃんIDを登録するためUserテーブル更新 */
