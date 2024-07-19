@@ -1,5 +1,3 @@
-import { ApiRequest } from "../../apiRequest";
-
-export interface PostRequests extends ApiRequest {
-  body: { email: string };
+export interface PostRequests {
+  email: string;
 }

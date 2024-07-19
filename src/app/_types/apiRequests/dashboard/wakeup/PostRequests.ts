@@ -1,3 +1,3 @@
 export interface PostRequests {
-  sleep: Date;
+  wakeup: Date;
 }
