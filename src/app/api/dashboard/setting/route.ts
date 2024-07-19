@@ -53,8 +53,7 @@ export const PUT = async (req: NextRequest) => {
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
     const body: UpdateRequests = await req.json();
-    const { name, birthday, expectedDateOfBirth, birthWeight, gender } =
-      body.data;
+    const { name, birthday, expectedDateOfBirth, birthWeight, gender } = body;
     await prisma.baby.update({
       where: {
         id: babyId,
@@ -67,7 +66,6 @@ export const PUT = async (req: NextRequest) => {
         gender,
       },
     });
-
     //体重データがない場合は出生体重をweightに登録する
     const getWeigth = await prisma.weight.findMany({
       where: {

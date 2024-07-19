@@ -2,76 +2,33 @@
 "use client";
 
 import { Gender } from "@prisma/client";
-import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 import React from "react";
-import { useState, useEffect } from "react";
-import { useGetBaby } from "../_hooks/useGetBaby";
-import { useGetWakeWindows } from "../_hooks/useGetWakeWindows";
-import { putBaby } from "./_utils/putBaby";
+import { useBaby } from "./_hooks/useBaby";
 import { Input } from "@/app/_components/input";
 import { InputRadio } from "@/app/_components/inputRadio";
 import { IsLoading } from "@/app/_components/isLoading";
 import { Label } from "@/app/_components/label";
-import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
-import { Baby } from "@/app/_types/apiRequests/dashboard/setting/updateRequest";
-
 export default function Page() {
-  const { token, isLoding } = useSupabaseSession();
-  const { data, isLoading, error } = useGetBaby();
-  const [babyName, setBabyName] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [expectedDateOfBirth, setExpectedDateOfBirth] = useState("");
-  const [birthWeight, setBirthWeight] = useState("");
-  const [gender, setGender] = useState<Gender | "">("");
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
-    data: wakeWindowsData,
-    isLoading: isWakeWindowsLoading,
-    error: wakeWindowsError,
-  } = useGetWakeWindows();
-  //初期設定
-  useEffect(() => {
-    if (data && "data" in data) {
-      const { data: babyData } = data;
-      setBabyName(babyData.name);
-      setBirthWeight(babyData.birthWeight.toString());
-      setBirthday(dayjs(babyData.birthday).format("YYYY-MM-DD"));
-      setExpectedDateOfBirth(
-        String(dayjs(babyData.expectedDateOfBirth).format("YYYY-MM-DD"))
-      );
-      setGender(babyData.gender);
-    }
-  }, [isLoding, data]);
+    isSubmitting,
+    isLoading,
+    error,
+    handleSubmit,
+    babyName,
+    setBabyName,
+    birthday,
+    setBirthday,
+    expectedDateOfBirth,
+    setExpectedDateOfBirth,
+    birthWeight,
+    setBirthWeight,
+    gender,
+    setGender,
+  } = useBaby();
 
   if (isLoading) return <IsLoading />;
   if (error) return <div>エラー発生</div>;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    if (token && gender) {
-      try {
-        const body: Baby = {
-          name: babyName,
-          birthday: dayjs(birthday).toDate(),
-          expectedDateOfBirth: dayjs(expectedDateOfBirth).toDate(),
-          birthWeight: parseInt(birthWeight),
-          gender,
-        };
-        await putBaby(token, body);
-        if (wakeWindowsError?.status === 204) {
-          router.replace("/dashboard/wakeWindows");
-        } else {
-          router.replace("/dashboard/sleep/");
-        }
-      } catch (e) {
-        alert("更新に失敗しました");
-      }
-    }
-    setIsSubmitting(false);
-  };
   return (
     <>
       <div className="absolute inset-0 flex items-center justify-center">
