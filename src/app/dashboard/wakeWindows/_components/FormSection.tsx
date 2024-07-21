@@ -1,5 +1,5 @@
 import { UseFormRegister, FieldErrors } from "react-hook-form";
-import { Input } from "./Input";
+import { HookFormInput } from "@/app/_components/HookFormInput";
 import { Label } from "@/app/_components/Label";
 
 interface Props {
@@ -24,8 +24,8 @@ export const FormSection: React.FC<Props> = ({
     <div className="flex-1">
       <Label text={label} />
       <div className="flex gap-1">
-        <Input
-          id={idHour}
+        <HookFormInput
+          name={idHour}
           type="text"
           placeholder="時間"
           inputMode="numeric"
@@ -35,8 +35,8 @@ export const FormSection: React.FC<Props> = ({
           }}
           register={register}
         />
-        <Input
-          id={idMinute}
+        <HookFormInput
+          name={idMinute}
           type="text"
           placeholder="分"
           inputMode="numeric"

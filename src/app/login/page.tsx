@@ -3,10 +3,10 @@
 import Link from "next/link";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import { HookFormInput } from "../_components/HookFormInput";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
-import { Input } from "./_components/Input";
 import { useLoginForm } from "./_hooks/useLoginForm";
 import { SubmitButton } from "@/app/_components/submitButton";
 
@@ -20,7 +20,7 @@ export default function Page() {
         <Toaster position="top-center" />
       </div>
       <Form handleSubmit={handleSubmit}>
-        <Input
+        <HookFormInput
           name="email"
           type="text"
           placeholder="メールアドレス"
@@ -37,7 +37,7 @@ export default function Page() {
           register={register}
           errors={errors}
         />
-        <Input
+        <HookFormInput
           name="password"
           type="password"
           placeholder="パスワード"

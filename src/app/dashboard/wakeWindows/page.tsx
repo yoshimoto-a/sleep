@@ -3,9 +3,9 @@
 import { Toaster } from "react-hot-toast";
 import { CautionaryNote } from "./_components/CautionaryNote";
 import { FormSection } from "./_components/FormSection";
-import { Input } from "./_components/Input";
 import { Guideline } from "./_components/guideline";
 import { useWakeWindows } from "./_hooks/useWakeWindows";
+import { HookFormInput } from "@/app/_components/HookFormInput";
 import { Label } from "@/app/_components/Label";
 import { SubmitButton } from "@/app/_components/submitButton";
 
@@ -47,8 +47,8 @@ export default function Page() {
             />
             <div className="flex-1">
               <Label text="寝かしつけ開始(分前)" />
-              <Input
-                id="sinceBedtime"
+              <HookFormInput
+                name="sinceBedtime"
                 type="number"
                 placeholder="分前"
                 inputMode="numeric"
