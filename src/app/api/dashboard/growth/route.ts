@@ -3,7 +3,6 @@ import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateRequest";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { buildPrisma } from "@/utils/prisema";
 
 export const GET = async (req: NextRequest) => {
@@ -23,7 +22,7 @@ export const GET = async (req: NextRequest) => {
         data: getGrowth,
       });
     } else {
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 404,
         error: "Requested record not found",
       });
@@ -33,7 +32,7 @@ export const GET = async (req: NextRequest) => {
       if (e.message.includes("Unauthorized")) {
         return Response.json({ status: 401, error: e.message });
       }
-      return Response.json(<IndexResponse>{ status: 400, error: e.message });
+      return Response.json({ status: 400, error: e.message });
     }
   }
 };
