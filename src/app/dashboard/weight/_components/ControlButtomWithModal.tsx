@@ -2,8 +2,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { useWeightForm } from "../_hooks/useWeightForm";
 import { Button } from "./Button";
+import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/input";
-import { Label } from "@/app/_components/label";
 import { CustomModal } from "@/app/_components/modal";
 import { Weight } from "@/app/_types/apiRequests/dashboard/weight/Index";
 

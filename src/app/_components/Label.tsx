@@ -1,7 +1,7 @@
 import React from "react";
 
 interface Props {
-  htmlFor: string;
+  htmlFor?: string;
   text: string;
 }
 

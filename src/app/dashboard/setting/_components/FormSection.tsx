@@ -1,5 +1,5 @@
+import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/input";
-import { Label } from "@/app/_components/label";
 
 type InputType = "text" | "date" | "gender";
 
