@@ -16,20 +16,21 @@ interface Props {
   validation: RegisterOptions;
   name: string;
   inputMode: InputMode;
-  register: UseFormRegister<any>;
-  errors: FieldErrors;
-  isSubmitting: boolean;
+  register?: UseFormRegister<any>;
+  errors?: FieldErrors;
+  isSubmitting?: boolean;
 }
-export const Input: React.FC<Props> = ({
+export const HookFormInput: React.FC<Props> = ({
   type,
   placeholder,
   validation,
   name,
   register,
   isSubmitting,
+  inputMode,
   errors,
 }) => {
-  const errorMessage = errors[name]?.message;
+  const errorMessage = errors?.[name]?.message;
   return (
     <div className="mb-4">
       <input
@@ -37,10 +38,11 @@ export const Input: React.FC<Props> = ({
         id={name}
         type={type}
         placeholder={placeholder}
+        inputMode={inputMode}
         disabled={isSubmitting}
-        {...register(name, validation)}
+        {...(register ? register(name, validation) : {})}
       />
-      {errors[name] && typeof errorMessage === "string" && (
+      {errors && errors[name] && typeof errorMessage === "string" && (
         <p className="mb-2 text-sm text-red-500">{errorMessage}</p>
       )}
     </div>
