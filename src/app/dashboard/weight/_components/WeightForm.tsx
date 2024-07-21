@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { useWeightValidation } from "../_hooks/useWeightValidation";
 import { Button } from "./Button";
+import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/input";
-import { Label } from "@/app/_components/label";
 
 interface Props {
   isSubmitting: boolean;

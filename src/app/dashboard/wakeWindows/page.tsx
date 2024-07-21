@@ -6,7 +6,7 @@ import { FormSection } from "./_components/FormSection";
 import { Input } from "./_components/Input";
 import { Guideline } from "./_components/guideline";
 import { useWakeWindows } from "./_hooks/useWakeWindows";
-import { Label } from "@/app/_components/label";
+import { Label } from "@/app/_components/Label";
 import { SubmitButton } from "@/app/_components/submitButton";
 
 export default function Page() {
