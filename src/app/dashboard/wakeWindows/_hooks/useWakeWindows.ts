@@ -183,7 +183,7 @@ export const useWakeWindows = () => {
         }
         const sleepPrepTime = {
           id: data.sleepPrepTime.id,
-          time: inputData.sinceBedtime,
+          time: Number(inputData.sinceBedtime),
         };
         const prams = { wakeWindows, sleepPrepTime };
         await fetcher.put<UpdateRequests, ApiResponse>(
