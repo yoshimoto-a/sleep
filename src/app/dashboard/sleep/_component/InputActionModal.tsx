@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { useState } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { Action } from "../_types/action";
 import { checkType } from "../_utils/checkType";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
