@@ -1,7 +1,7 @@
 "use client";
-import dayjs from "dayjs";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { ModalButton } from "../../growth/_components/ModalButton";
 import { useGetDataById } from "../_hooks/useGetDataById";
 import { useApi } from "@/app/_hooks/useApi";

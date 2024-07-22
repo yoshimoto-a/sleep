@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { dayjs } from "../../../../utils/dayjs";
 import { Action } from "../_types/action";
 interface Props {
   id: Action;
