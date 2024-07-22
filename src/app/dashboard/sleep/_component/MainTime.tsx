@@ -28,7 +28,7 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
   }, [SleepingSituationData, mutate]);
 
   useEffect(() => {
-    if (data && "data" in data) {
+    if (data) {
       setElapsedTime(data.data);
     }
   }, [data]);
@@ -65,7 +65,6 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
     if (elapsedTime !== "即時") return;
     if (
       babyData &&
-      "data" in babyData &&
       Math.floor(dayjs().diff(dayjs(babyData.data.birthday), "month")) <= 5
     )
       return;
