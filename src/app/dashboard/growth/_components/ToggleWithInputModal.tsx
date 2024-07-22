@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import React from "react";
 import { useState } from "react";
-import { InputDate } from "./InputDate";
 import { Toggle } from "./Toggle";
+import { InputDate } from "./inputDate";
 import { CustomModal } from "@/app/_components/modal";
 
 interface Props {
