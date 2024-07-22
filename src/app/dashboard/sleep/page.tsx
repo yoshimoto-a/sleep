@@ -1,35 +1,28 @@
 "use client";
 
-import dayjs from "dayjs";
-import { useState } from "react";
 import { Footer } from "../_components/footer";
+import { ButtonArea } from "./_component/ButtonArea";
 import { Chart } from "./_component/Chart";
+import { ElapsedTime } from "./_component/ElapsedTime";
+import { Header } from "./_component/Header";
+import { MainTime } from "./_component/MainTime";
+import { ShowData } from "./_component/ShowData";
 import { TotalSleepTime } from "./_component/TotalSleepTime";
-import { ButtonArea } from "./_component/buttonArea";
-import { ElapsedTime } from "./_component/elapsedTime";
-import { Header } from "./_component/header";
-import { MainTime } from "./_component/mainTime";
-import { ShowData } from "./_component/showData";
-import { useGetData } from "./_hooks/useGetData";
+import { useSleepDashBoard } from "./_hooks/useSleepDashboard";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Page() {
-  const [date, setDate] = useState(new Date());
-  const { isLoading, data, error, mutate } = useGetData(date);
+  const { isLoading, data, error, mutate, handleNext, handlePrev, date } =
+    useSleepDashBoard();
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
-  const handlePrev = () => {
-    setDate(dayjs(date).add(-1, "d").toDate());
-  };
-  const handleNext = () => {
-    setDate(dayjs(date).add(1, "d").toDate());
-  };
+
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
       <div className="flex justify-between mx-5 my-5">
         <MainTime SleepingSituationData={data} />
-        <ElapsedTime data={data} />
+        <ElapsedTime data={data?.latestData} />
       </div>
       <div className="grid grid-cols-10 mx-1">
         <div className="col-span-3 flex flex-col items-center">
