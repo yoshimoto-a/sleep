@@ -1,7 +1,5 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
+import { dayjs } from "../../../utils/dayjs";
 import { SleepChartDataGenerator } from "../_utils/SleepChartDataGenerator";
 import { getUserAndBabyIds } from "../_utils/getUserAndBabyIds";
 import { findLatest } from "./sleep/_utils/findLatest";
@@ -14,9 +12,6 @@ import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { buildPrisma } from "@/utils/prisema";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Tokyo");
 const FormatContainNull = (record: SleepingSituation) => {
   return {
     id: record.id,

@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { useState } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 
 export const useWeeklyNavigation = () => {
   const [date, setDate] = useState(new Date());

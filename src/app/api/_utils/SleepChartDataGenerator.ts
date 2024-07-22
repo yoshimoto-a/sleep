@@ -1,4 +1,4 @@
-import { dayjs } from "../_utils/dayjs";
+import { dayjs } from "../../../utils/dayjs";
 import { FindLatestResponse } from "../dashboard/sleep/_utils/findLatest";
 import { isToday } from "../dashboard/sleep/_utils/isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";

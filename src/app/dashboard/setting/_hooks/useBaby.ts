@@ -1,9 +1,9 @@
 "use client";
 
 import { Gender } from "@prisma/client";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { useGetBaby } from "../../_hooks/useGetBaby";
 import { useGetWakeWindows } from "../../_hooks/useGetWakeWindows";
 import { useValidation } from "./useValidation";

@@ -2,16 +2,11 @@ import { Growth } from "@prisma/client";
 import { WakeWindows } from "@prisma/client";
 import { Baby } from "@prisma/client";
 import { SleepingSituation } from "@prisma/client";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { dayjs } from "../../../../../utils/dayjs";
 import { applyWakeWindows } from "./applyWakeWindows";
 import { shortening } from "./shortening";
 import { timeZone } from "./timeZone";
 import { wakeWindowsShortening } from "./wakeWindowsShortening";
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Tokyo");
 
 export const calculate = (
   practicing: Growth[],

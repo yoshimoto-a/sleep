@@ -1,15 +1,9 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
+import { dayjs } from "../../../../../utils/dayjs";
 import { isToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Tokyo");
 
 const createNewData = (
   id: number,

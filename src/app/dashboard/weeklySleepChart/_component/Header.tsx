@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import Image from "next/image";
+import { dayjs } from "../../../../utils/dayjs";
 interface Props {
   date: Date;
   onClickPrev: () => void;
