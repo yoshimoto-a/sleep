@@ -1,7 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/sleep/postRequest";
-import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 
 export const POST = async (req: NextRequest) => {
@@ -10,8 +9,7 @@ export const POST = async (req: NextRequest) => {
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
     const body: PostRequests = await req.json();
-    const { sleep: time } = body;
-    const sleep = ChangeTimeZone(time);
+    const { sleep } = body;
     //登録出来ないパターンが存在しないか確認する
     //パターン①連続して寝たボタン押した場合(wakeupはnullで、①bedtimeがnot null且つsleepもnot null②bedtimeがnull且つsleep はnot null)
     //パターン①-①

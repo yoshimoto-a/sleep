@@ -1,7 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeup/PostRequests";
-import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 
 export const POST = async (req: NextRequest) => {
@@ -10,8 +9,7 @@ export const POST = async (req: NextRequest) => {
   try {
     const { babyId, userId } = await getUserAndBabyIds(token);
     const body: PostRequests = await req.json();
-    const { wakeup: time } = body;
-    const wakeup = ChangeTimeZone(time);
+    const { wakeup } = body;
     //登録出来ないパターンが存在しないか確認する
     //sleepがnullのレコードが存在する場合
     const badRecords = await prisma.sleepingSituation.findMany({

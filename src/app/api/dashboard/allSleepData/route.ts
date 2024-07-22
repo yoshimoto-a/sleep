@@ -1,7 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { PostRequest } from "@/app/_types/apiRequests/dashboard/allSleepData/postRequest";
-import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 
 export const POST = async (req: NextRequest) => {
@@ -14,9 +13,9 @@ export const POST = async (req: NextRequest) => {
     const resp = await prisma.sleepingSituation.create({
       data: {
         babyId,
-        bedTime: ChangeTimeZone(bedtime),
-        sleep: ChangeTimeZone(sleep),
-        wakeup: ChangeTimeZone(wakeup),
+        bedTime: bedtime,
+        sleep: sleep,
+        wakeup: wakeup,
         createUser: userId,
         changeUser: userId,
       },
