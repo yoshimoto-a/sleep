@@ -92,7 +92,7 @@ export interface IndexErrorResponse {
 export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
 
 export interface SleepingSituationResponse {
-  status: number;
+  status: 200;
   message: string;
   data: FormatedData[];
   latestData: FindLatestResponse;
