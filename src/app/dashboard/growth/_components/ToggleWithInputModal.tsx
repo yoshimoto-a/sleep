@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import React from "react";
+import { useState } from "react";
 import { InputDate } from "./InputDate";
 import { Toggle } from "./Toggle";
 import { CustomModal } from "@/app/_components/modal";
@@ -8,7 +9,7 @@ interface Props {
   isChecked: boolean;
   onChange: () => void;
   onUpdate: (key: string, isActive: boolean, date: Date) => void;
-  date: Date | null | undefined;
+  date: Date | null;
   value: string;
 }
 export const ToggleWithInputModal: React.FC<Props> = ({
@@ -18,7 +19,7 @@ export const ToggleWithInputModal: React.FC<Props> = ({
   date,
   value,
 }) => {
-  const [openModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div className="w-1/3 text-center">
       <Toggle
