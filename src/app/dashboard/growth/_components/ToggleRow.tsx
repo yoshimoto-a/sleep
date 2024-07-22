@@ -28,8 +28,8 @@ export const ToggleRow: React.FC<Props> = ({
   compValue,
 }) => {
   return (
-    <div className="flex justify-between items-center gap-4 h-[60px]">
-      <div className="w-1/4 text-center">{label}</div>
+    <div className="flex justify-between items-center h-[60px]">
+      <div className="w-1/3 text-center">{label}</div>
       <ToggleWithInputModal
         isChecked={isCheckedStart}
         onChange={onChangeStart}

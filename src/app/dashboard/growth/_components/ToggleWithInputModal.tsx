@@ -20,7 +20,7 @@ export const ToggleWithInputModal: React.FC<Props> = ({
 }) => {
   const [openModal, setOpenModal] = React.useState(false);
   return (
-    <div className="w-1/4 text-center">
+    <div className="w-1/3 text-center">
       <Toggle
         isChecked={isChecked}
         handleChange={onChange}
