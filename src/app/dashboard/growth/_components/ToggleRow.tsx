@@ -5,12 +5,12 @@ interface Props {
   isCheckedStart: boolean;
   onChangeStart: () => void;
   onUpdateStart: (key: string, isActive: boolean, date: Date) => void;
-  startDate: Date | null | undefined;
+  startDate: Date | null;
   startValue: string;
   isCheckedComp: boolean;
   onChangeComp: () => void;
   onUpdateComp: (key: string, isActive: boolean, date: Date) => void;
-  compDate: Date | null | undefined;
+  compDate: Date | null;
   compValue: string;
 }
 
