@@ -5,12 +5,12 @@ interface Props {
   isCheckedStart: boolean;
   onChangeStart: () => void;
   onUpdateStart: (key: string, isActive: boolean, date: Date) => void;
-  startDate: Date | null | undefined;
+  startDate: Date | null;
   startValue: string;
   isCheckedComp: boolean;
   onChangeComp: () => void;
   onUpdateComp: (key: string, isActive: boolean, date: Date) => void;
-  compDate: Date | null | undefined;
+  compDate: Date | null;
   compValue: string;
 }
 
@@ -28,8 +28,8 @@ export const ToggleRow: React.FC<Props> = ({
   compValue,
 }) => {
   return (
-    <div className="flex justify-between items-center gap-4 h-[60px]">
-      <div className="w-1/4 text-center">{label}</div>
+    <div className="flex justify-between items-center h-[60px]">
+      <div className="w-1/3 text-center">{label}</div>
       <ToggleWithInputModal
         isChecked={isCheckedStart}
         onChange={onChangeStart}

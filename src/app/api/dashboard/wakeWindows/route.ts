@@ -2,7 +2,6 @@ import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { PostResponse } from "@/app/_types/apiRequests/dashboard/setting/postResponse";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/wakeWindows";
 import { PostRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/postRequest";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/wakeWindows/updateRequest";
 import { buildPrisma } from "@/utils/prisema";
@@ -69,7 +68,7 @@ export const GET = async (req: NextRequest) => {
         },
       });
     } else {
-      return Response.json(<IndexResponse>{
+      return Response.json({
         status: 204,
         error: "record not found",
       });
@@ -79,7 +78,7 @@ export const GET = async (req: NextRequest) => {
       if (e.message.includes("Unauthorized")) {
         return Response.json({ status: 401, error: e.message });
       }
-      return Response.json(<IndexResponse>{ status: 400, error: e.message });
+      return Response.json({ status: 400, error: e.message });
     }
   }
 };

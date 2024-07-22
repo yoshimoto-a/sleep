@@ -10,14 +10,7 @@ export interface Growth {
   createUser: number;
   changeUser: number;
 }
-export interface IndexSuccessResponse {
-  status: number;
+export interface IndexResponse {
+  status: 200;
   data: Growth[];
 }
-
-export interface IndexErrorResponse {
-  status: number;
-  error: string;
-}
-
-export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;

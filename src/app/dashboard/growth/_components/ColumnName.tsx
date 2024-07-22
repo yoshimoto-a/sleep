@@ -2,5 +2,5 @@ interface Props {
   title: string;
 }
 export const ColumnName: React.FC<Props> = ({ title }) => {
-  return <span className="w-1/4 text-center">{title}</span>;
+  return <span className="w-1/3 text-center">{title}</span>;
 };
