@@ -1,58 +1,20 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { useGetGrowth } from "../../_hooks/useGetGrowth";
+import { DateState } from "../_types/DateState";
+import { State } from "../_types/State";
 import { findMilestone } from "../_utils/findMilestone";
+import { initializeDateState } from "../_utils/initializeDateState";
+import { initializeState } from "../_utils/initializeState";
 import { useApi } from "@/app/_hooks/useApi";
-import { IndexResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting";
 import { updateRequests } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateRequest";
 import { UpdateResponse } from "@/app/_types/apiRequests/dashboard/advancedSetting/updateResponse";
-export interface State {
-  [key: string]: boolean;
-}
-export interface DateState {
-  [key: string]: Date | null | undefined;
-}
 
-export const useToggle = (data: IndexResponse | undefined) => {
+export const useGrowth = () => {
   const apiRequests = useApi();
-  const [state, setState] = useState<State>({
-    turningOver: false,
-    turningOverAndOver: false,
-    crawling: false,
-    sitting: false,
-    crawlingOnHandAndKnees: false,
-    pullingUpToStand: false,
-    cruising: false,
-    standing: false,
-    walking: false,
-    turningOverComp: false,
-    turningOverAndOverComp: false,
-    crawlingComp: false,
-    sittingComp: false,
-    crawlingOnHandAndKneesComp: false,
-    pullingUpToStandComp: false,
-    cruisingComp: false,
-    standingComp: false,
-    walkingComp: false,
-  });
-  const [date, setDate] = useState<DateState>({
-    turningOverDate: null,
-    turningOverAndOverDate: null,
-    crawlingDate: null,
-    sittingDate: null,
-    crawlingOnHandAndKneesDate: null,
-    pullingUpToStandDate: null,
-    cruisingDate: null,
-    standingDate: null,
-    walkingDate: null,
-    turningOverCompDate: null,
-    turningOverAndOverCompDate: null,
-    crawlingCompDate: null,
-    sittingCompDate: null,
-    crawlingOnHandAndKneesCompDate: null,
-    pullingUpToStandCompDate: null,
-    cruisingCompDate: null,
-    standingCompDate: null,
-    walkingCompDate: null,
-  });
+  const { isLoading, data, error } = useGetGrowth();
+  const [state, setState] = useState<State>(initializeState());
+  const [date, setDate] = useState<DateState>(initializeDateState());
+
   const updateDate = async (
     key: string,
     isActive: boolean,
@@ -63,14 +25,12 @@ export const useToggle = (data: IndexResponse | undefined) => {
       [`${key}Date`]: isActive ? date : null,
     }));
     const name = findMilestone(key);
-    if (data?.status !== 200 || !("data" in data)) return;
-    const targetData = data.data.find(item => item.milestone === name);
+    const targetData = data?.data.find(item => item.milestone === name);
     if (!targetData) {
-      alert("データない");
+      alert("データがありません");
       return;
     }
     const { id, startedAt, archevedAt } = targetData;
-    !isActive && (date = null);
     const payload = {
       id,
       data: {
@@ -109,47 +69,9 @@ export const useToggle = (data: IndexResponse | undefined) => {
   }
 
   const setData = useCallback(() => {
-    if (data?.status !== 200 || !("data" in data)) return;
-    const _state: State = {
-      turningOver: false,
-      turningOverAndOver: false,
-      crawling: false,
-      sitting: false,
-      crawlingOnHandAndKnees: false,
-      pullingUpToStand: false,
-      cruising: false,
-      standing: false,
-      walking: false,
-      turningOverComp: false,
-      turningOverAndOverComp: false,
-      crawlingComp: false,
-      sittingComp: false,
-      crawlingOnHandAndKneesComp: false,
-      pullingUpToStandComp: false,
-      cruisingComp: false,
-      standingComp: false,
-      walkingComp: false,
-    };
-    const _date: DateState = {
-      turningOverDate: null,
-      turningOverAndOverDate: null,
-      crawlingDate: null,
-      sittingDate: null,
-      crawlingOnHandAndKneesDate: null,
-      pullingUpToStandDate: null,
-      cruisingDate: null,
-      standingDate: null,
-      walkingDate: null,
-      turningOverCompDate: null,
-      turningOverAndOverCompDate: null,
-      crawlingCompDate: null,
-      sittingCompDate: null,
-      crawlingOnHandAndKneesCompDate: null,
-      pullingUpToStandCompDate: null,
-      cruisingCompDate: null,
-      standingCompDate: null,
-      walkingCompDate: null,
-    };
+    if (data?.status !== 200) return;
+    const _state: State = initializeState();
+    const _date: DateState = initializeDateState();
 
     data.data.forEach(item => {
       switch (item.milestone) {
@@ -213,5 +135,17 @@ export const useToggle = (data: IndexResponse | undefined) => {
     setState(_state);
   }, [data, setDate, setState]);
 
-  return { state, handlers, date, setDate, setState, setData, updateDate };
+  useEffect(() => {
+    if (isLoading) return;
+    setData();
+  }, [isLoading, setData]);
+
+  return {
+    state,
+    handlers,
+    date,
+    isLoading,
+    error,
+    updateDate,
+  };
 };
