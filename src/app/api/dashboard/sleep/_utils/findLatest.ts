@@ -15,19 +15,22 @@ export const findLatest = (
     containNullRecords.length === 1 && !containNullRecords[0].sleep;
   const wakeup =
     containNullRecords.length === 0 && completedRecords.length === 1;
-  let action: Action = "寝た";
   if (sleep) {
-    action = "寝た";
+    return {
+      record: containNullRecords[0],
+      action: "寝た",
+    };
   }
   if (bedtime) {
-    action = "寝かしつけ開始";
+    return {
+      record: containNullRecords[0],
+      action: "寝かしつけ開始",
+    };
   }
   if (wakeup) {
-    action = "起きた";
+    return {
+      record: completedRecords[0],
+      action: "起きた",
+    };
   }
-
-  return {
-    record: completedRecords[0],
-    action,
-  };
 };
