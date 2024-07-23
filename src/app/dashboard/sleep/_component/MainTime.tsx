@@ -35,28 +35,25 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (error) {
-      if (error.message === "no wakeWindowsData") {
-        //活動時間の設定がない
-        setAction("活動時間");
-        setElapsedTime("登録なし");
-        return;
-      }
-      if (error.message === "no sleepingSituationData") {
-        //登録データがない
-        setAction("起きたデータ");
-        setElapsedTime("登録なし");
-        return;
-      }
-    } else {
-      if (!SleepingSituationData) return;
-      switch (SleepingSituationData.latestData.action) {
-        case "起きた":
-          setAction("お勧めねんね時刻");
-          break;
-        default:
-          setAction("睡眠中");
-      }
+    if (error && error.message === "no wakeWindowsData") {
+      //活動時間の設定がない
+      setAction("活動時間");
+      setElapsedTime("登録なし");
+      return;
+    }
+    if (error && error.message === "no sleepingSituationData") {
+      //登録データがない
+      setAction("起きたデータ");
+      setElapsedTime("登録なし");
+      return;
+    }
+    if (!SleepingSituationData) return;
+    switch (SleepingSituationData.latestData.action) {
+      case "起きた":
+        setAction("お勧めねんね時刻");
+        break;
+      default:
+        setAction("睡眠中");
     }
   }, [SleepingSituationData, isLoading, error, data]);
 
