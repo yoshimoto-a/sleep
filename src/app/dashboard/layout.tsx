@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
 import { useGetBaby } from "./_hooks/useGetBaby";
-
+import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
 export default function Layout({
   children,
 }: Readonly<{
@@ -12,6 +12,11 @@ export default function Layout({
 }>) {
   const router = useRouter();
   const { session, isLoding } = useSupabaseSession();
+  const {
+    wakeWindowsData,
+    isLoading: wakeWindowsIsLoading,
+    mutate,
+  } = useGetWakeWindows();
   const { data, isLoading, error } = useGetBaby();
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
@@ -34,7 +39,14 @@ export default function Layout({
       return;
     }
   }, [isLoading, error, router, data]);
-
+  // wakeWindowsがない(status204)場合、登録ページにリダイレクト
+  useEffect(() => {
+    if (wakeWindowsIsLoading) return;
+    if (wakeWindowsData?.status === 204) {
+      router.replace("/dashboard/wakeWindows");
+      return;
+    }
+  }, [wakeWindowsIsLoading, router, wakeWindowsData]);
   return (
     <>
       {children}
