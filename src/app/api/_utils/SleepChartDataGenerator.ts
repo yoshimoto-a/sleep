@@ -1,6 +1,6 @@
 import { dayjs } from "../../../utils/dayjs";
-import { FindLatestResponse } from "../dashboard/sleep/_utils/findLatest";
 import { isToday } from "../dashboard/sleep/_utils/isToday";
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 
