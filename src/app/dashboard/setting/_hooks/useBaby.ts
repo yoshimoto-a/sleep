@@ -1,9 +1,9 @@
 "use client";
 
 import { Gender } from "@prisma/client";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { useGetBaby } from "../../_hooks/useGetBaby";
 import { useGetWakeWindows } from "../../_hooks/useGetWakeWindows";
 import { useValidation } from "./useValidation";
@@ -27,12 +27,12 @@ export const useBaby = () => {
   );
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { error: wakeWindowsError } = useGetWakeWindows();
+  const { wakeWindowsData } = useGetWakeWindows();
   const { put } = useApi();
 
   useEffect(() => {
     if (isLoading) return;
-    if (data && "data" in data) {
+    if (data) {
       const { data: babyData } = data;
       setBabyName(babyData.name);
       setBirthWeight(babyData.birthWeight.toString());
@@ -46,7 +46,7 @@ export const useBaby = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (validate()) return;
     setIsSubmitting(true);
     if (gender) {
       try {
@@ -58,7 +58,7 @@ export const useBaby = () => {
           gender,
         };
         await put<UpdateRequests, ApiResponse>("/api/dashboard/setting", body);
-        if (wakeWindowsError?.status === 204) {
+        if (wakeWindowsData?.status === 204) {
           router.replace("/dashboard/wakeWindows");
           return;
         } else {

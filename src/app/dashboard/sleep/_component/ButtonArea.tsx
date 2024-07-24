@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Action } from "../_types/action";
+import { Button } from "./Button";
 import { InputAcionModal } from "./InputActionModal";
 import { InputAllModal } from "./InputAllModal";
-import { Button } from "./button";
 import { CustomModal } from "@/app/_components/modal";
 
 interface Props {

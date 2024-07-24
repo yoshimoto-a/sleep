@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { FormatDuration } from "../_utils/formatDuration";
-import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 
 interface PropsItem {
-  data: SleepingSituationResponse | undefined;
+  data: FindLatestResponse | undefined;
 }
 
 export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
@@ -19,50 +19,37 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
     return () => clearInterval(interval);
   }, []);
   useEffect(() => {
-    if (!data) return;
-    if (!data.latestData) {
+    if (!data) {
       setAction("");
       setElapsedTime("登録なし");
       return;
     } else {
-      switch (data.latestData.action) {
+      switch (data.action) {
         case "寝かしつけ開始":
           setAction("入眠所要時間");
-          if (data.latestData.record.bedTime)
+          if (data.record.bedTime)
             setElapsedTime(
-              FormatDuration(
-                data.latestData.record.bedTime,
-                currentTime,
-                "MinutesOnly"
-              )
+              FormatDuration(data.record.bedTime, currentTime, "MinutesOnly")
             );
           break;
         case "寝た":
           setAction("睡眠時間");
-          if (data.latestData.record.sleep)
+          if (data.record.sleep)
             setElapsedTime(
-              FormatDuration(
-                data.latestData.record.sleep,
-                currentTime,
-                "HourAndMinutes"
-              )
+              FormatDuration(data.record.sleep, currentTime, "HourAndMinutes")
             );
           break;
         case "起きた":
           setAction("活動時間");
-          if (data.latestData.record.wakeup)
+          if (data.record.wakeup)
             setElapsedTime(
-              FormatDuration(
-                data.latestData.record.wakeup,
-                currentTime,
-                "HourAndMinutes"
-              )
+              FormatDuration(data.record.wakeup, currentTime, "HourAndMinutes")
             );
           break;
       }
       return;
     }
-  }, [data, data?.latestData?.action, data?.latestData?.record, currentTime]);
+  }, [data, data?.action, data?.record, currentTime]);
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">

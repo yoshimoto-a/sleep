@@ -1,17 +1,17 @@
 "use client";
 
-import dayjs from "dayjs";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { useGetBaby } from "../../_hooks/useGetBaby";
 import { useGetNextSleepTime } from "../_hooks/useGetNextSleepTime";
-import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 
 interface PropsItem {
-  SleepingSituationData: SleepingSituationResponse | undefined;
+  latestData: FindLatestResponse | undefined;
 }
 
-export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
+export const MainTime: React.FC<PropsItem> = ({ latestData }) => {
   const [action, setAction] = useState<string>("");
   const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
     null
@@ -25,44 +25,44 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
 
   useEffect(() => {
     mutate();
-  }, [SleepingSituationData, mutate]);
+  }, [latestData, mutate]);
 
   useEffect(() => {
-    if (data && "data" in data) {
-      setElapsedTime(data.data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (isLoading || !data) return;
-    if (data?.error === "no wakeWindowsData") {
+    if (isLoading) return;
+    if (!data) return;
+    if (data === "no wakeWindowsData") {
       //活動時間の設定がない
       setAction("活動時間");
       setElapsedTime("登録なし");
       return;
     }
-    if (data?.error === "no sleepingSituationData") {
+    if (data === "no sleepingSituationData") {
       //登録データがない
       setAction("起きたデータ");
       setElapsedTime("登録なし");
       return;
     }
-    if (!SleepingSituationData) return;
-    switch (SleepingSituationData.latestData.action) {
+    if (data) {
+      setElapsedTime(data);
+    }
+  }, [isLoading, data]);
+
+  useEffect(() => {
+    if (!latestData) return;
+    switch (latestData.action) {
       case "起きた":
         setAction("お勧めねんね時刻");
         break;
       default:
         setAction("睡眠中");
     }
-  }, [SleepingSituationData, isLoading, error, data]);
+  }, [latestData]);
 
   //生後6か月以降で早朝起きしている場合、6時過ぎたらお勧めは8時に設定
   useEffect(() => {
     if (elapsedTime !== "即時") return;
     if (
       babyData &&
-      "data" in babyData &&
       Math.floor(dayjs().diff(dayjs(babyData.data.birthday), "month")) <= 5
     )
       return;
@@ -81,8 +81,7 @@ export const MainTime: React.FC<PropsItem> = ({ SleepingSituationData }) => {
 
   if (isLoading || isLoadingBaby)
     return <div className="text-center">読込み中...</div>;
-  if ((error && error.error !== "no wakeWindowsData") || babyError)
-    return <div className="text-center">エラー発生</div>;
+  if (error || babyError) return <div className="text-center">エラー発生</div>;
 
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">

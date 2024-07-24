@@ -1,13 +1,13 @@
 import { SleepingSituation } from "@prisma/client";
 import { type NextRequest } from "next/server";
+import { dayjs } from "../../../../utils/dayjs";
 import { SleepChartDataGenerator } from "../../_utils/SleepChartDataGenerator";
-import { dayjs } from "../../_utils/dayjs";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
-import { FindLatestResponse } from "../sleep/_utils/findLatest";
 import { getTotalSleepTime } from "../sleep/_utils/getTotalSleepTime";
 import { findLatestData } from "./_utils/findLatestData";
 import { formatData } from "./_utils/formatData";
 import { splitDataByDate } from "./_utils/splitDataByDate";
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 import {
   ChartData,
   FormatedData,

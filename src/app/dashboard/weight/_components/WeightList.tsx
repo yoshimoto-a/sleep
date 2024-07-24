@@ -1,5 +1,5 @@
 "use client";
-import dayjs from "dayjs";
+import { dayjs } from "../../../../utils/dayjs";
 import { ControlButtomWithModal } from "../_components/ControlButtomWithModal";
 import { Item } from "../_components/Item";
 import { dailyIncrease } from "../_utils/dailyIncrease";

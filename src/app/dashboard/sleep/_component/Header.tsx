@@ -1,7 +1,7 @@
 "use client";
-import dayjs from "dayjs";
 import ja from "dayjs/locale/ja";
 import Image from "next/image";
+import { dayjs } from "../../../../utils/dayjs";
 import { useGetBaby } from "../../_hooks/useGetBaby";
 
 interface Props {

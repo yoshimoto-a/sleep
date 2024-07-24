@@ -5,10 +5,9 @@ export const useGetWakeWindows = () => {
   const { data, error, isLoading, mutate } = useFetch<IndexResponse>(
     "dashboard/wakeWindows"
   );
-
   return {
     isLoading,
-    wakeWindowsData: data?.data,
+    wakeWindowsData: data,
     error,
     mutate,
   };

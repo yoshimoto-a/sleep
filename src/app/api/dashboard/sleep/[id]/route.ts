@@ -1,7 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getUserAndBabyIds } from "../../../_utils/getUserAndBabyIds";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/sleep/updateRequest";
-import { ChangeTimeZone } from "@/utils/chageTimeZon";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
 export const PUT = async (
@@ -22,9 +21,9 @@ export const PUT = async (
         id: parseInt(id),
       },
       data: {
-        bedTime: ChangeTimeZone(bedtime),
-        sleep: ChangeTimeZone(sleep),
-        wakeup: ChangeTimeZone(wakeup),
+        bedTime: bedtime,
+        sleep: sleep,
+        wakeup: wakeup,
         changeUser: userId,
       },
     });

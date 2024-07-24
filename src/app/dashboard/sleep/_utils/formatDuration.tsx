@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
+import { dayjs } from "../../../../utils/dayjs";
 
-export type Style = "HourAndMinutes" | "MinutesOnly";
+type Style = "HourAndMinutes" | "MinutesOnly";
 
 export const FormatDuration = (
   start: Date,

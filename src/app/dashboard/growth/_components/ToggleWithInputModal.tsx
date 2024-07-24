@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
 import React from "react";
 import { useState } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { InputDate } from "./InputDate";
 import { Toggle } from "./Toggle";
 import { CustomModal } from "@/app/_components/modal";

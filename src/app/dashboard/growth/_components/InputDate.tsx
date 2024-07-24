@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { useState } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 import { ModalButton } from "./ModalButton";
 interface Props {
   closeModal: () => void;

@@ -1,11 +1,6 @@
 /**直近のレコードを探す*/
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
-export type Action = "寝かしつけ開始" | "寝た" | "起きた";
-export interface FindLatestResponse {
-  record: SleepingSituation;
-  action: Action;
-}
-type length = [number] | [];
 
 export const findLatest = (
   containNullRecords: SleepingSituation[], //未完成のデータ※存在したら必ず最新になる

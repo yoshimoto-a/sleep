@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { useState } from "react";
+import { dayjs } from "../../../../utils/dayjs";
 
 export const useWeightValidation = (
   initialWeight: number | null,

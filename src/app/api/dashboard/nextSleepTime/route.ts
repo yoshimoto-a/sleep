@@ -1,14 +1,9 @@
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { type NextRequest } from "next/server";
+import { dayjs } from "../../../../utils/dayjs";
 import { calculate } from "./_utils/calculate";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
 import { buildPrisma } from "@/utils/prisema";
 import { supabase } from "@/utils/supabase";
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Tokyo");
 
 export const GET = async (req: NextRequest) => {
   const prisma = await buildPrisma();
@@ -31,7 +26,7 @@ export const GET = async (req: NextRequest) => {
     });
     const babyId = user?.babyId;
     if (!babyId) {
-      return Response.json({ status: 400, error: "babyId is not found" });
+      return Response.json({ status: 400, message: "babyId is not found" });
     }
     const practicing = await prisma.growth.findMany({
       where: {
@@ -88,13 +83,13 @@ export const GET = async (req: NextRequest) => {
       },
     });
     if (wakeWindows.length === 0)
-      return Response.json({ status: 400, error: "no wakeWindowsData" });
+      return Response.json({ status: 200, data: "no wakeWindowsData" });
     const baby = await prisma.baby.findUnique({
       where: {
         id: babyId,
       },
     });
-    if (!baby) return Response.json({ status: 400, error: "no babyData" });
+    if (!baby) return Response.json({ status: 400, message: "no babyData" });
 
     const sleepingSituation = await prisma.sleepingSituation.findMany({
       where: {
@@ -111,7 +106,10 @@ export const GET = async (req: NextRequest) => {
       take: 1,
     });
     if (sleepingSituation.length === 0)
-      return Response.json({ status: 400, error: "no sleepingSituationData" });
+      return Response.json({
+        status: 200,
+        data: "no sleepingSituationData",
+      });
     const result = calculate(
       practicing,
       acquisition,
@@ -123,7 +121,7 @@ export const GET = async (req: NextRequest) => {
     return Response.json({ status: 200, data: result });
   } catch (e) {
     if (e instanceof Error) {
-      return Response.json({ status: 400, error: e.message });
+      return Response.json({ status: 400, message: e.message });
     }
   }
 };

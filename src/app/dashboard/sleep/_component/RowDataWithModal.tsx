@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useCallback } from "react";
 import { InputModal } from "./InputModal";
-import { RowItem } from "./rowItem";
+import { RowItem } from "./RowItem";
 import { CustomModal } from "@/app/_components/modal";
 
 interface Props {

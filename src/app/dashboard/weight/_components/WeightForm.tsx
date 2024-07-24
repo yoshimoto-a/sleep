@@ -1,8 +1,7 @@
 "use client";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-
 import toast, { Toaster } from "react-hot-toast";
+import { dayjs } from "../../../../utils/dayjs";
 import { useWeightValidation } from "../_hooks/useWeightValidation";
 import { Button } from "./Button";
 import { Label } from "@/app/_components/Label";
