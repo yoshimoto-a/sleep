@@ -83,7 +83,7 @@ export const GET = async (req: NextRequest) => {
       },
     });
     if (wakeWindows.length === 0)
-      return Response.json({ status: 400, message: "no wakeWindowsData" });
+      return Response.json({ status: 200, data: "no wakeWindowsData" });
     const baby = await prisma.baby.findUnique({
       where: {
         id: babyId,
@@ -107,8 +107,8 @@ export const GET = async (req: NextRequest) => {
     });
     if (sleepingSituation.length === 0)
       return Response.json({
-        status: 400,
-        message: "no sleepingSituationData",
+        status: 200,
+        data: "no sleepingSituationData",
       });
     const result = calculate(
       practicing,
