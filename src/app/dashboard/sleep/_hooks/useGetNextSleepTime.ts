@@ -5,6 +5,5 @@ export const useGetNextSleepTime = () => {
   const { data, error, isLoading, mutate } = useFetch<IndexResponse>(
     "dashboard/nextSleepTime"
   );
-
-  return { isLoading, data, error, mutate };
+  return { isLoading, data: data?.data, error, mutate };
 };
