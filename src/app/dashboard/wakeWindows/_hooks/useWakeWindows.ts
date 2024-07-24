@@ -59,22 +59,23 @@ export const useWakeWindows = () => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (wakeWindowsData) {
-      setData(wakeWindowsData);
+    if (!wakeWindowsData) return;
+    if (wakeWindowsData.data) {
+      setData(wakeWindowsData.data);
       const allTime = convertMinutesToHoursAndMinutes(
-        wakeWindowsData.activityTime.find(item => item.type === "ALL")?.time ||
-          0
+        wakeWindowsData.data.activityTime.find(item => item.type === "ALL")
+          ?.time || 0
       );
       const morningTime = convertMinutesToHoursAndMinutes(
-        wakeWindowsData.activityTime.find(item => item.type === "MORNING")
+        wakeWindowsData.data.activityTime.find(item => item.type === "MORNING")
           ?.time || 0
       );
       const noonTime = convertMinutesToHoursAndMinutes(
-        wakeWindowsData.activityTime.find(item => item.type === "NOON")?.time ||
-          0
+        wakeWindowsData.data.activityTime.find(item => item.type === "NOON")
+          ?.time || 0
       );
       const eveningTime = convertMinutesToHoursAndMinutes(
-        wakeWindowsData.activityTime.find(item => item.type === "EVENING")
+        wakeWindowsData.data.activityTime.find(item => item.type === "EVENING")
           ?.time || 0
       );
       reset({
@@ -86,10 +87,10 @@ export const useWakeWindows = () => {
         afternoonMinutes: noonTime.mins.toString(),
         eveningHour: eveningTime.hours.toString(),
         eveningMinutes: eveningTime.mins.toString(),
-        sinceBedtime: wakeWindowsData.sleepPrepTime.time,
+        sinceBedtime: wakeWindowsData.data.sleepPrepTime.time,
       });
     }
-  }, [isLoading, wakeWindowsData, reset]);
+  }, [isLoading, wakeWindowsData, reset, mutate]);
 
   const onSubmit = async (inputData: FormInputs) => {
     setIsSubmitting(true);
@@ -123,10 +124,9 @@ export const useWakeWindows = () => {
           },
         ];
         const sleepPrepTime: SleepPrepTime = {
-          time: inputData.sinceBedtime,
+          time: Number(inputData.sinceBedtime),
         };
         const prams = { wakeWindows, sleepPrepTime };
-
         await fetcher.post<PostRequests, ApiResponse>(
           "/api/dashboard/wakeWindows",
           prams
