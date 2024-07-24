@@ -21,7 +21,7 @@ export default function Page() {
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
       <div className="flex justify-between mx-5 my-5">
-        <MainTime SleepingSituationData={data} />
+        <MainTime latestData={data?.latestData} />
         <ElapsedTime data={data?.latestData} />
       </div>
       <div className="grid grid-cols-10 mx-1">
