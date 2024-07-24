@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FormatDuration } from "../_utils/formatDuration";
-import { FindLatestResponse } from "@/app/api/dashboard/sleep/_utils/findLatest";
+import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 
 interface PropsItem {
   data: FindLatestResponse | undefined;
@@ -19,7 +19,6 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
     return () => clearInterval(interval);
   }, []);
   useEffect(() => {
-    if (!data) return;
     if (!data) {
       setAction("");
       setElapsedTime("登録なし");
