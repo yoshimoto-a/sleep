@@ -54,7 +54,7 @@ export const useSignupForm = () => {
       if (error.status === 422) {
         alert("登録済のメールアドレスです");
       } else {
-        alert("登録に失敗しました");
+        alert(`登録に失敗しました。${error.message}`);
       }
     } else {
       setEmail("");
