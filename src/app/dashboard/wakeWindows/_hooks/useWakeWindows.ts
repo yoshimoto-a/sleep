@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,6 +30,7 @@ type FormInputs = {
   sinceBedtime: number;
 };
 export const useWakeWindows = () => {
+  const router = useRouter();
   const {
     wakeWindowsData,
     error: wakeWindowsError,
@@ -133,6 +135,7 @@ export const useWakeWindows = () => {
         );
         mutate();
         toast.success("保存しました");
+        router.replace("/dashboard/sleep");
       } else {
         const wakeWindows: PutWakeWindows[] = [];
         data.activityTime.map(item => {
