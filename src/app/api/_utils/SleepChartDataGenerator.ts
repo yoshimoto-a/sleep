@@ -102,7 +102,7 @@ export class SleepChartDataGenerator {
     }
     count++;
     if (this.isSingleDataWithAction("寝た")) {
-      return this.handleSingleDataSlept(count);
+      this.handleSingleDataSlept(count);
     }
     if (this.isSingleDataWithAction("起きた")) {
       return this.handleSingleDataAwake(count, currentTime);
