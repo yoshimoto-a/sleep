@@ -12,11 +12,8 @@ export default function Layout({
 }>) {
   const router = useRouter();
   const { session, isLoding } = useSupabaseSession();
-  const {
-    wakeWindowsData,
-    isLoading: wakeWindowsIsLoading,
-    mutate,
-  } = useGetWakeWindows();
+  const { wakeWindowsData, isLoading: wakeWindowsIsLoading } =
+    useGetWakeWindows();
   const { data, isLoading, error } = useGetBaby();
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
@@ -26,9 +23,10 @@ export default function Layout({
     }
   }, [isLoding, session, router]);
 
-  //初回更新が未済なら設定画面へリダイレクト
+  /*初回更新が未済なら設定画面へリダイレクト
+   wakeWindowsがない(status204)場合、登録ページにリダイレクト*/
   useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || wakeWindowsIsLoading) return;
     if (error) {
       router.replace("/login");
       return;
@@ -37,16 +35,12 @@ export default function Layout({
     if (data && data.data.updated === data.data.created) {
       router.replace("/dashboard/setting");
       return;
-    }
-  }, [isLoading, error, router, data]);
-  // wakeWindowsがない(status204)場合、登録ページにリダイレクト
-  useEffect(() => {
-    if (wakeWindowsIsLoading) return;
-    if (wakeWindowsData?.status === 204) {
+    } else if (wakeWindowsData?.status === 204) {
       router.replace("/dashboard/wakeWindows");
       return;
     }
-  }, [wakeWindowsIsLoading, router, wakeWindowsData]);
+  }, [isLoading, error, router, data, wakeWindowsIsLoading, wakeWindowsData]);
+
   return (
     <>
       {children}

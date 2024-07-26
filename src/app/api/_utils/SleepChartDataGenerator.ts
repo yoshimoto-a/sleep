@@ -39,16 +39,34 @@ export class SleepChartDataGenerator {
 
   public generateChartData() {
     const noDate = this.data.length === 0;
-    const latestDataActionAwake = this.latestData?.action !== "寝た";
-    if (noDate && (latestDataActionAwake || !this.latestData)) {
+    const oneData = this.data.length === 1;
+    const latestDataActionAwake = this.latestData?.action === "起きた";
+    const latestDataActionSlept = this.latestData?.action === "寝た";
+    if (noDate) {
       this.handleNoData();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-    if (noDate && !latestDataActionAwake) {
+    if (
+      oneData &&
+      latestDataActionAwake &&
+      isToday(this.targetDate, new Date())
+    ) {
       this.handleNoDataAwake();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-
+    if (
+      oneData &&
+      latestDataActionAwake &&
+      !isToday(this.targetDate, new Date())
+    ) {
+      //翌日以降に日付またいでおきている
+      this.handleNoDataAwakeNotToday();
+      return { chartData: this.chartData, keyName: this.keyName };
+    }
+    if (oneData && latestDataActionSlept) {
+      this.handleNoDataSlept();
+      return { chartData: this.chartData, keyName: this.keyName };
+    }
     return this.handleData();
   }
 
@@ -64,6 +82,27 @@ export class SleepChartDataGenerator {
     this.keyName.push(`1:睡眠時間`);
     this.chartData[`2:活動時間`] = 1440 - this.getMinutesSinceMidnight();
     this.keyName.push(`2:活動時間`);
+  }
+  private handleNoDataAwakeNotToday() {
+    this.chartData[`1:活動時間`] = this.getMinutesSinceMidnight();
+    this.keyName.push(`1:活動時間`);
+    this.chartData[`2:睡眠時間`] = 1440 - this.getMinutesSinceMidnight();
+    this.keyName.push(`2:睡眠時間`);
+  }
+  /*前日終わり時点で起きていて(または登録し始め)当日になってから初めて寝たグラフ*/
+  private handleNoDataSlept() {
+    this.chartData[`1:活動時間`] = this.getTimeDifference(
+      this.startOfDay.toDate(),
+      this.data[0].datetime
+    );
+    this.keyName.push(`1:活動時間`);
+    this.chartData[`2:睡眠時間`] = this.getTimeDifference(
+      this.data[0].datetime,
+      new Date()
+    );
+    this.keyName.push(`2:睡眠時間`);
+    this.chartData[`3:活動時間`] = 1440 - this.getMinutesSinceMidnight();
+    this.keyName.push(`3:活動時間`);
   }
 
   private handleData() {
@@ -87,7 +126,7 @@ export class SleepChartDataGenerator {
       return this.handleSingleDataAwake(count, currentTime);
     }
     if (this.isDoubleDataWithAction("寝た")) {
-      return this.handleDoubleDataSlept(count);
+      return this.handleDoubleDataSlept(count, currentTime);
     }
     if (this.isDoubleDataWithAction("起きた")) {
       return this.handleDoubleDataAwake(count, currentTime);
@@ -95,34 +134,34 @@ export class SleepChartDataGenerator {
     return this.handleMultipleData(count, currentTime);
   }
   private handleSingleDataSlept(count: number) {
-    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
       this.data[0].datetime,
       new Date()
     );
-    this.keyName.push(`${count}:睡眠時間`);
+    this.keyName.push(`${count}:活動時間`);
     count++;
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
+    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
       new Date(),
       null
     );
-    this.keyName.push(`${count}:活動時間`);
+    this.keyName.push(`${count}:睡眠時間`);
   }
   private handleSingleDataAwake(count: number, currentTime: number) {
     this.chartData[`${count}:活動時間`] = 1440 - currentTime;
     this.keyName.push(`${count}:活動時間`);
     return { chartData: this.chartData, keyName: this.keyName };
   }
-  private handleDoubleDataSlept(count: number) {
-    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+  private handleDoubleDataSlept(count: number, currentTime: number) {
+    let total = currentTime;
+    const sleepTime = this.getTimeDifference(
       this.data[0].datetime,
       this.data[1].datetime
     );
+    total += sleepTime;
+    this.chartData[`${count}:睡眠時間`] = sleepTime;
     this.keyName.push(`${count}:睡眠時間`);
     count++;
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
-      this.data[1].datetime,
-      null
-    );
+    this.chartData[`${count}:活動時間`] = 1440 - total;
     this.keyName.push(`${count}:活動時間`);
     return { chartData: this.chartData, keyName: this.keyName };
   }

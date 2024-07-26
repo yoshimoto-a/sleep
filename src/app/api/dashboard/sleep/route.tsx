@@ -28,7 +28,8 @@ export const POST = async (req: NextRequest) => {
     if (badRecords1.length !== 0)
       return Response.json({
         status: 400,
-        message: "There is incomplete data",
+        message:
+          "寝た～起きたまで完成していないデータがあります。過去データの場合は一括登録をご使用ください。",
       });
     //パターン①-②
     const badRecords2 = await prisma.sleepingSituation.findMany({
@@ -44,8 +45,41 @@ export const POST = async (req: NextRequest) => {
     if (badRecords2.length !== 0)
       return Response.json({
         status: 400,
-        message: "There is incomplete data",
+        message:
+          "寝た～起きたまで完成していないデータがあります。過去データの場合は一括登録をご使用ください。",
       });
+
+    //過去のデータの登録をする場合は一括登録
+    const laterRecords = await prisma.sleepingSituation.findMany({
+      where: {
+        babyId,
+        OR: [
+          {
+            bedTime: {
+              gt: sleep,
+            },
+          },
+          {
+            sleep: {
+              gt: sleep,
+            },
+          },
+          {
+            wakeup: {
+              gt: sleep,
+            },
+          },
+        ],
+      },
+    });
+
+    // 既に遅い時間に登録がある場合
+    if (laterRecords.length !== 0) {
+      return Response.json({
+        status: 400,
+        message: "過去の登録は一括登録をご利用ください。",
+      });
+    }
 
     const records = await prisma.sleepingSituation.findMany({
       where: {
