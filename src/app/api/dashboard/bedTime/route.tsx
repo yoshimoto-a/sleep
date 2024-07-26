@@ -12,17 +12,49 @@ export const POST = async (req: NextRequest) => {
     const { bedTime } = body;
     //登録出来ないパターンが存在しないか確認する
     //wakeupがnull
-    const records = await prisma.sleepingSituation.findMany({
+    const errorRecords1 = await prisma.sleepingSituation.findMany({
       where: {
         babyId,
         OR: [{ sleep: null }, { wakeup: null }],
       },
     });
-    if (records.length !== 0) {
+    if (errorRecords1.length !== 0) {
       return Response.json({
         status: 400,
         message:
           "寝た～起きたまで完成していないデータがあります。過去データの場合は一括登録をご使用ください。",
+      });
+    }
+
+    // bedTimeより遅い時間に登録されているデータをチェック
+    const laterRecords = await prisma.sleepingSituation.findMany({
+      where: {
+        babyId,
+        OR: [
+          {
+            bedTime: {
+              gt: bedTime,
+            },
+          },
+          {
+            sleep: {
+              gt: bedTime,
+            },
+          },
+          {
+            wakeup: {
+              gt: bedTime,
+            },
+          },
+        ],
+      },
+    });
+
+    // 既に遅い時間に登録がある場合
+    if (laterRecords.length !== 0) {
+      return Response.json({
+        status: 400,
+        message: "過去の登録は一括登録をご利用ください。",
       });
     }
     //レコードを登録する
