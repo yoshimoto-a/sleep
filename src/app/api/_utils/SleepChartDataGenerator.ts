@@ -46,15 +46,27 @@ export class SleepChartDataGenerator {
       this.handleNoData();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-    if (oneData && latestDataActionAwake) {
+    if (
+      oneData &&
+      latestDataActionAwake &&
+      isToday(this.targetDate, new Date())
+    ) {
       this.handleNoDataAwake();
+      return { chartData: this.chartData, keyName: this.keyName };
+    }
+    if (
+      oneData &&
+      latestDataActionAwake &&
+      !isToday(this.targetDate, new Date())
+    ) {
+      //翌日以降に日付またいでおきている
+      this.handleNoDataAwakeNotToday();
       return { chartData: this.chartData, keyName: this.keyName };
     }
     if (oneData && latestDataActionSlept) {
       this.handleNoDataSlept();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-
     return this.handleData();
   }
 
@@ -70,6 +82,12 @@ export class SleepChartDataGenerator {
     this.keyName.push(`1:睡眠時間`);
     this.chartData[`2:活動時間`] = 1440 - this.getMinutesSinceMidnight();
     this.keyName.push(`2:活動時間`);
+  }
+  private handleNoDataAwakeNotToday() {
+    this.chartData[`1:活動時間`] = this.getMinutesSinceMidnight();
+    this.keyName.push(`1:活動時間`);
+    this.chartData[`2:睡眠時間`] = 1440 - this.getMinutesSinceMidnight();
+    this.keyName.push(`2:睡眠時間`);
   }
   /*前日終わり時点で起きていて(または登録し始め)当日になってから初めて寝たグラフ*/
   private handleNoDataSlept() {
@@ -116,17 +134,17 @@ export class SleepChartDataGenerator {
     return this.handleMultipleData(count, currentTime);
   }
   private handleSingleDataSlept(count: number) {
-    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
+    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
       this.data[0].datetime,
       new Date()
     );
-    this.keyName.push(`${count}:睡眠時間`);
+    this.keyName.push(`${count}:活動時間`);
     count++;
-    this.chartData[`${count}:活動時間`] = this.getTimeDifference(
+    this.chartData[`${count}:睡眠時間`] = this.getTimeDifference(
       new Date(),
       null
     );
-    this.keyName.push(`${count}:活動時間`);
+    this.keyName.push(`${count}:睡眠時間`);
   }
   private handleSingleDataAwake(count: number, currentTime: number) {
     this.chartData[`${count}:活動時間`] = 1440 - currentTime;
