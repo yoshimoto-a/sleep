@@ -39,11 +39,15 @@ export default function Menu() {
           title="サブアカウントの作成"
         />
       )}
-      {/* 追加予定<RowItem icon="/_menuIcon/graph.png" link="./weight/" title="成長曲線" /> */}
       <RowItem
         icon="/_menuIcon/setting.png"
         link="./setting/"
         title="赤ちゃん情報の設定"
+      />
+      <RowItem
+        icon="/_menuIcon/Instagram.png"
+        link="https://www.instagram.com/sleep_app_info?igsh=enp1ZnprOThtbXFp&utm_source=qr"
+        title="お問い合わせ(instagramのDMから)"
       />
       <div
         onClick={logout}
