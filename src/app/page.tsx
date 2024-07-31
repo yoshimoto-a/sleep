@@ -1,10 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Footer } from "./_components/footer";
 import { Header } from "./_components/header";
-
+import { useGuestLogin } from "./_hooks/useGuestLogin";
 export default function Home() {
+  const { handleClick } = useGuestLogin();
   return (
     <div className="min-h-screen">
       <Header />
@@ -30,6 +33,12 @@ export default function Home() {
               ログイン
             </div>
           </Link>
+        </div>
+        <div
+          className="cursor-pointer mt-4 px-5 py-2 w-40 rounded-full text-center bg-custom-blue"
+          onClick={handleClick}
+        >
+          ゲストログイン
         </div>
         <div className="bg-gray-100 w-full mt-10">
           <div className="mt-10 text-center w-full">
