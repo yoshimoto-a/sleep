@@ -13,10 +13,11 @@ export const POST = async (req: NextRequest) => {
     if (error) {
       throw new Error(error.message);
     }
+    await supabase.auth.setSession(data.session);
+
     return Response.json({
       status: 200,
       message: "success",
-      session: data.session,
     });
   } catch (e) {
     if (e instanceof Error) {

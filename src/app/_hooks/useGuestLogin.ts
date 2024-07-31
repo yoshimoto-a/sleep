@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { PostRequest } from "../_types/apiRequests/guest_login/PostRequest";
 import { PostResponse } from "../_types/apiRequests/guest_login/PostResponse";
 import { useApi } from "./useApi";
-import { supabase } from "@/utils/supabase";
 
 export const useGuestLogin = () => {
   const { post } = useApi();
@@ -19,7 +18,6 @@ export const useGuestLogin = () => {
     const resp = await post<PostRequest, PostResponse>("/api/guest_login", {});
     0;
     if (resp.status === 200) {
-      await supabase.auth.setSession(resp.session);
       router.replace("/dashboard/sleep");
       toast.dismiss(toastId);
     } else {
