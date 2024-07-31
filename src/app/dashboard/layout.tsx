@@ -12,6 +12,8 @@ export default function Layout({
 }>) {
   const router = useRouter();
   const { session, isLoding } = useSupabaseSession();
+
+  console.log(session, isLoding);
   const { wakeWindowsData, isLoading: wakeWindowsIsLoading } =
     useGetWakeWindows();
   const { data, isLoading, error } = useGetBaby();
