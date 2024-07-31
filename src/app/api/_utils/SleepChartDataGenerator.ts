@@ -30,7 +30,7 @@ export class SleepChartDataGenerator {
   }
 
   private get today() {
-    return isToday(new Date(), this.targetDate);
+    return isToday(new Date(), dayjs.tz(this.targetDate).toDate());
   }
 
   private get data() {
@@ -42,29 +42,29 @@ export class SleepChartDataGenerator {
     const oneData = this.data.length === 1;
     const latestDataActionAwake = this.latestData?.action === "起きた";
     const latestDataActionSlept = this.latestData?.action === "寝た";
-    if (noDate) {
+    let dataActionSlept = false;
+    if (oneData) {
+      dataActionSlept = this.formatedData[0].action === "寝た";
+    }
+    const today = isToday(dayjs.tz(this.targetDate).toDate(), new Date());
+    //最後起きたOR最後データなし→全部活動時間
+    if (noDate && (latestDataActionAwake || !this.latestData)) {
       this.handleNoData();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-    if (
-      oneData &&
-      latestDataActionAwake &&
-      isToday(this.targetDate, new Date())
-    ) {
+    //最後寝た→現在時刻まで睡眠時間
+    if (noDate && latestDataActionSlept) {
       this.handleNoDataAwake();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-    if (
-      oneData &&
-      latestDataActionAwake &&
-      !isToday(this.targetDate, new Date())
-    ) {
-      //翌日以降に日付またいでおきている
-      this.handleNoDataAwakeNotToday();
+    //一件＆当日＆formatdataが寝た→活動時間→睡眠時間→(現在時刻以降活動時間)
+    if (oneData && dataActionSlept && today) {
+      this.handleNoDataSlept();
       return { chartData: this.chartData, keyName: this.keyName };
     }
-    if (oneData && latestDataActionSlept) {
-      this.handleNoDataSlept();
+    //一件＆当日以外＆formatdataが寝た→活動時間→睡眠時間
+    if (oneData && dataActionSlept && !today) {
+      this.handleNoDataAwakeNotToday();
       return { chartData: this.chartData, keyName: this.keyName };
     }
     return this.handleData();
