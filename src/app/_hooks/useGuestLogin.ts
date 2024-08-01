@@ -12,8 +12,6 @@ export const useGuestLogin = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleClick = async () => {
-    //すでに押されていたらリターンする
-    if (isSubmitting) return;
     const toastId = toast.loading("ログイン処理中...");
     setIsSubmitting(true);
     const resp = await post<PostRequest, PostResponse>("/api/guest_login", {});
@@ -21,11 +19,11 @@ export const useGuestLogin = () => {
     if (resp.status === 200) {
       await supabase.auth.setSession(resp.session);
       router.replace("/dashboard/sleep");
-      toast.dismiss(toastId);
     } else {
       alert(resp.message);
     }
+    toast.dismiss(toastId);
     setIsSubmitting(false);
   };
-  return { handleClick };
+  return { handleClick, isSubmitting };
 };

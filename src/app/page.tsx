@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import { TopPageImg } from "./_components/TopPageImg";
+import { TopPageLink } from "./_components/TopPageLink";
 import { Footer } from "./_components/footer";
 import { Header } from "./_components/header";
 import { useGuestLogin } from "./_hooks/useGuestLogin";
 export default function Home() {
-  const { handleClick } = useGuestLogin();
+  const { handleClick, isSubmitting } = useGuestLogin();
   return (
     <div className="min-h-screen">
       <Header />
@@ -22,26 +23,25 @@ export default function Home() {
           <p>睡眠に特化した育児記録アプリ</p>
         </div>
 
-        <div className="flex items-center gap-2 pt-10">
-          <Link href="/signup" className="header-link">
-            <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
-              ユーザー登録
-            </div>
-          </Link>
-          <Link href="/login" className="header-link">
-            <div className="px-5 py-2 w-40 bg-gray-300 rounded-full text-center">
-              ログイン
-            </div>
-          </Link>
+        <div className="flex justify-center pt-10">
+          <TopPageLink link="/signup" backgroundColor="bg-gray-300">
+            ユーザー登録
+          </TopPageLink>
+          <TopPageLink link="/login" backgroundColor="bg-gray-300">
+            ログイン
+          </TopPageLink>
         </div>
-        <div
-          className="cursor-pointer mt-4 px-5 py-2 w-40 rounded-full text-center bg-custom-blue"
-          onClick={handleClick}
-        >
-          ゲストログイン
+        <div className="flex justify-center">
+          <button
+            className="cursor-pointer mt-4 px-5 py-2 w-[140px] rounded-full text-center bg-custom-blue"
+            onClick={handleClick}
+            disabled={isSubmitting}
+          >
+            ゲストログイン
+          </button>
         </div>
-        <div className="bg-gray-100 w-full mt-10">
-          <div className="mt-10 text-center w-full">
+        <div className="bg-gray-100 mt-10">
+          <div className="mt-10 text-center">
             <h2 className="py-5 text-xl">専門家監修</h2>
             <div>
               乳幼児の睡眠のプロフェッショナル
@@ -60,11 +60,9 @@ export default function Home() {
               />
             </div>
             <div className="mt-8 flex justify-center">
-              <Link href="/expers" className="header-link">
-                <div className="px-5 py-2 w-40 rounded-full text-center bg-custom-blue">
-                  もっと詳しく
-                </div>
-              </Link>
+              <TopPageLink link="/expers" backgroundColor="bg-custom-blue">
+                もっと詳しく
+              </TopPageLink>
             </div>
           </div>
           <div className="pt-10 text-center w-full">
@@ -81,26 +79,14 @@ export default function Home() {
                   ※その時間に寝ると保証するものではありません
                 </span>
               </div>
-              <div className="p-5 flex justify-center">
-                <Image
-                  alt="topPageImage"
-                  src={"/_topPage/sleep.PNG"}
-                  width={200}
-                  height={0}
-                  layout="intrinsic"
-                />
-                <Image
-                  alt="topPage"
-                  src={"/_topPage/growth.PNG"}
-                  width={200}
-                  height={0}
-                  layout="intrinsic"
-                />
+              <div className="p-5 flex justify-center w-full">
+                <TopPageImg src={"/_topPage/sleep.PNG"} />
+                <TopPageImg src={"/_topPage/growth.PNG"} />
               </div>
             </div>
           </div>
 
-          <div className="mt-10 text-center w-full">
+          <div className="mt-10 text-center">
             <h2 className="py-5 text-xl">アカウント共有機能</h2>
             <div className="p-2">
               夫婦、その他保育者とアカウントを共有して
@@ -112,16 +98,10 @@ export default function Home() {
               共有できる人数に制限もありません
             </div>
             <div className="flex justify-center">
-              <Image
-                alt="topPage"
-                src={"/_topPage/share.PNG"}
-                width={200}
-                height={0}
-                layout="intrinsic"
-              />
+              <TopPageImg src={"/_topPage/share.PNG"} />
             </div>
           </div>
-          <div className="mb-5 text-center w-full">
+          <div className="mb-5 text-center">
             <h2 className="py-5 text-xl">体重記録機能</h2>
             <div className="p-2">
               体重の増え方も日割りで自動計算
@@ -129,24 +109,15 @@ export default function Home() {
               測る度に電卓を叩く必要がなくなります
             </div>
             <div className="p-5 flex justify-center">
-              <Image
-                alt="weightPage"
-                src={"/_topPage/weight.PNG"}
-                width={200}
-                height={0}
-                layout="intrinsic"
-              />
+              <TopPageImg src={"/_topPage/weight.PNG"} />
             </div>
           </div>
           <div className="mb-20 flex justify-center">
-            <Link href="./signup" className="header-link">
-              <div className="px-5 p-2 w-40 rounded-full text-center bg-blue-200 ">
-                はじめる
-              </div>
-            </Link>
+            <TopPageLink link="/signup" backgroundColor="bg-custom-blue">
+              はじめる
+            </TopPageLink>
           </div>
         </div>
-
         <Footer />
       </div>
     </div>
