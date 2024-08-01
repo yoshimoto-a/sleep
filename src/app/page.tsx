@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { TopPageImg } from "./_components/TopPageImg";
 import { TopPageLink } from "./_components/TopPageLink";
@@ -51,13 +50,7 @@ export default function Home() {
               坪根理恵先生監修のもと開発
             </div>
             <div className="mt-5 flex justify-center">
-              <Image
-                alt="tsuboneRie"
-                src={"/_topPage/rie.jpg"}
-                width={150}
-                height={0}
-                layout="intrinsic"
-              />
+              <TopPageImg src={"/_topPage/rie.jpg"} alt="tsuboneRie" />
             </div>
             <div className="mt-8 flex justify-center">
               <TopPageLink link="/expers" backgroundColor="bg-custom-blue">
@@ -80,8 +73,11 @@ export default function Home() {
                 </span>
               </div>
               <div className="p-5 flex justify-center w-full">
-                <TopPageImg src={"/_topPage/sleep.PNG"} />
-                <TopPageImg src={"/_topPage/growth.PNG"} />
+                <TopPageImg src={"/_topPage/sleep.PNG"} alt="topPageImage" />
+                <TopPageImg
+                  src={"/_topPage/growth.PNG"}
+                  alt="growthPageImage"
+                />
               </div>
             </div>
           </div>
@@ -98,7 +94,7 @@ export default function Home() {
               共有できる人数に制限もありません
             </div>
             <div className="flex justify-center">
-              <TopPageImg src={"/_topPage/share.PNG"} />
+              <TopPageImg src={"/_topPage/share.PNG"} alt="share" />
             </div>
           </div>
           <div className="mb-5 text-center">
@@ -109,7 +105,7 @@ export default function Home() {
               測る度に電卓を叩く必要がなくなります
             </div>
             <div className="p-5 flex justify-center">
-              <TopPageImg src={"/_topPage/weight.PNG"} />
+              <TopPageImg src={"/_topPage/weight.PNG"} alt="weightPageImage" />
             </div>
           </div>
           <div className="mb-20 flex justify-center">
