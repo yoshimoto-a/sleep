@@ -34,6 +34,8 @@ export const Button: React.FC<Props> = ({
         return "bg-gray-300";
       case "contained-blu500":
         return "bg-blue-500 text-white";
+      case "none":
+        return "";
     }
   };
 
