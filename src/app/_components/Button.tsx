@@ -29,7 +29,7 @@ export const Button: React.FC<Props> = ({
       case "outlined":
         return "border-solid border-2 border-slate-600";
       case "contained-blu":
-        return "cursor-pointer text-center bg-custom-blue";
+        return "bg-custom-blue";
       case "contained-gry":
         return "bg-gray-300";
       case "contained-blu500":
