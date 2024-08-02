@@ -3,13 +3,12 @@
 import Link from "next/link";
 import React from "react";
 import { Toaster } from "react-hot-toast";
+import { Button } from "../_components/Button";
 import { HookFormInput } from "../_components/HookFormInput";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { useLoginForm } from "./_hooks/useLoginForm";
-import { SubmitButton } from "@/app/_components/submitButton";
-
 export default function Page() {
   const { register, handleSubmit, isSubmitting, errors } = useLoginForm();
   return (
@@ -56,7 +55,17 @@ export default function Page() {
         >
           パスワードの再設定はこちら
         </Link>
-        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
+        <div className="flex justify-center">
+          <div className="w-32 h-10">
+            <Button
+              disabled={isSubmitting}
+              type="submit"
+              variant="contained-blu500"
+            >
+              送信
+            </Button>
+          </div>
+        </div>
       </Form>
       <Footer />
     </>

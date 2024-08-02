@@ -5,9 +5,9 @@ import { Gender } from "@prisma/client";
 import React from "react";
 import { FormSection } from "./_components/FormSection";
 import { useBaby } from "./_hooks/useBaby";
+import { Button } from "@/app/_components/Button";
 import { InputRadio } from "@/app/_components/inputRadio";
 import { IsLoading } from "@/app/_components/isLoading";
-import { SubmitButton } from "@/app/_components/submitButton";
 export default function Page() {
   const {
     isSubmitting,
@@ -104,7 +104,17 @@ export default function Page() {
               <div className="text-red-500">{errors.gender}</div>
             )}
           </div>
-          <SubmitButton disabled={isSubmitting}>保存</SubmitButton>
+          <div className="flex justify-center">
+            <div className="w-32 h-10">
+              <Button
+                disabled={isSubmitting}
+                type="submit"
+                variant="contained-blu500"
+              >
+                保存
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
     </>

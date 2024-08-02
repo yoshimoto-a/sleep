@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { dayjs } from "../../../../utils/dayjs";
 import { useWeightValidation } from "../_hooks/useWeightValidation";
-import { Button } from "./Button";
+import { Button } from "@/app/_components/Button";
 import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/input";
 
@@ -62,13 +62,27 @@ export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
         </div>
       </div>
       <div className="flex justify-center gap-4 pt-5">
-        <Button
-          text="体重推移"
-          onclick={() => {
-            router.replace("/dashboard/weight/graph");
-          }}
-        />
-        <Button disabled={isSubmitting} text="保存" onclick={handleSave} />
+        <div className="w-40 h-10 mb-3">
+          <Button
+            onClick={() => {
+              router.replace("/dashboard/weight/graph");
+            }}
+            type="button"
+            variant="outlined"
+          >
+            体重推移
+          </Button>
+        </div>
+        <div className="w-40 h-10 mb-3">
+          <Button
+            onClick={handleSave}
+            type="button"
+            variant="outlined"
+            disabled={isSubmitting}
+          >
+            保存
+          </Button>
+        </div>
       </div>
     </>
   );

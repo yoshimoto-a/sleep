@@ -5,10 +5,9 @@ import { CautionaryNote } from "./_components/CautionaryNote";
 import { FormSection } from "./_components/FormSection";
 import { Guideline } from "./_components/guideline";
 import { useWakeWindows } from "./_hooks/useWakeWindows";
+import { Button } from "@/app/_components/Button";
 import { HookFormInput } from "@/app/_components/HookFormInput";
 import { Label } from "@/app/_components/Label";
-import { SubmitButton } from "@/app/_components/submitButton";
-
 export default function Page() {
   const {
     handleSubmit,
@@ -93,8 +92,16 @@ export default function Page() {
             register={register}
           />
         </div>
-        <div className="text-center">
-          <SubmitButton disabled={isSubmitting}>保存</SubmitButton>
+        <div className="flex justify-center">
+          <div className="w-32 h-10">
+            <Button
+              disabled={isSubmitting}
+              type="submit"
+              variant="contained-blu500"
+            >
+              保存
+            </Button>
+          </div>
         </div>
       </form>
     </>

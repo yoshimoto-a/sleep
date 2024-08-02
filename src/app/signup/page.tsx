@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
+import { Button } from "../_components/Button";
 import { ErrorMessage } from "../_components/ErrorMessage";
 import { Footer } from "../_components/footer";
 import { Form } from "../_components/form";
 import { Header } from "../_components/header";
 import { Input } from "../_components/input";
 import { useSignupForm } from "./_hooks/useSingnupForm";
-import { SubmitButton } from "@/app/_components/submitButton";
 export default function Page() {
   const {
     email,
@@ -50,7 +50,17 @@ export default function Page() {
           />
           <ErrorMessage message={passwordErrorMessage} />
         </div>
-        <SubmitButton disabled={isSubmitting}>送信</SubmitButton>
+        <div className="flex justify-center">
+          <div className="w-32 h-10">
+            <Button
+              disabled={isSubmitting}
+              type="submit"
+              variant="contained-blu500"
+            >
+              送信
+            </Button>
+          </div>
+        </div>
       </Form>
       <Footer />
     </>

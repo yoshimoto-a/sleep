@@ -33,25 +33,25 @@ export const ButtonArea: React.FC<Props> = ({ mutate }) => {
           text="一括登録"
           action="wakeup"
           onclick={handleClickAll}
-        ></Button>
+        />
         <Button
           icon="/_buttonIcon/start.png"
           text="寝かしつけ"
           action="bedTime"
           onclick={() => handleClick("bedTime")}
-        ></Button>
+        />
         <Button
           icon="/_buttonIcon/sleep.png"
           text="寝た"
           action="sleep"
           onclick={() => handleClick("sleep")}
-        ></Button>
+        />
         <Button
           icon="/_buttonIcon/wakeUp.png"
           text="起きた"
           action="wakeup"
           onclick={() => handleClick("wakeup")}
-        ></Button>
+        />
       </div>
       <CustomModal
         isOpen={isModalOpen}

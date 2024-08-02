@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import { Button } from "@/app/_components/Button";
 import { Input } from "@/app/_components/input";
 import { IsLoading } from "@/app/_components/isLoading";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
@@ -67,14 +68,14 @@ export default function Page() {
               onChange={value => setEmail(value)}
             />
           </div>
-          <div className="text-center">
-            <button
-              className="rounded-full w-32 bg-blue-500 text-white py-2"
+          <div className="text-center w-32 h-10">
+            <Button
               type="submit"
+              variant="contained-blu500"
               disabled={isSubmitting}
             >
               送信
-            </button>
+            </Button>
           </div>
         </form>
       </div>
