@@ -1,7 +1,7 @@
-import { ModalButton } from "../../growth/_components/ModalButton";
 import { useDatetimeValidation } from "../_hooks/useDatetimeValidation";
 import { Action } from "../_types/action";
 import { InputDatetime } from "./InputDatetime";
+import { Button } from "@/app/_components/Button";
 import { useApi } from "@/app/_hooks/useApi";
 import { PostRequest } from "@/app/_types/apiRequests/dashboard/allSleepData/postRequest";
 import { PostResonse } from "@/app/_types/apiRequests/dashboard/allSleepData/postResponse";
@@ -65,17 +65,21 @@ export const InputAllModal: React.FC<Props> = ({
           handleChange(new Date(e.target.value), e.target.id as Action);
         }}
       ></InputDatetime>
-      <div className="w-full flex pt-3 gap-5 justify-center">
-        <ModalButton
-          onClick={() => setAllIsModalOpen(false)}
-          text="閉じる"
-          colorClass="bg-gray-300"
-        ></ModalButton>
-        <ModalButton
-          onClick={handleSave}
-          text="保存"
-          colorClass="bg-blue-500"
-        ></ModalButton>
+      <div className="w-full flex flex-col pt-3 gap-5 justify-center">
+        <div className="h-10">
+          <Button
+            onClick={() => setAllIsModalOpen(false)}
+            type="button"
+            variant="contained-gry"
+          >
+            閉じる
+          </Button>
+        </div>
+        <div className="h-10">
+          <Button onClick={handleSave} type="button" variant="contained-blu500">
+            保存
+          </Button>
+        </div>
       </div>
     </>
   );

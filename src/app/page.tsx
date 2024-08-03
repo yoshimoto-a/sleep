@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Button } from "./_components/Button";
 import { TopPageImg } from "./_components/TopPageImg";
 import { TopPageLink } from "./_components/TopPageLink";
 import { Footer } from "./_components/footer";
@@ -30,14 +31,15 @@ export default function Home() {
             ログイン
           </TopPageLink>
         </div>
-        <div className="flex justify-center">
-          <button
-            className="cursor-pointer mt-4 px-5 py-2 w-[140px] rounded-full text-center bg-custom-blue"
+        <div className="flex justify-center mt-4 w-32 h-10">
+          <Button
             onClick={handleClick}
             disabled={isSubmitting}
+            type="button"
+            variant="contained-blu"
           >
             ゲストログイン
-          </button>
+          </Button>
         </div>
         <div className="bg-gray-100 mt-10">
           <div className="mt-10 text-center">

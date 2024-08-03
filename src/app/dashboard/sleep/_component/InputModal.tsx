@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { dayjs } from "../../../../utils/dayjs";
-import { ModalButton } from "../../growth/_components/ModalButton";
 import { useGetDataById } from "../_hooks/useGetDataById";
+import { Button } from "@/app/_components/Button";
 import { useApi } from "@/app/_hooks/useApi";
 import { DeleteResponse } from "@/app/_types/apiRequests/dashboard/sleep/deleteResponse";
 import { UpdateRequests } from "@/app/_types/apiRequests/dashboard/sleep/updateRequest";
@@ -110,21 +110,23 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
           setWakeup(new Date(e.target.value));
         }}
       />
-      <div className="w-full flex pt-3 gap-5 justify-center">
-        <ModalButton
-          onClick={onClose}
-          text="閉じる"
-          colorClass="bg-gray-300"
-        ></ModalButton>
-        <ModalButton
-          onClick={handleSave}
-          text="保存"
-          colorClass="bg-blue-500"
-        ></ModalButton>
+      <div className="w-full flex flex-col pt-3 gap-5 justify-center">
+        <div className="h-10">
+          <Button onClick={onClose} type="button" variant="contained-gry">
+            閉じる
+          </Button>
+        </div>
+        <div className="h-10 mb-2">
+          <Button onClick={handleSave} type="button" variant="contained-blu500">
+            保存
+          </Button>
+        </div>
       </div>
-      <button onClick={handleDelete} className="absolute inset-b-0 right-20">
-        <Image alt="削除" src="/weight/rubbish.png" width={20} height={20} />
-      </button>
+      <div className="absolute inset-b-0 right-20">
+        <Button onClick={handleDelete} type="button">
+          <Image alt="削除" src="/weight/rubbish.png" width={20} height={20} />
+        </Button>
+      </div>
     </>
   );
 };

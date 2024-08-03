@@ -2,9 +2,9 @@ import { useState } from "react";
 import { dayjs } from "../../../../utils/dayjs";
 import { Action } from "../_types/action";
 import { checkType } from "../_utils/checkType";
+import { Button } from "@/app/_components/Button";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 import { ApiResponse } from "@/app/_types/apiRequests/apiResponse";
-
 interface Props {
   mutate: any;
   action: Action;
@@ -52,25 +52,21 @@ export const InputAcionModal: React.FC<Props> = ({
         id="datetime"
         type="datetime-local"
         defaultValue={dayjs(new Date()).format("YYYY-MM-DDTHH:mm")}
-        className="block p-2 m-5 border"
+        className="block p-2 my-3 border"
         disabled={isSubmitting}
         onChange={e => setDatetimeState(new Date(e.target.value))}
       />
-      <div className="w-full flex justify-between">
-        <button
-          onClick={modalClose}
-          disabled={isSubmitting}
-          className="w-2/5 rounded bg-gray-300 px-4 py-2"
-        >
-          閉じる
-        </button>
-        <button
-          onClick={saveValue}
-          disabled={isSubmitting}
-          className="w-2/5 rounded bg-blue-500 px-4 py-2"
-        >
-          保存
-        </button>
+      <div className="w-full flex flex-col justify-between">
+        <div className="h-10 mb-3">
+          <Button onClick={modalClose} type="button" variant="contained-gry">
+            閉じる
+          </Button>
+        </div>
+        <div className="h-10">
+          <Button onClick={saveValue} type="button" variant="contained-blu500">
+            保存
+          </Button>
+        </div>
       </div>
     </>
   );

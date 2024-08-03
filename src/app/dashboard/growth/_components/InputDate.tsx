@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dayjs } from "../../../../utils/dayjs";
-import { ModalButton } from "./ModalButton";
+import { Button } from "@/app/_components/Button";
 interface Props {
   closeModal: () => void;
   value: string;
@@ -27,24 +27,24 @@ export const InputDate: React.FC<Props> = ({
         id="date"
         type="date"
         value={dayjs(modalDate).format("YYYY-MM-DD")}
-        className="block p-2 m-5 border"
+        className="block p-2 mb-3 border w-full"
         onChange={e => {
           if (dayjs(e.target.value).isValid()) {
             setModalDate(new Date(e.target.value));
           }
         }}
       />
-      <div className="w-full flex justify-between">
-        <ModalButton
-          onClick={closeModal}
-          text="閉じる"
-          colorClass="bg-gray-300"
-        ></ModalButton>
-        <ModalButton
-          onClick={handleSave}
-          text="保存"
-          colorClass="bg-blue-500"
-        ></ModalButton>
+      <div className="w-full flex flex-col justify-between gap-3">
+        <div className="h-10">
+          <Button onClick={closeModal} type="button" variant="contained-gry">
+            閉じる
+          </Button>
+        </div>
+        <div className="h-10">
+          <Button onClick={handleSave} type="button" variant="contained-blu500">
+            保存
+          </Button>
+        </div>
       </div>
     </>
   );

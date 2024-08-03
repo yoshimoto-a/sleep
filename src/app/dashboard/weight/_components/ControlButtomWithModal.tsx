@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useWeightForm } from "../_hooks/useWeightForm";
-import { Button } from "./Button";
+import { Button } from "@/app/_components/Button";
 import { Label } from "@/app/_components/Label";
 import { Input } from "@/app/_components/input";
 import { CustomModal } from "@/app/_components/modal";
 import { Weight } from "@/app/_types/apiRequests/dashboard/weight/Index";
-
 interface Props {
   isSubmitting: boolean;
   rowItem: Weight;
@@ -70,23 +69,36 @@ export const ControlButtomWithModal: React.FC<Props> = ({
             }}
           />
           {weightError && <p>{weightError}</p>}
-
-          <div>
+          <div className="h-10 w-[150px] mb-2">
             <Button
               disabled={isSubmitting}
-              text="キャンセル"
-              onclick={() => setIsOpen(false)}
-            />
-            <Button disabled={isSubmitting} text="保存" onclick={put} />
+              onClick={() => setIsOpen(false)}
+              type="button"
+              variant="outlined"
+            >
+              キャンセル
+            </Button>
           </div>
-          <button onClick={del} className="absolute bottom-10 right-20">
-            <Image
-              alt="削除"
-              src="/weight/rubbish.png"
-              width={20}
-              height={20}
-            />
-          </button>
+          <div className="h-10 w-[150px] mb-2">
+            <Button
+              disabled={isSubmitting}
+              onClick={put}
+              type="button"
+              variant="outlined"
+            >
+              保存
+            </Button>
+          </div>
+          <div className="absolute bottom-10 right-20">
+            <Button onClick={del} type="button">
+              <Image
+                alt="削除"
+                src="/weight/rubbish.png"
+                width={20}
+                height={20}
+              />
+            </Button>
+          </div>
         </div>
       </CustomModal>
     </>

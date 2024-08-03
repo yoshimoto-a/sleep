@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Button } from "../../weight/_components/Button";
+import { Button } from "@/app/_components/Button";
 import { CustomModal } from "@/app/_components/modal";
 export const Guideline = () => {
   const [isOpenWakeWindows, setIsOpenWakeWindows] = useState(false);
@@ -39,26 +39,32 @@ export const Guideline = () => {
   return (
     <div className="pt-3 mx-3">
       登録した活動時間を元にお勧めねんね時刻を算出します。
-      <div className="flex justify-center gap-4 pt-5">
-        <button
-          onClick={() => setIsOpenWakeWindows(true)}
-          className="w-40 h-10 mb-2 flex flex-col justify-center items-center border-solid border-2 border-slate-600 rounded-full"
-        >
-          目安
-        </button>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="w-40 h-10 mb-3 flex flex-col justify-center items-center border-solid border-2 border-slate-600 rounded-full"
-        >
-          見極めポイント
-        </button>
+      <div className="flex justify-center gap-4 pt-5 ">
+        <div className="w-40 h-10 mb-2">
+          <Button
+            onClick={() => setIsOpenWakeWindows(true)}
+            type="button"
+            variant="outlined"
+          >
+            目安
+          </Button>
+        </div>
+        <div className="w-40 h-10 mb-2">
+          <Button
+            onClick={() => setIsOpen(true)}
+            type="button"
+            variant="outlined"
+          >
+            見極めポイント
+          </Button>
+        </div>
       </div>
       <CustomModal
         isOpen={isOpenWakeWindows}
         onClose={() => setIsOpenWakeWindows(false)}
         className=""
       >
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex flex-col items-center">
           <table className="min-w-full border-collapse border border-gray-300">
             <thead>
               <tr>
@@ -84,11 +90,14 @@ export const Guideline = () => {
             ファーバー医師、「健康的な睡眠習慣」、「ハッピー チャイルド」、M.
             ワイスブルース医師
           </div>
-          <div className="flex justify-center pt-5">
+          <div className="w-40 h-10 my-3 ">
             <Button
-              text="閉じる"
-              onclick={() => setIsOpenWakeWindows(false)}
-            ></Button>
+              onClick={() => setIsOpenWakeWindows(false)}
+              type="button"
+              variant="outlined"
+            >
+              閉じる
+            </Button>
           </div>
         </div>
       </CustomModal>
@@ -97,7 +106,7 @@ export const Guideline = () => {
         onClose={() => setIsOpen(false)}
         className=""
       >
-        <div>
+        <div className="flex flex-col items-center">
           <ol>
             <li>
               <strong>眠いサイン観察</strong>
@@ -128,8 +137,14 @@ export const Guideline = () => {
               </div>
             </li>
           </ol>
-          <div className="flex justify-center pt-5">
-            <Button text="閉じる" onclick={() => setIsOpen(false)}></Button>
+          <div className="w-40 h-10 my-3">
+            <Button
+              onClick={() => setIsOpen(false)}
+              type="button"
+              variant="outlined"
+            >
+              閉じる
+            </Button>
           </div>
         </div>
       </CustomModal>
