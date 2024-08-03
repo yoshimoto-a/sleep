@@ -4,8 +4,7 @@ type Variant =
   | "outlined"
   | "contained-blu"
   | "contained-gry"
-  | "contained-blu500"
-  | "none";
+  | "contained-blu500";
 
 interface Props extends ComponentPropsWithRef<"button"> {
   variant?: Variant;
@@ -24,8 +23,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           return "bg-gray-300";
         case "contained-blu500":
           return "bg-blue-500 text-white";
-        case "none":
-          return "";
         default:
           return "";
       }
