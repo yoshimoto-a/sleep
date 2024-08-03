@@ -123,7 +123,7 @@ export const InputModal: React.FC<Props> = ({ onClose, id, mutate }) => {
         </div>
       </div>
       <div className="absolute inset-b-0 right-20">
-        <Button onClick={handleDelete} type="button" variant="none">
+        <Button onClick={handleDelete} type="button">
           <Image alt="削除" src="/weight/rubbish.png" width={20} height={20} />
         </Button>
       </div>

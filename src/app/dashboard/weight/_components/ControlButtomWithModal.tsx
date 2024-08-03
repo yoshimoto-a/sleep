@@ -90,7 +90,7 @@ export const ControlButtomWithModal: React.FC<Props> = ({
             </Button>
           </div>
           <div className="absolute bottom-10 right-20">
-            <Button onClick={del} type="button" variant="none">
+            <Button onClick={del} type="button">
               <Image
                 alt="削除"
                 src="/weight/rubbish.png"
