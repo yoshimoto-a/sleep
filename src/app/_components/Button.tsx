@@ -6,7 +6,7 @@ type Variant =
   | "contained-gry"
   | "contained-blu500";
 
-interface Props extends ComponentPropsWithRef<"button"> {
+interface Props extends Omit<ComponentPropsWithRef<"button">, "className"> {
   variant?: Variant;
   children?: ReactNode;
 }
