@@ -12,6 +12,7 @@
   "dependencies": {
     "@next/third-parties": "^15.0.0-canary.28",
     "@prisma/client": "^5.11.0",
+    "@slack/web-api": "^7.3.2",
     "@supabase/supabase-js": "^2.41.1",
     "@types/jest": "^29.5.12",
     "dayjs": "^1.11.10",
