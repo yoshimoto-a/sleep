@@ -64,7 +64,7 @@ export class SleepChartDataGenerator {
     }
     //一件＆当日以外＆formatdataが寝た→活動時間→睡眠時間
     if (oneData && dataActionSlept && !today) {
-      this.handleNoDataAwakeNotToday();
+      this.handleOneDataSleptNotToday();
       return { chartData: this.chartData, keyName: this.keyName };
     }
     return this.handleData();
@@ -83,10 +83,15 @@ export class SleepChartDataGenerator {
     this.chartData[`2:活動時間`] = 1440 - this.getMinutesSinceMidnight();
     this.keyName.push(`2:活動時間`);
   }
-  private handleNoDataAwakeNotToday() {
-    this.chartData[`1:活動時間`] = this.getMinutesSinceMidnight();
+  /*過去日付で寝た登録のみ→活動時間→終日寝たのみのグラフ*/
+  private handleOneDataSleptNotToday() {
+    const awakeTime = this.getTimeDifference(
+      this.startOfDay.toDate(),
+      this.data[0].datetime
+    );
+    this.chartData[`1:活動時間`] = awakeTime;
     this.keyName.push(`1:活動時間`);
-    this.chartData[`2:睡眠時間`] = 1440 - this.getMinutesSinceMidnight();
+    this.chartData[`2:睡眠時間`] = 1440 - awakeTime;
     this.keyName.push(`2:睡眠時間`);
   }
   /*前日終わり時点で起きていて(または登録し始め)当日になってから初めて寝たグラフ*/
