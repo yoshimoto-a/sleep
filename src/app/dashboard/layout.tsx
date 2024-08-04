@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
+import { Footer } from "./_components/footer";
 import { useGetBaby } from "./_hooks/useGetBaby";
 import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
 export default function Layout({
@@ -40,5 +41,10 @@ export default function Layout({
     }
   }, [isLoading, error, router, data, wakeWindowsIsLoading, wakeWindowsData]);
 
-  throw new Error("テストエラー");
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  );
 }

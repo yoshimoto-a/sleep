@@ -16,7 +16,7 @@ export default function Page() {
     useSleepDashBoard();
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
-
+  if (!error) throw new Error("テストエラー");
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
