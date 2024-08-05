@@ -17,6 +17,7 @@ export default function Page() {
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
 
+  console.log(process.env.NODE_ENV, process.env.NEXT_PUBLIC_TEST_ERROR);
   if (
     process.env.NODE_ENV === "production" &&
     process.env.NEXT_PUBLIC_TEST_ERROR === "true"
