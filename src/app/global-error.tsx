@@ -52,7 +52,7 @@ export default function GlobalError({
             </Link>
             お願いいたします。
           </p>
-          <Link href="/" className="text-blue-500">
+          <Link href="/" className="text-blue-500 mt-2">
             トップページへ戻る
           </Link>
         </div>
