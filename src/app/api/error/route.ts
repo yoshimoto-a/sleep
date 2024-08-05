@@ -19,7 +19,7 @@ export const POST = async (req: NextRequest) => {
           supabaseUserId: session?.user.id,
         },
       });
-      message = `userId:${getUser?.id} /n babyId:${getUser?.babyId} /n エラーメッセージ：${body.message}`;
+      message = `userId:${getUser?.id}  babyId:${getUser?.babyId}  エラーメッセージ：${body.message}`;
     } else {
       message = `session情報なし→エラーメッセージ：${body.message}`;
     }
