@@ -46,12 +46,15 @@ export default function GlobalError({
             <Link
               href="https://www.instagram.com/sleep_app_info?igsh=enp1ZnprOThtbXFp&utm_source=qr"
               target="_blank"
+              className="text-blue-500"
             >
               InstagramのDMから
             </Link>
             お願いいたします。
           </p>
-          <Link href="/">トップページへ戻る</Link>
+          <Link href="/" className="text-blue-500">
+            トップページへ戻る
+          </Link>
         </div>
       </body>
     </html>
