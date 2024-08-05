@@ -16,7 +16,10 @@ export default function Page() {
     useSleepDashBoard();
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
-  if (!error) throw new Error("テストエラー");
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("This is a test error");
+  }
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
