@@ -17,6 +17,9 @@ export default function Layout({
   const { data, isLoading, error } = useGetBaby();
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
+    if (session?.user.id !== "") {
+      throw new Error("test error");
+    }
     if (!isLoding && session == null) {
       router.replace("/login");
       return;
