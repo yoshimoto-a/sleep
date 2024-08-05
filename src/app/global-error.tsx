@@ -31,23 +31,27 @@ export default function GlobalError({
     <html>
       <body className="h-screen flex flex-col justify-center items-center bg-blue-200 text-gray-800">
         <h2 className="text-center">エラーが発生しました。</h2>
-        <div className="h-10 w-32 flex justify-center">
+        <div className="mt-5 h-10 w-32 flex justify-center">
           <Button onClick={() => reset()} variant="contained-blu500">
             再実行
           </Button>
         </div>
         <div className="mt-5">
           <p>
-            再実行しても解消しない場合、しばらく経ってから再度ログインしてください。
+            再実行してもエラーが解消しない場合、しばらく経ってから再度ログインしてください。
             <br />
             それでも解決しない場合は、お問い合わせください。
             <br />
             お問い合わせは
-            <Link href="https://www.instagram.com/sleep_app_info?igsh=enp1ZnprOThtbXFp&utm_source=qr">
+            <Link
+              href="https://www.instagram.com/sleep_app_info?igsh=enp1ZnprOThtbXFp&utm_source=qr"
+              target="_blank"
+            >
               InstagramのDMから
             </Link>
             お願いいたします。
           </p>
+          <Link href="/">トップページへ戻る</Link>
         </div>
       </body>
     </html>
