@@ -17,12 +17,6 @@ export default function Page() {
   if (isLoading) return <IsLoading />;
   if (error) return <div>データ取得失敗</div>;
 
-  if (
-    process.env.NODE_ENV === "production" &&
-    process.env.NEXT_PUBLIC_TEST_ERROR === "true"
-  ) {
-    throw new Error("This is a test error");
-  }
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
