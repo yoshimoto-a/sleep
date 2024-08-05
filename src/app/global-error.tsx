@@ -12,6 +12,7 @@ export default function GlobalError({
 }) {
   console.log(error);
   const fetcher = useApi();
+  console.log(fetcher);
   const post = useCallback(async () => {
     try {
       await fetcher.post<PostRequest, PostResponse>("/api/error", {
@@ -23,6 +24,7 @@ export default function GlobalError({
   }, [fetcher, error]);
   useEffect(() => {
     if (!error) return;
+    console.log(post);
     post();
   }, [error, post]);
 
