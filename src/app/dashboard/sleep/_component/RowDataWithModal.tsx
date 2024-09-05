@@ -36,14 +36,14 @@ export const RowDataWithModal: React.FC<Props> = ({
           time={HourAndMinutes}
           action={action}
           interval={MinutesOnly}
-        ></RowItem>
+        />
       </div>
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-20"
       >
-        <InputModal id={id} onClose={onClose} mutate={mutate}></InputModal>
+        <InputModal id={id} onClose={onClose} mutate={mutate} />
       </CustomModal>
     </div>
   );
