@@ -8,20 +8,17 @@ interface Props {
   interval: string;
 }
 export const RowItem: React.FC<Props> = ({ time, action, interval }) => {
-  const { fontColor } = useMemo(() => {
-    let fontColor = "";
+  const fontColor = useMemo(() => {
     switch (action) {
       case "寝かしつけ":
-        fontColor = "text-blue-500";
-        break;
+        return "text-blue-500";
       case "寝た":
-        fontColor = "text-teal-500";
-        break;
+        return "text-teal-500";
       case "起きた":
-        fontColor = "text-indigo-800";
-        break;
+        return "text-indigo-800";
+      default:
+        return "";
     }
-    return { fontColor };
   }, [action]);
 
   return (
