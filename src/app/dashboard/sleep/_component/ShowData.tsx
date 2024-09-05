@@ -30,7 +30,7 @@ export const ShowData: React.FC<Props> = ({
             mutate={mutate}
             HourAndMinutes={record.HourAndMinutes}
             MinutesOnly={record.MinutesOnly}
-          ></RowDataWithModal>
+          />
         );
       })}
     </div>
