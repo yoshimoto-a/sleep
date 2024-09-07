@@ -82,7 +82,6 @@ export const MainTime: React.FC<PropsItem> = ({ latestData }) => {
   if (isLoading || isLoadingBaby)
     return <div className="text-center">読込み中...</div>;
   if (error || babyError) return <div className="text-center">エラー発生</div>;
-
   return (
     <div className="rounded-md bg-white w-40 pt-2 text-center">
       <span className="text-sm">{action}</span>

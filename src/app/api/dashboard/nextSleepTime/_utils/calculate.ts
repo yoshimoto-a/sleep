@@ -86,7 +86,7 @@ export const calculate = (
   //時間帯を問わず活動時間が同じで登録されてるパターン
   if (all != 0 && morning === 0 && noon === 0 && evening === 0) {
     const basicTime = addWakeWindows(all - shorteningTime);
-    if (timeZone(basicTime) === "wakeupTime") return "8時00分";
+    if (timeZone(basicTime) === "wakeupTime") return "08時00分";
     return basicTime.format("HH時mm分");
   }
 
@@ -112,12 +112,13 @@ export const calculate = (
       timeZone(wakeupTime) === "morning") &&
     timeZone(morningTime) === "wakeupTime"
   )
-    return "8時00分";
+    return "08時00分";
 
   //夕寝の活動時間がなくて次が18時以降になる場合or昼寝が夕寝の時間になる場合そのまま返す
   if (timeZone(noonTime) === "night" || timeZone(noonTime) === "evening") {
     return noonTime.format("HH時mm分");
   }
 
-  return "ここまで届かないはず";
+  //処理がここまで来たらおかしい
+  throw new Error("バグがあります。");
 };

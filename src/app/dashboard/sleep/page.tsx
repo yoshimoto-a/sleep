@@ -1,6 +1,7 @@
 "use client";
 
 import { Footer } from "../_components/footer";
+import { Bedtime } from "./_component/Bedtime";
 import { ButtonArea } from "./_component/ButtonArea";
 import { Chart } from "./_component/Chart";
 import { ElapsedTime } from "./_component/ElapsedTime";
@@ -15,15 +16,18 @@ export default function Page() {
   const { isLoading, data, error, mutate, handleNext, handlePrev, date } =
     useSleepDashBoard();
   if (isLoading) return <IsLoading />;
-  if (error) return <div>データ取得失敗</div>;
-
+  if (error)
+    return <div className="text-center">データの取得に失敗しました</div>;
+  if (!data) return <div className="text-center">データが存在しません</div>;
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
-      <div className="flex justify-between mx-5 my-5">
+      <div className="flex justify-between mx-5 mt-5 mb-2">
         <MainTime latestData={data?.latestData} />
         <ElapsedTime data={data?.latestData} />
       </div>
+      <Bedtime prepData={data.sleepPrepTime} latestData={data.latestData} />
+
       <div className="grid grid-cols-10 mx-1">
         <div className="col-span-3 flex flex-col items-center">
           <Chart chartData={data?.chartData} keyName={data?.keyName}></Chart>

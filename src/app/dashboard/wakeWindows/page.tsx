@@ -16,6 +16,8 @@ export default function Page() {
     isLoading,
     register,
     errors,
+    isOpen,
+    setIsOpen,
   } = useWakeWindows();
 
   if (isLoading) return;
@@ -23,7 +25,11 @@ export default function Page() {
     return <div className="text-center">データの取得に失敗しました</div>;
 
   return (
-    <>
+    <div
+      onClick={() => {
+        isOpen && setIsOpen(false);
+      }}
+    >
       <h1 className="pt-10 text-center text-lg">活動時間設定</h1>
       <div>
         <Toaster position="top-center" />
@@ -35,7 +41,7 @@ export default function Page() {
       >
         <div className="flex flex-col">
           <CautionaryNote />
-          <div className="flex gap-4">
+          <div className="flex justify-between gap-4">
             <FormSection
               label="基本の活動時間"
               idHour="basicHour"
@@ -44,8 +50,23 @@ export default function Page() {
               errors={errors}
               register={register}
             />
-            <div className="flex-1">
-              <Label text="寝かしつけ開始(分前)" />
+            <div className="w-1/2">
+              {isOpen && (
+                <div className="bg-black bg-opacity-90 text-white text-xs p-2 mb-2 rounded-md relative after:absolute after:right-2 after:top-[63px] after:bg-black after:opacity-90 after:[clip-path:polygon(0_0,50%_100%,100%_0)] after:z-10 after:w-5 after:h-3 after:contents-['']">
+                  お勧めねんね時刻をもとに寝かしつけ開始時刻の目安を算出するのに使用する時間です。
+                </div>
+              )}
+              <div className="flex gap-2 justify-start">
+                <Label text="寝かしつけ開始(分前)" />
+                <div
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                  className="pr-4"
+                >
+                  ?
+                </div>
+              </div>
               <HookFormInput
                 name="sinceBedtime"
                 type="number"
@@ -104,6 +125,6 @@ export default function Page() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }
