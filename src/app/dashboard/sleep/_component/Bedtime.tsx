@@ -18,10 +18,10 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
     setNextSleepTimeData(data);
   }, [data]);
 
-  if (!data) return;
-  if (latestData?.action !== "起きた") return;
+  if (!data) return <div></div>;
+  if (latestData?.action !== "起きた") return <div></div>;
 
-  const classes = "text-xs text-center pb-2";
+  const classes = "text-xs";
   //即時の場合
   if (data === "即時") {
     return <div className={classes}>暗い寝室で過ごしましょう</div>;

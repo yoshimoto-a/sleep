@@ -5,6 +5,7 @@ import { Bedtime } from "./_component/Bedtime";
 import { ButtonArea } from "./_component/ButtonArea";
 import { Chart } from "./_component/Chart";
 import { ElapsedTime } from "./_component/ElapsedTime";
+import { GuideWithModal } from "./_component/GuideWithModal";
 import { Header } from "./_component/Header";
 import { MainTime } from "./_component/MainTime";
 import { ShowData } from "./_component/ShowData";
@@ -29,7 +30,13 @@ export default function Page() {
             <MainTime latestData={data.latestData} />
             <ElapsedTime data={data.latestData} />
           </div>
-          <Bedtime prepData={data.sleepPrepTime} latestData={data.latestData} />
+          <div className="flex justify-between px-5 pb-2">
+            <Bedtime
+              prepData={data.sleepPrepTime}
+              latestData={data.latestData}
+            />
+            <GuideWithModal />
+          </div>
           <div className="grid grid-cols-10 mx-1">
             <div className="col-span-3 flex flex-col items-center">
               <Chart chartData={data.chartData} keyName={data.keyName} />
