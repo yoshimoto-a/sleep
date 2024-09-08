@@ -47,7 +47,6 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
             );
           break;
       }
-      return;
     }
   }, [data, data?.action, data?.record, currentTime]);
 

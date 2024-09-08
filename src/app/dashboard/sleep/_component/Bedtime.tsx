@@ -7,7 +7,7 @@ import { sleepPrepTime } from "@/app/_types/apiRequests/dashboard/sleep";
 
 interface Props {
   prepData: sleepPrepTime;
-  latestData: FindLatestResponse;
+  latestData: FindLatestResponse | undefined;
 }
 export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
   //NextSleepTimeのレスポンスは「即時」OR「HH時mm分」のフォーマット
@@ -19,7 +19,7 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
   }, [data]);
 
   if (!data) return;
-  if (latestData?.action !== "起きた") return null;
+  if (latestData?.action !== "起きた") return;
 
   const classes = "text-xs text-center pb-2";
   //即時の場合
@@ -30,6 +30,7 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
     dayjs().format("YYYY-MM-DD ") +
       nextSleepTimeData.replace("時", ":").replace("分", ":00")
   );
+  console.log(prepData);
   const bedtime = nextSleepTime.subtract(prepData.time, "minutes");
   return (
     <div className={classes}>

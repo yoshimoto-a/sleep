@@ -3,7 +3,7 @@ import { RowDataWithModal } from "./RowDataWithModal";
 import { SleepingSituationResponse } from "@/app/_types/apiRequests/dashboard/sleep";
 
 interface Props {
-  data: SleepingSituationResponse | undefined;
+  data: SleepingSituationResponse;
   isLoading: boolean;
   error: any;
   mutate: any;
@@ -16,7 +16,7 @@ export const ShowData: React.FC<Props> = ({
 }) => {
   if (isLoading) return <div>読込み中...</div>;
   if (error) return <div>データ取得失敗</div>;
-  if (!data || data.data.length === 0)
+  if (data.data.length === 0)
     return <div className="mt-10 text-center">データがありません</div>;
   return (
     <div>

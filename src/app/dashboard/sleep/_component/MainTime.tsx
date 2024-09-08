@@ -13,9 +13,7 @@ interface PropsItem {
 
 export const MainTime: React.FC<PropsItem> = ({ latestData }) => {
   const [action, setAction] = useState<string>("");
-  const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
-    null
-  );
+  const [elapsedTime, setElapsedTime] = useState<string | undefined>(undefined);
   const { isLoading, data, error, mutate } = useGetNextSleepTime();
   const {
     isLoading: isLoadingBaby,
