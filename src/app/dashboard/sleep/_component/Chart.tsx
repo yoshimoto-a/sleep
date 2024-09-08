@@ -3,13 +3,11 @@ import { BarChart, Bar, YAxis, XAxis, Tooltip } from "recharts";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 
 interface Props {
-  chartData: ChartData | undefined;
-  keyName: string[] | undefined;
+  chartData: ChartData;
+  keyName: string[];
 }
 
 export const Chart: React.FC<Props> = ({ chartData, keyName }) => {
-  if (!chartData || !keyName)
-    return <div className="text-center">データなし</div>;
   const tooltipFormatter = (value: number, name: any) => {
     const hour = Math.floor(value / 60);
     const min = value % 60;

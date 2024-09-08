@@ -30,6 +30,7 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
     dayjs().format("YYYY-MM-DD ") +
       nextSleepTimeData.replace("時", ":").replace("分", ":00")
   );
+  console.log(prepData);
   const bedtime = nextSleepTime.subtract(prepData.time, "minutes");
   return (
     <div className={classes}>

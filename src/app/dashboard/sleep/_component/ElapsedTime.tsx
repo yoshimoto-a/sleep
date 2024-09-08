@@ -3,7 +3,7 @@ import { FormatDuration } from "../_utils/formatDuration";
 import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 
 interface PropsItem {
-  data: FindLatestResponse | undefined;
+  data: FindLatestResponse;
 }
 
 export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
@@ -19,35 +19,28 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
     return () => clearInterval(interval);
   }, []);
   useEffect(() => {
-    if (!data) {
-      setAction("");
-      setElapsedTime("登録なし");
-      return;
-    } else {
-      switch (data.action) {
-        case "寝かしつけ開始":
-          setAction("入眠所要時間");
-          if (data.record.bedTime)
-            setElapsedTime(
-              FormatDuration(data.record.bedTime, currentTime, "MinutesOnly")
-            );
-          break;
-        case "寝た":
-          setAction("睡眠時間");
-          if (data.record.sleep)
-            setElapsedTime(
-              FormatDuration(data.record.sleep, currentTime, "HourAndMinutes")
-            );
-          break;
-        case "起きた":
-          setAction("活動時間");
-          if (data.record.wakeup)
-            setElapsedTime(
-              FormatDuration(data.record.wakeup, currentTime, "HourAndMinutes")
-            );
-          break;
-      }
-      return;
+    switch (data.action) {
+      case "寝かしつけ開始":
+        setAction("入眠所要時間");
+        if (data.record.bedTime)
+          setElapsedTime(
+            FormatDuration(data.record.bedTime, currentTime, "MinutesOnly")
+          );
+        break;
+      case "寝た":
+        setAction("睡眠時間");
+        if (data.record.sleep)
+          setElapsedTime(
+            FormatDuration(data.record.sleep, currentTime, "HourAndMinutes")
+          );
+        break;
+      case "起きた":
+        setAction("活動時間");
+        if (data.record.wakeup)
+          setElapsedTime(
+            FormatDuration(data.record.wakeup, currentTime, "HourAndMinutes")
+          );
+        break;
     }
   }, [data, data?.action, data?.record, currentTime]);
 
