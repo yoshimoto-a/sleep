@@ -45,7 +45,7 @@ export interface SleepingSituationResponse {
   status: 200;
   message: string;
   data: FormatedData[];
-  latestData: FindLatestResponse;
+  latestData: FindLatestResponse | undefined;
   chartData: ChartData;
   keyName: string[];
   totalSleepTime: number;

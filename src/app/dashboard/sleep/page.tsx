@@ -30,7 +30,6 @@ export default function Page() {
             <ElapsedTime data={data.latestData} />
           </div>
           <Bedtime prepData={data.sleepPrepTime} latestData={data.latestData} />
-
           <div className="grid grid-cols-10 mx-1">
             <div className="col-span-3 flex flex-col items-center">
               <Chart chartData={data.chartData} keyName={data.keyName} />

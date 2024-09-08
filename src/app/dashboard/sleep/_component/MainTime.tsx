@@ -8,14 +8,12 @@ import { useGetNextSleepTime } from "../_hooks/useGetNextSleepTime";
 import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 
 interface PropsItem {
-  latestData: FindLatestResponse;
+  latestData: FindLatestResponse | undefined;
 }
 
 export const MainTime: React.FC<PropsItem> = ({ latestData }) => {
   const [action, setAction] = useState<string>("");
-  const [elapsedTime, setElapsedTime] = useState<string | null | undefined>(
-    null
-  );
+  const [elapsedTime, setElapsedTime] = useState<string | undefined>(undefined);
   const { isLoading, data, error, mutate } = useGetNextSleepTime();
   const {
     isLoading: isLoadingBaby,
@@ -48,6 +46,7 @@ export const MainTime: React.FC<PropsItem> = ({ latestData }) => {
   }, [isLoading, data]);
 
   useEffect(() => {
+    if (!latestData) return;
     switch (latestData.action) {
       case "起きた":
         setAction("お勧めねんね時刻");
