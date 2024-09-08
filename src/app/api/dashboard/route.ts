@@ -431,9 +431,9 @@ export const GET = async (req: NextRequest) => {
     const { chartData, keyName } = sleepChartDataGenerator.generateChartData();
     const totalSleepTime = getTotalSleepTime(chartData);
 
-    const sleepPrepTime = await prisma.sleepPrepTime.findUnique({
+    const sleepPrepTime = await prisma.sleepPrepTime.findMany({
       where: {
-        id: babyId,
+        babyId,
       },
     });
     return Response.json({
@@ -444,7 +444,7 @@ export const GET = async (req: NextRequest) => {
       chartData,
       keyName,
       totalSleepTime,
-      sleepPrepTime,
+      sleepPrepTime: sleepPrepTime[0],
     });
   } catch (e) {
     if (e instanceof Error) {
