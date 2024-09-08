@@ -20,7 +20,6 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
 
   if (!data) return;
   if (latestData?.action !== "起きた") return null;
-  if (!prepData) return null;
 
   const classes = "text-xs text-center pb-2";
   //即時の場合
