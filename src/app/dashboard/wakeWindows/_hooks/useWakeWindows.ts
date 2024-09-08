@@ -40,6 +40,7 @@ export const useWakeWindows = () => {
   const [data, setData] = useState<WakeWindowsData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fetcher = useApi();
+
   const {
     register,
     handleSubmit,
@@ -58,7 +59,7 @@ export const useWakeWindows = () => {
       sinceBedtime: 0,
     },
   });
-
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     if (isLoading) return;
     if (!wakeWindowsData) return;
@@ -213,5 +214,7 @@ export const useWakeWindows = () => {
     isLoading,
     register,
     errors,
+    isOpen,
+    setIsOpen,
   };
 };

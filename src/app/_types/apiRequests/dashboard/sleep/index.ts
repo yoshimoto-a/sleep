@@ -1,31 +1,5 @@
-import { Role } from "@prisma/client";
-import { Milestone } from "@prisma/client";
-import { Type } from "@prisma/client";
 import { FindLatestResponse } from "../nextSleepTime";
 
-/**現在の月齢を表示*/
-interface Baby {
-  id: number;
-  name: String;
-  birthday: Date;
-}
-
-interface User {
-  id: number;
-  babyId: number;
-  supabaseUserId: number;
-  userName: String;
-  role: Role;
-}
-
-/**発達→お勧めねんね時刻の算出*/
-interface Growth {
-  id: number;
-  babyId: number;
-  milestone: Milestone;
-  startedAt: Date;
-  archevedAt: Date;
-}
 /**睡眠時間→一覧表示・表・現在の活動時間の算出*/
 export interface SleepingSituation {
   id: number;
@@ -59,38 +33,14 @@ export interface FormatedData {
   changer: number;
 }
 
-/**活動時間→お勧めねんね時刻の算出*/
-interface ActivityTime {
-  id: number;
-  babyId: number;
-  time: Date;
-  type: Type;
-}
-
-interface BabyData {
-  baby: Baby;
-  user: User;
-  growth: Growth;
-  sleepingSituation: SleepingSituation;
-  activityTime: ActivityTime;
-}
-
 export interface ChartData {
   date: string;
   [key: string]: number | string;
 }
-export interface IndexSuccessResponse {
-  status: number;
-  data: BabyData | BabyData[];
+
+export interface sleepPrepTime {
+  time: number;
 }
-
-export interface IndexErrorResponse {
-  status: number;
-  error: string;
-}
-
-export type IndexResponse = IndexSuccessResponse | IndexErrorResponse;
-
 export interface SleepingSituationResponse {
   status: 200;
   message: string;
@@ -99,4 +49,5 @@ export interface SleepingSituationResponse {
   chartData: ChartData;
   keyName: string[];
   totalSleepTime: number;
+  sleepPrepTime: sleepPrepTime;
 }

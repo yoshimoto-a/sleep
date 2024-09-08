@@ -431,6 +431,11 @@ export const GET = async (req: NextRequest) => {
     const { chartData, keyName } = sleepChartDataGenerator.generateChartData();
     const totalSleepTime = getTotalSleepTime(chartData);
 
+    const sleepPrepTime = await prisma.sleepPrepTime.findUnique({
+      where: {
+        id: babyId,
+      },
+    });
     return Response.json({
       status: 200,
       message: "success",
@@ -439,6 +444,7 @@ export const GET = async (req: NextRequest) => {
       chartData,
       keyName,
       totalSleepTime,
+      sleepPrepTime,
     });
   } catch (e) {
     if (e instanceof Error) {
