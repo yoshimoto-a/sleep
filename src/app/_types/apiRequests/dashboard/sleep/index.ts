@@ -23,12 +23,12 @@ export interface SleepingSituationComp {
   created: Date;
   updated: Date;
 }
-
+export type ActionName = "寝かしつけ" | "寝た" | "起きた";
 export interface FormatedData {
   id: number;
   datetime: Date;
   HourAndMinutes: string; //時刻
-  action: string;
+  action: ActionName;
   MinutesOnly: string; //時間
   changer: number;
 }
@@ -50,4 +50,5 @@ export interface SleepingSituationResponse {
   keyName: string[];
   totalSleepTime: number;
   sleepPrepTime: sleepPrepTime;
+  hasLatestBedtimeData: boolean;
 }
