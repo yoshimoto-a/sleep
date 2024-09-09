@@ -19,7 +19,6 @@ export const useGrowth = () => {
     isActive: boolean,
     date: Date | null
   ) => {
-    console.log(key, isActive, date);
     setDateState(prevDates => ({
       ...prevDates,
       [`${key}Date`]: isActive ? date : null,
