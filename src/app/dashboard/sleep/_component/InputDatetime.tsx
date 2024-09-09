@@ -1,8 +1,9 @@
 import { dayjs } from "../../../../utils/dayjs";
 import { Action } from "../_types/action";
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 interface Props {
   id: Action;
-  label: string;
+  label: ActionName;
   date: Date | null;
   err: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

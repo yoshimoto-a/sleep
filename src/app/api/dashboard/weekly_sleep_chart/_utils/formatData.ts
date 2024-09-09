@@ -2,12 +2,12 @@ import { dayjs } from "../../../../../utils/dayjs";
 import { isToday } from "../../sleep/_utils/isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { SleepingSituation } from "@/app/_types/apiRequests/dashboard/sleep";
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
-
 const createNewData = (
   id: number,
   datetime: Date,
-  action: string,
+  action: ActionName,
   startTime: Date | null,
   endTime: Date,
   changer: number

@@ -1,9 +1,11 @@
 import { Action } from "./action";
-export type ButtonName = "一括登録" | "寝かしつけ" | "寝た" | "起きた";
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
+
+export type ButtonNames = ActionName | "一括登録";
 
 export type Buttons = {
   icon: string;
-  text: ButtonName;
+  text: ButtonNames;
   action: Action;
   onclick: () => void | Promise<void>;
 };

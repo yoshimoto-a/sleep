@@ -1,8 +1,8 @@
-import { ButtonName } from "../_types/Buttons";
+import { ButtonNames } from "../_types/Buttons";
 export const filterButtonNames = (
   latestAction: string | undefined,
   hasLatestBedtimeData: boolean | undefined
-): ButtonName[] => {
+): ButtonNames[] => {
   //latestAction,hasLatestBedtimeDataいずれかがundefinedの時はどちらもundefinedになる。
   if (hasLatestBedtimeData) {
     return ["一括登録", "寝た"];

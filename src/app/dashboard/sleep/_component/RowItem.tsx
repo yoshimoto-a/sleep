@@ -1,10 +1,10 @@
 /**ログの行データ */
 import React, { useMemo } from "react";
-
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 interface Props {
   id: number;
   time: string;
-  action: string;
+  action: ActionName;
   interval: string;
 }
 export const RowItem: React.FC<Props> = ({ time, action, interval }) => {
