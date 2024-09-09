@@ -13,14 +13,13 @@ export const useGrowth = () => {
   const apiRequests = useApi();
   const { isLoading, data, error } = useGetGrowth();
   const [state, setState] = useState<State>(initializeState());
-  const [date, setDate] = useState<DateState>(initializeDateState());
-
+  const [dateState, setDateState] = useState<DateState>(initializeDateState());
   const updateDate = async (
     key: string,
     isActive: boolean,
     date: Date | null
   ) => {
-    setDate(prevDates => ({
+    setDateState(prevDates => ({
       ...prevDates,
       [`${key}Date`]: isActive ? date : null,
     }));
@@ -64,7 +63,7 @@ export const useGrowth = () => {
           ...prevState,
           [key]: nextState,
         }));
-        updateDate(key, nextState, new Date());
+        updateDate(key, nextState, nextState ? new Date() : null);
       };
   }
 
@@ -131,9 +130,9 @@ export const useGrowth = () => {
           break;
       }
     });
-    setDate(_date);
+    setDateState(_date);
     setState(_state);
-  }, [data, setDate, setState]);
+  }, [data, setDateState, setState]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -143,7 +142,7 @@ export const useGrowth = () => {
   return {
     state,
     handlers,
-    date,
+    date: dateState,
     isLoading,
     error,
     updateDate,

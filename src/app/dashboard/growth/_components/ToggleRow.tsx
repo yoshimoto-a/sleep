@@ -36,14 +36,14 @@ export const ToggleRow: React.FC<Props> = ({
         onUpdate={onUpdateStart}
         date={startDate}
         value={startValue}
-      ></ToggleWithInputModal>
+      />
       <ToggleWithInputModal
         isChecked={isCheckedComp}
         onChange={onChangeComp}
         onUpdate={onUpdateComp}
         date={compDate}
         value={compValue}
-      ></ToggleWithInputModal>
+      />
     </div>
   );
 };
