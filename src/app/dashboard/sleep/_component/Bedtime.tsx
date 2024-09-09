@@ -22,7 +22,6 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
   if (latestData?.action !== "起きた") return <div></div>;
 
   const classes = "text-xs";
-  //即時の場合
   if (data === "即時") {
     return <div className={classes}>暗い寝室で過ごしましょう</div>;
   }
@@ -30,7 +29,6 @@ export const Bedtime: React.FC<Props> = ({ prepData, latestData }) => {
     dayjs().format("YYYY-MM-DD ") +
       nextSleepTimeData.replace("時", ":").replace("分", ":00")
   );
-  console.log(prepData);
   const bedtime = nextSleepTime.subtract(prepData.time, "minutes");
   return (
     <div className={classes}>
