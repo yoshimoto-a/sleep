@@ -4,10 +4,10 @@ import { Button } from "./Button";
 import { InputAcionModal } from "./InputActionModal";
 import { InputAllModal } from "./InputAllModal";
 import { CustomModal } from "@/app/_components/modal";
-import { Action } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 interface Props {
   mutate: any;
-  latestAction: Action | undefined;
+  latestAction: ActionName | undefined;
   hasLatestBedtimeData: boolean | undefined;
 }
 export const ButtonArea: React.FC<Props> = ({

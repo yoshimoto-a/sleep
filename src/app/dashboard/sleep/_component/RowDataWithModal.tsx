@@ -4,11 +4,11 @@ import { useCallback } from "react";
 import { InputModal } from "./InputModal";
 import { RowItem } from "./RowItem";
 import { CustomModal } from "@/app/_components/modal";
-
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 interface Props {
   rowKey: number;
   id: number;
-  action: string;
+  action: ActionName;
   HourAndMinutes: string;
   MinutesOnly: string;
   mutate: any;
