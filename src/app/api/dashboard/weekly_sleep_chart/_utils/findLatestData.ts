@@ -9,6 +9,6 @@ export const findLatestData = (
   } else if (data.sleep) {
     return "寝た";
   } else {
-    return "寝かしつけ開始";
+    return "寝かしつけ";
   }
 };

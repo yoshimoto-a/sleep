@@ -436,6 +436,21 @@ export const GET = async (req: NextRequest) => {
         babyId,
       },
     });
+
+    const latestBedtimeData = await prisma.sleepingSituation.findMany({
+      where: {
+        babyId,
+        bedTime: {
+          not: null,
+        },
+        sleep: null,
+        wakeup: null,
+      },
+      orderBy: {
+        wakeup: "desc",
+      },
+      take: 1,
+    });
     return Response.json({
       status: 200,
       message: "success",
@@ -445,6 +460,7 @@ export const GET = async (req: NextRequest) => {
       keyName,
       totalSleepTime,
       sleepPrepTime: sleepPrepTime[0],
+      hasLatestBedtimeData: latestBedtimeData.length === 1,
     });
   } catch (e) {
     if (e instanceof Error) {

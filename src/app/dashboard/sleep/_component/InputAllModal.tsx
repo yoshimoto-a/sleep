@@ -40,13 +40,13 @@ export const InputAllModal: React.FC<Props> = ({
     <>
       <InputDatetime
         id="bedTime"
-        label="寝かしつけ開始"
+        label="寝かしつけ"
         date={allDatetime.bedTime}
         err=""
         onChange={e => {
           handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      ></InputDatetime>
+      />
       <InputDatetime
         id="sleep"
         label="寝た"
@@ -55,7 +55,7 @@ export const InputAllModal: React.FC<Props> = ({
         onChange={e => {
           handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      ></InputDatetime>
+      />
       <InputDatetime
         id="wakeup"
         label="起きた"
@@ -64,7 +64,7 @@ export const InputAllModal: React.FC<Props> = ({
         onChange={e => {
           handleChange(new Date(e.target.value), e.target.id as Action);
         }}
-      ></InputDatetime>
+      />
       <div className="w-full flex flex-col pt-3 gap-5 justify-center">
         <div className="h-10">
           <Button

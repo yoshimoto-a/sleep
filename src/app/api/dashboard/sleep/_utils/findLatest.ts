@@ -20,7 +20,7 @@ export const findLatest = (
   if (bedtime) {
     return {
       record: containNullRecords[0],
-      action: "寝かしつけ開始",
+      action: "寝かしつけ",
     };
   }
   if (wakeup) {
