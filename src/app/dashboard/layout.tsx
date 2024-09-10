@@ -26,7 +26,13 @@ export default function Layout({
   /*初回更新が未済なら設定画面へリダイレクト
    wakeWindowsがない(status204)場合、登録ページにリダイレクト*/
   useEffect(() => {
-    if (isLoading || wakeWindowsIsLoading) return;
+    if (isLoding) return;
+    if (session === null) {
+      router.replace("/login");
+      return;
+    }
+    if (isLoading) return;
+    if (wakeWindowsIsLoading) return;
     if (error) {
       router.replace("/login");
       return;
@@ -39,7 +45,16 @@ export default function Layout({
       router.replace("/dashboard/wakeWindows");
       return;
     }
-  }, [isLoading, error, router, data, wakeWindowsIsLoading, wakeWindowsData]);
+  }, [
+    isLoading,
+    error,
+    router,
+    data,
+    wakeWindowsIsLoading,
+    wakeWindowsData,
+    isLoding,
+    session,
+  ]);
 
   return (
     <>
