@@ -51,7 +51,7 @@ export default function Menu() {
       />
       <div
         onClick={logout}
-        className="border-b w-4/5 mx-auto pt-5 flex items-center space-x-4"
+        className="border-b w-4/5 mx-auto pt-5 flex items-center space-x-4 cursor-pointer"
       >
         <Image
           src="/_menuIcon/logout.png"

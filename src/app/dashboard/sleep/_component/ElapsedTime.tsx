@@ -51,7 +51,7 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
   }, [data, data?.action, data?.record, currentTime]);
 
   return (
-    <div className="rounded-md bg-white w-40 pt-2 text-center">
+    <div className="rounded-md bg-white w-[45%] pt-2 text-center">
       <span className="text-sm">{action}</span>
       <div className="flex items-center justify-center">
         <span className="text-3xl pb-3">{elapsedTime}</span>

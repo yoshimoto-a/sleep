@@ -27,7 +27,7 @@ export const ButtonArea: React.FC<Props> = ({
 
   return (
     <>
-      <div className="max-w-md fixed bottom-16 w-full px-3 py-2 flex justify-end gap-3 items-center z-50">
+      <div className="max-w-md fixed bottom-[52px] w-full px-3 py-2 flex justify-end gap-3 items-center z-50">
         {baseButtons
           .filter(item =>
             filterButtonNames(latestAction, hasLatestBedtimeData).includes(

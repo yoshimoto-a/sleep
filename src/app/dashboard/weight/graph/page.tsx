@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <>
       <h1 className="pt-5 text-center text-lg">体重グラフ</h1>
-      <Graph data={data.graphData}></Graph>
+      <Graph data={data.graphData} />
       <Footer />
     </>
   );
