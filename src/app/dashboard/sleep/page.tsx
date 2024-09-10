@@ -19,6 +19,7 @@ export default function Page() {
   if (isLoading) return <IsLoading />;
   if (error)
     return <div className="text-center">データの取得に失敗しました</div>;
+
   return (
     <>
       <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
@@ -56,7 +57,11 @@ export default function Page() {
         </>
       )}
       <div className="fixed bottom-25 w-full bg-white z-0">
-        <ButtonArea mutate={mutate} />
+        <ButtonArea
+          mutate={mutate}
+          latestAction={data?.latestData?.action}
+          hasLatestBedtimeData={data?.hasLatestBedtimeData}
+        />
       </div>
       <Footer />
     </>

@@ -1,14 +1,14 @@
 import { dayjs } from "../../../../../utils/dayjs";
 import { isToday } from "./isToday";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
+import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ContainNull } from "@/app/_types/dashboard/change";
 import { CompletedData } from "@/app/_types/dashboard/change";
 import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
-
 const createNewData = (
   id: number,
   datetime: Date,
-  action: string,
+  action: ActionName,
   startTime: Date | null,
   endTime: Date | null,
   changer: number

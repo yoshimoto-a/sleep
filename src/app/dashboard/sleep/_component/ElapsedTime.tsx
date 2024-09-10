@@ -25,7 +25,7 @@ export const ElapsedTime: React.FC<PropsItem> = ({ data }) => {
       return;
     } else {
       switch (data.action) {
-        case "寝かしつけ開始":
+        case "寝かしつけ":
           setAction("入眠所要時間");
           if (data.record.bedTime)
             setElapsedTime(
