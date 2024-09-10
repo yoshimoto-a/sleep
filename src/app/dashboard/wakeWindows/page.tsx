@@ -1,5 +1,7 @@
 "use client";
 
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Toaster } from "react-hot-toast";
 import { CautionaryNote } from "./_components/CautionaryNote";
 import { FormSection } from "./_components/FormSection";
@@ -62,9 +64,9 @@ export default function Page() {
                   onClick={() => {
                     setIsOpen(!isOpen);
                   }}
-                  className="pr-4"
+                  className="pr-[10px]"
                 >
-                  ?
+                  <FontAwesomeIcon icon={faCircleQuestion} />
                 </div>
               </div>
               <HookFormInput

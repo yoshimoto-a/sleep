@@ -1,10 +1,12 @@
 "use client";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons/faCircleInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useState } from "react";
 import { CustomModal } from "@/app/_components/modal";
+
 export const GuideWithModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => {
@@ -16,15 +18,16 @@ export const GuideWithModal: React.FC = () => {
   return (
     <>
       <div onClick={openModal} className="text-sm cursor-pointer">
+        <FontAwesomeIcon icon={faCircleInfo} className="pr-1" />
         アプリガイド
       </div>
       <CustomModal isOpen={isOpen} onClose={closeModal} className="">
         <div className="flex justify-end cursor-pointer" onClick={closeModal}>
           <FontAwesomeIcon icon={faXmark} className="h-6" />
         </div>
-        <h1 className="text-center pb-5 text-2xl">アプリガイド</h1>
+        <h1 className="text-center pb-5">アプリガイド</h1>
 
-        <h2 className="text-xl pb-2 flex gap-1 items-center">
+        <h2 className="text-sm pb-2 flex gap-1 items-center">
           <FontAwesomeIcon icon={faCheck} className="h-5" />
           睡眠データ登録の順番
         </h2>
@@ -36,7 +39,7 @@ export const GuideWithModal: React.FC = () => {
           ※「寝た」登録がないと「起きた」登録はできませんのでご注意ください。
         </p>
 
-        <h2 className="text-xl pb-2 flex gap-1 items-center">
+        <h2 className="text-sm pb-2 flex gap-1 items-center">
           <FontAwesomeIcon icon={faCheck} className="h-5" />
           直近の登録が「寝た」の場合の制御
         </h2>

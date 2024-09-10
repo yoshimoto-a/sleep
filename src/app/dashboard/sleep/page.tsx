@@ -27,7 +27,7 @@ export default function Page() {
         <div className="text-center">データが存在しません</div>
       ) : (
         <>
-          <div className="flex justify-between mx-5 mt-5 mb-2">
+          <div className="flex justify-between mx-auto mt-4 mb-2 px-4">
             <MainTime latestData={data.latestData} />
             <ElapsedTime data={data.latestData} />
           </div>

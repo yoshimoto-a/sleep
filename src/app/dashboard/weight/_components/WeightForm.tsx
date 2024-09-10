@@ -35,7 +35,7 @@ export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
         <Toaster position="top-center" />
       </div>
       <div className="flex justify-center gap-4 pt-5">
-        <div className="pl-8 w-1/2">
+        <div className="pl-8 w-1/2 flex flex-col">
           <Label htmlFor="measurementDate" text="計測日" />
           <Input
             id="measurementDate"
@@ -47,7 +47,7 @@ export const WeightForm: React.FC<Props> = ({ isSubmitting, createWeight }) => {
             onChange={value => handleChangeDate(value)}
           />
         </div>
-        <div className="pr-8 w-1/2">
+        <div className="pr-8 w-1/2 flex flex-col">
           <Label htmlFor="weight" text="体重" />
           <Input
             id="weight"
