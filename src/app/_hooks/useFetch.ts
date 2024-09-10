@@ -2,7 +2,7 @@ import useSWR from "swr";
 import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 interface ApiResponse {
-  status: number;
+  status: 200 | 204 | 400 | 401 | 404;
 }
 export const useFetch = <T extends ApiResponse>(path: string) => {
   const { token, isLoding } = useSupabaseSession();
@@ -18,6 +18,7 @@ export const useFetch = <T extends ApiResponse>(path: string) => {
     };
     const resp = await fetch(`/api/${path}`, prams);
     const data: T = await resp.json();
+    console.log(data);
     if (data.status !== 200) {
       const errorData = await resp.json();
       throw new Error(
