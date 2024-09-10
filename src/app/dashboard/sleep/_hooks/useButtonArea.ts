@@ -20,7 +20,7 @@ export const useButtonArea = () => {
     setIsAllModalOpen(true);
   };
 
-  const baseButtons: Buttons[] = [
+  const baseButtons: Buttons<Action>[] = [
     {
       icon: "/_buttonIcon/all.png",
       text: "一括登録",
