@@ -1,9 +1,11 @@
+import { FindLatestResponse } from "../nextSleepTime";
 import { ChartData } from "../sleep";
 
 export interface IndexResponse {
-  status: number;
+  status: 200;
   message: string;
   chartData: ChartData[];
   keyname: string[];
-  totalSleepTime: number[];
+  totalSleepTimeAverage: string;
+  latestData: FindLatestResponse;
 }

@@ -100,6 +100,7 @@ export const GET = async (req: NextRequest) => {
 
     //前日以前のデータの有無で呼び出す関数を変える
     //ユーザーの初期登録が済んで登録し始めた1日目(＝前日のデータがない)
+
     const data: ChartData[] = [];
     const totalSleepTime: number[] = [];
     const keyname: string[][] = [];
@@ -117,17 +118,33 @@ export const GET = async (req: NextRequest) => {
       const { chartData, keyName } =
         sleepChartDataGenerator.generateChartData();
 
+      const numSleepLength = getTotalSleepTime(chartData);
+      const strsleepLength = `${Math.floor(numSleepLength / 60)}h${
+        numSleepLength % 60
+      }m`;
+      chartData.date += "\n" + strsleepLength;
+
+      if (
+        !dayjs(dateRanges[i].startOfDay).isSame(dayjs().startOf("day"), "day")
+      ) {
+        totalSleepTime.push(numSleepLength);
+      }
+
       data.push(chartData);
-      totalSleepTime.push(getTotalSleepTime(chartData));
       keyname.push(keyName);
     }
 
+    const totalSleepTimeAverage =
+      totalSleepTime.reduce((sum, value) => sum + value, 0) /
+      totalSleepTime.length;
     return Response.json({
       status: 200,
       message: "success",
       chartData: data.reverse(),
       keyname: Array.from(new Set(keyname.flat())),
-      totalSleepTime,
+      totalSleepTimeAverage: `${Math.floor(
+        totalSleepTimeAverage / 60
+      )}時間${Math.floor(totalSleepTimeAverage % 60)}分`,
       latestData,
     });
   } catch (e) {
