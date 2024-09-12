@@ -1,15 +1,16 @@
 import React from "react";
 import { BarChart, Bar, YAxis, XAxis, Tooltip } from "recharts";
+import { ChartXAxisTicks } from "./ChartXAxisTick";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
-
 interface Props {
   chartData: ChartData[] | undefined;
   keyName: string[] | undefined;
 }
 
 export const WeeklyChart: React.FC<Props> = ({ chartData, keyName }) => {
-  if (!chartData || !keyName)
-    return <div className="text-center">データなし</div>;
+  const noData = <div className="text-center">データがありません</div>;
+  if (!chartData) return noData;
+  if (!keyName) return noData;
   const tooltipFormatter = (value: number, name: any) => {
     const hour = Math.floor(value / 60);
     const min = value % 60;
@@ -24,16 +25,23 @@ export const WeeklyChart: React.FC<Props> = ({ chartData, keyName }) => {
   };
 
   return (
-    <div className="text-center mt-2">
+    <div className="flex justify-center mt-2 whitespace-pre-wrap">
       <BarChart
-        width={400}
-        height={500}
+        width={375}
+        height={350}
         data={chartData}
         layout="horizontal"
         barSize={20}
-        margin={{ top: 10, right: 5, left: 0, bottom: 10 }}
+        margin={{ top: 10, right: 0, left: 0, bottom: 10 }}
       >
-        <XAxis type="category" dataKey="date" />
+        <XAxis
+          type="category"
+          dataKey="date"
+          tick={props => <ChartXAxisTicks {...props} />}
+          className="text-[10px]"
+          /**↓これがないとx軸ラベル3個しか表示されない */
+          interval={0}
+        />
         <YAxis
           type="number"
           ticks={ticks}

@@ -7,7 +7,8 @@ import { useWeeklySleepChart } from "./_hooks/useWeeklySleepChart";
 import { IsLoading } from "@/app/_components/isLoading";
 export default function Page() {
   const { date, onClickNext, onClickPrev } = useWeeklyNavigation();
-  const { data, error, isLoading } = useWeeklySleepChart(date);
+  const { chartData, keyname, totalSleepTimeAverage, error, isLoading } =
+    useWeeklySleepChart(date);
 
   if (isLoading) return <IsLoading />;
   if (error)
@@ -21,7 +22,10 @@ export default function Page() {
           onClickNext={onClickNext}
           onClickPrev={onClickPrev}
         />
-        <WeeklyChart chartData={data?.chartData} keyName={data?.keyname} />
+        <WeeklyChart chartData={chartData} keyName={keyname} />
+      </div>
+      <div className="mt-5 text-center text-xs">
+        平均の睡眠時間 :{totalSleepTimeAverage}
       </div>
       <Footer />
     </>
