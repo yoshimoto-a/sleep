@@ -17,15 +17,18 @@ export class SleepChartDataGenerator {
   private sleepData: SleepingSituation[][];
   private yesterdayData: SleepingSituation[][];
   private dateRanges: { startOfDay: Date; endOfDay: Date }[];
+
   constructor(
+    formatData: FormatedData[],
     latestData: FindLatestResponse | undefined,
     dateRanges: { startOfDay: Date; endOfDay: Date }[],
     sleepData: SleepingSituation[][],
-    yesterdayData: SleepingSituation[][]
+    yesterdayData: SleepingSituation[][],
+    startOfDay: Date = new Date()
   ) {
-    this.formatedData = [];
+    this.formatedData = formatData;
     this.latestData = latestData;
-    this.targetDate = undefined;
+    this.targetDate = startOfDay;
     this.chartData = { date: dayjs.tz(this.targetDate).format("M/D") };
     this.keyName = [];
     this.sleepData = sleepData;
@@ -90,7 +93,7 @@ export class SleepChartDataGenerator {
     return { data, totalSleepTimeAverage, keyname };
   }
 
-  private generateChartData() {
+  public generateChartData() {
     const noDate = this.data.length === 0;
     const oneData = this.data.length === 1;
     const latestDataActionAwake = this.latestData?.action === "起きた";

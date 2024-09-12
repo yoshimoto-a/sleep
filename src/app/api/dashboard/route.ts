@@ -426,6 +426,9 @@ export const GET = async (req: NextRequest) => {
     const sleepChartDataGenerator = new SleepChartDataGenerator(
       formatData,
       latestData,
+      [],
+      [],
+      [],
       startOfDay
     );
     const { chartData, keyName } = sleepChartDataGenerator.generateChartData();

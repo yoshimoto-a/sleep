@@ -93,6 +93,7 @@ export const GET = async (req: NextRequest) => {
     };
 
     const sleepChartDataGenerator = new SleepChartDataGenerator(
+      [],
       latestData,
       dateRanges,
       sleepData,
