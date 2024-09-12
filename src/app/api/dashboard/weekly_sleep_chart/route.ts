@@ -3,15 +3,9 @@ import { type NextRequest } from "next/server";
 import { dayjs } from "../../../../utils/dayjs";
 import { SleepChartDataGenerator } from "../../_utils/SleepChartDataGenerator";
 import { getUserAndBabyIds } from "../../_utils/getUserAndBabyIds";
-import { getTotalSleepTime } from "../sleep/_utils/getTotalSleepTime";
 import { findLatestData } from "./_utils/findLatestData";
-import { formatData } from "./_utils/formatData";
 import { splitDataByDate } from "./_utils/splitDataByDate";
 import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
-import {
-  ChartData,
-  FormatedData,
-} from "@/app/_types/apiRequests/dashboard/sleep";
 import { buildPrisma } from "@/utils/prisema";
 
 export const GET = async (req: NextRequest) => {
@@ -98,45 +92,15 @@ export const GET = async (req: NextRequest) => {
       action,
     };
 
-    //前日以前のデータの有無で呼び出す関数を変える
-    //ユーザーの初期登録が済んで登録し始めた1日目(＝前日のデータがない)
+    const sleepChartDataGenerator = new SleepChartDataGenerator(
+      latestData,
+      dateRanges,
+      sleepData,
+      yesterdayData
+    );
+    const { data, totalSleepTimeAverage, keyname } =
+      sleepChartDataGenerator.generateChartDatas();
 
-    const data: ChartData[] = [];
-    const totalSleepTime: number[] = [];
-    const keyname: string[][] = [];
-    for (let i = 0; i < 7; i++) {
-      const formatedData: FormatedData[] = formatData(
-        sleepData[i],
-        yesterdayData[i],
-        dateRanges[i].startOfDay
-      );
-      const sleepChartDataGenerator = new SleepChartDataGenerator(
-        formatedData,
-        latestData,
-        dateRanges[i].startOfDay
-      );
-      const { chartData, keyName } =
-        sleepChartDataGenerator.generateChartData();
-
-      const numSleepLength = getTotalSleepTime(chartData);
-      const strsleepLength = `${Math.floor(numSleepLength / 60)}h${
-        numSleepLength % 60
-      }m`;
-      chartData.date += "\n" + strsleepLength;
-
-      if (
-        !dayjs(dateRanges[i].startOfDay).isSame(dayjs().startOf("day"), "day")
-      ) {
-        totalSleepTime.push(numSleepLength);
-      }
-
-      data.push(chartData);
-      keyname.push(keyName);
-    }
-
-    const totalSleepTimeAverage =
-      totalSleepTime.reduce((sum, value) => sum + value, 0) /
-      totalSleepTime.length;
     return Response.json({
       status: 200,
       message: "success",
