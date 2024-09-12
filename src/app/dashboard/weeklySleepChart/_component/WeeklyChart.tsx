@@ -1,7 +1,7 @@
 import React from "react";
 import { BarChart, Bar, YAxis, XAxis, Tooltip } from "recharts";
-import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartXAxisTicks } from "./ChartXAxisTick";
+import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
 interface Props {
   chartData: ChartData[] | undefined;
   keyName: string[] | undefined;

@@ -1,10 +1,10 @@
+import { SleepingSituation } from "@prisma/client";
 import { dayjs } from "../../../utils/dayjs";
+import { getTotalSleepTime } from "../dashboard/sleep/_utils/getTotalSleepTime";
 import { isToday } from "../dashboard/sleep/_utils/isToday";
 import { FindLatestResponse } from "@/app/_types/apiRequests/dashboard/nextSleepTime";
 import { FormatedData } from "@/app/_types/apiRequests/dashboard/sleep";
 import { ChartData } from "@/app/_types/apiRequests/dashboard/sleep";
-import { SleepingSituation } from "@prisma/client";
-import { getTotalSleepTime } from "../dashboard/sleep/_utils/getTotalSleepTime";
 import { ActionName } from "@/app/_types/apiRequests/dashboard/sleep";
 import { FormatDuration } from "@/app/dashboard/sleep/_utils/formatDuration";
 
