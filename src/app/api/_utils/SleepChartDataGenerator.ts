@@ -55,7 +55,7 @@ export class SleepChartDataGenerator {
     const data: ChartData[] = [];
     const totalSleepTime: number[] = [];
     const keyname: string[][] = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < this.sleepData.length; i++) {
       this.targetDate = this.dateRanges[i].startOfDay;
       this.chartData = { date: dayjs.tz(this.targetDate).format("M/D") };
       this.formatedData = this.formatData(
