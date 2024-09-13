@@ -18,6 +18,9 @@ export const useGuestLogin = () => {
 
     if (resp.status === 200) {
       await supabase.auth.setSession(resp.session);
+      alert(
+        "ログインしていただきありがとうございます。\nゲストは基本的に閲覧専用です。\n恐れ入りますが、データの上書きはご遠慮くださいますようお願い申し上げます。"
+      );
       router.replace("/dashboard/sleep");
     } else {
       alert(resp.message);
