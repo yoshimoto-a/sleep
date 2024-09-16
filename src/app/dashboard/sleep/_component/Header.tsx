@@ -3,13 +3,20 @@ import ja from "dayjs/locale/ja";
 import Image from "next/image";
 import { dayjs } from "../../../../utils/dayjs";
 import { useGetBaby } from "../../_hooks/useGetBaby";
+import { SelectableDate } from "./SelectableDate";
 
 interface Props {
   date: Date;
   onClickPrev: () => void;
   onClickNext: () => void;
+  setSelectedDate: (date: Date) => void;
 }
-export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
+export const Header: React.FC<Props> = ({
+  date,
+  onClickPrev,
+  onClickNext,
+  setSelectedDate,
+}) => {
   const { isLoading, data, error } = useGetBaby();
   dayjs.locale(ja);
   if (isLoading || !data) return <div>読込み中</div>;
@@ -25,7 +32,7 @@ export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
         onClick={onClickPrev}
         className="inline-block w-[15px] h-[15px]"
       />
-      <span>{dayjs(date).format("YYYY年M月D日(ddd)")}</span>
+      <SelectableDate date={date} setGetDate={setSelectedDate} />
       <span className="">{"data" in data && data.data.name}ちゃん</span>
       <span className="">
         {"data" in data &&
@@ -40,7 +47,7 @@ export const Header: React.FC<Props> = ({ date, onClickPrev, onClickNext }) => {
           width={20}
           height={15}
           onClick={onClickNext}
-          className="inline-block"
+          className="inline-block w-[15px] h-[15px]"
         />
       )}
     </div>
