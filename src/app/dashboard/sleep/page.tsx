@@ -14,15 +14,28 @@ import { useSleepDashBoard } from "./_hooks/useSleepDashboard";
 import { IsLoading } from "@/app/_components/isLoading";
 
 export default function Page() {
-  const { isLoading, data, error, mutate, handleNext, handlePrev, date } =
-    useSleepDashBoard();
+  const {
+    isLoading,
+    data,
+    error,
+    mutate,
+    handleNext,
+    handlePrev,
+    date,
+    setSelectedDate,
+  } = useSleepDashBoard();
   if (isLoading) return <IsLoading />;
   if (error)
     return <div className="text-center">データの取得に失敗しました</div>;
 
   return (
     <>
-      <Header date={date} onClickPrev={handlePrev} onClickNext={handleNext} />
+      <Header
+        date={date}
+        onClickPrev={handlePrev}
+        onClickNext={handleNext}
+        setSelectedDate={setSelectedDate}
+      />
       {!data ? (
         <div className="text-center">データが存在しません</div>
       ) : (

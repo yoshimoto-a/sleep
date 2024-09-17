@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { Footer } from "./_components/footer";
 import { useGetBaby } from "./_hooks/useGetBaby";
@@ -58,7 +58,8 @@ export default function Layout({
 
   return (
     <>
-      {children}
+      <Suspense>{children}</Suspense>
+
       <Footer />
     </>
   );
