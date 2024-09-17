@@ -1,4 +1,6 @@
 "use client";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ja } from "date-fns/locale";
 import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -37,9 +39,15 @@ export const SelectableDate: React.FC<Props> = ({ date, setGetDate }) => {
         isOpen={isOpen}
         className=""
       >
+        <div
+          className="flex justify-end cursor-pointer"
+          onClick={() => setIsOpen(false)}
+        >
+          <FontAwesomeIcon icon={faXmark} className="h-6" />
+        </div>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col justify-center items-center gap-3"
+          className="flex flex-col justify-center items-center gap-5 h-[90%]"
         >
           <DatePicker
             selected={selectedDate}
