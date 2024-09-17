@@ -1,8 +1,8 @@
 "use client";
 import { ja } from "date-fns/locale";
+import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { dayjs } from "../../../../utils/dayjs";
-import { useSelectableDate } from "../_hooks/useSelectedDate";
 import { Button } from "@/app/_components/Button";
 import { CustomModal } from "@/app/_components/modal";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,19 +13,25 @@ interface Props {
 }
 
 export const SelectableDate: React.FC<Props> = ({ date, setGetDate }) => {
-  const { isOpen, setIsOpen, selectedDate, setModalDate, handleSubmit } =
-    useSelectableDate(date, setGetDate);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(date);
+  const [modalDate, setModalDate] = useState(selectedDate);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSelectedDate(modalDate);
+    setGetDate(modalDate);
+    setIsOpen(false);
+  };
   return (
     <>
-      <span
+      <button
         onClick={() => {
           setIsOpen(true);
         }}
         className="cursor-pointer"
       >
         {dayjs(selectedDate).format("YYYY年M月D日(ddd)")}
-      </span>
+      </button>
       <CustomModal
         onClose={() => setIsOpen(false)}
         isOpen={isOpen}
