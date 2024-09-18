@@ -25,14 +25,20 @@ export const InputAllModal: React.FC<Props> = ({
       wakeup: allDatetime.wakeup,
     };
     try {
-      await fetcher.post<PostRequest, PostResonse>(
+      const resp = await fetcher.post<PostRequest, PostResonse>(
         "/api/dashboard/allSleepData",
         body
       );
+      if (resp.status !== 200) {
+        throw new Error(resp.message);
+      }
       mutate();
-      setAllIsModalOpen(false);
     } catch (e) {
-      alert("登録に失敗しました");
+      if (e instanceof Error) {
+        alert(e.message);
+      }
+    } finally {
+      setAllIsModalOpen(false);
     }
   };
 
