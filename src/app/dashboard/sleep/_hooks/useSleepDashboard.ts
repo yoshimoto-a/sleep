@@ -2,8 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useCallback } from "react";
 import { dayjs } from "../../../../utils/dayjs";
 import { useGetData } from "./../_hooks/useGetData";
+import { Swiper } from "swiper/types";
+
 export const useSleepDashBoard = () => {
   const searchParams = useSearchParams();
   const currentDate = searchParams.get("date")
@@ -19,13 +22,24 @@ export const useSleepDashBoard = () => {
     window.history.replaceState({}, "", newUrl);
   }, [selectedDate]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     const newDate = dayjs(selectedDate).add(-1, "d").toDate();
     setSelectedDate(newDate);
-  };
-  const handleNext = () => {
+  }, [selectedDate]);
+  const handleNext = useCallback(() => {
     const newDate = dayjs(selectedDate).add(1, "d").toDate();
     setSelectedDate(newDate);
+  }, [selectedDate]);
+
+  const handleSwipe = (event: Swiper) => {
+    const diff = event.touches.diff;
+    if (Math.abs(diff) < 30) return;
+    // スワイプ左右の確認
+    if (diff < 0) {
+      handleNext();
+    } else {
+      handlePrev();
+    }
   };
   return {
     isLoading,
@@ -36,5 +50,6 @@ export const useSleepDashBoard = () => {
     handlePrev,
     date: selectedDate,
     setSelectedDate,
+    handleSwipe,
   };
 };
