@@ -1,9 +1,9 @@
 "use client";
+import { Footer } from "../_components/footer";
 import { HeaderArea } from "./_components/HeaderArea";
 import { ToggleArea } from "./_components/ToggleArea";
 import { useGrowth } from "./_hooks/useGrowth";
 import { IsLoading } from "@/app/_components/isLoading";
-
 export default function Page() {
   const { state, handlers, date, isLoading, error, updateDate } = useGrowth();
 
@@ -20,6 +20,7 @@ export default function Page() {
         handlers={handlers}
         updateDate={updateDate}
       />
+      <Footer />
     </div>
   );
 }
