@@ -18,7 +18,6 @@ export const useFetch = <T extends ApiResponse>(path: string) => {
     };
     const resp = await fetch(`/api/${path}`, prams);
     const data: T = await resp.json();
-    console.log(data);
     if (data.status !== 200) {
       const errorData = await resp.json();
       throw new Error(
