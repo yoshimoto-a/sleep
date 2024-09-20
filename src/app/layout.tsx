@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`max-w-md mx-auto bg-blue-200 text-gray-800 ${roboto.variable}`}
+        className={`max-w-md mx-auto h-screen bg-blue-200 text-gray-800 ${roboto.variable}`}
       >
         {children}
       </body>
