@@ -3,6 +3,7 @@
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Toaster } from "react-hot-toast";
+import { Footer } from "../_components/footer";
 import { CautionaryNote } from "./_components/CautionaryNote";
 import { FormSection } from "./_components/FormSection";
 import { Guideline } from "./_components/guideline";
@@ -127,6 +128,7 @@ export default function Page() {
           </div>
         </div>
       </form>
+      <Footer />
     </div>
   );
 }

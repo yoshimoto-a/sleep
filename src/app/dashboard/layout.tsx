@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, Suspense } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
-import { Footer } from "./_components/footer";
 import { useGetBaby } from "./_hooks/useGetBaby";
 import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
 export default function Layout({
@@ -59,8 +58,6 @@ export default function Layout({
   return (
     <>
       <Suspense>{children}</Suspense>
-
-      <Footer />
     </>
   );
 }

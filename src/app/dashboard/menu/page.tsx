@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useGetLoginUser } from "../../_hooks/useGetLoginUser";
+import { Footer } from "../_components/footer";
 import { RowItem } from "./_components/rowItem";
 import { useLogout } from "./_hooks/useLogout";
 import { IsLoading } from "@/app/_components/isLoading";
@@ -62,6 +63,7 @@ export default function Menu() {
         />
         <span className="text-lg">ログアウト</span>
       </div>
+      <Footer />
     </>
   );
 }

@@ -2,6 +2,7 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ja } from "date-fns/locale";
+import { useEffect } from "react";
 import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { dayjs } from "../../../../utils/dayjs";
@@ -24,6 +25,10 @@ export const SelectableDate: React.FC<Props> = ({ date, setGetDate }) => {
     setGetDate(modalDate);
     setIsOpen(false);
   };
+  useEffect(() => {
+    setSelectedDate(date);
+  }, [date]);
+
   return (
     <>
       <button
