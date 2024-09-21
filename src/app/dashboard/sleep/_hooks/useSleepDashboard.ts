@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useCallback } from "react";
 import { dayjs } from "../../../../utils/dayjs";
 import { useGetData } from "./../_hooks/useGetData";
-import { Swiper } from "swiper/types";
+import { useSwiper } from "@/app/_hooks/useSwiper";
 
 export const useSleepDashBoard = () => {
   const searchParams = useSearchParams();
@@ -30,17 +30,8 @@ export const useSleepDashBoard = () => {
     const newDate = dayjs(selectedDate).add(1, "d").toDate();
     setSelectedDate(newDate);
   }, [selectedDate]);
+  const { handleTouchEnd } = useSwiper(handleNext, handlePrev);
 
-  const handleSwipe = (event: Swiper) => {
-    const diff = event.touches.diff;
-    if (Math.abs(diff) < 30) return;
-    // スワイプ左右の確認
-    if (diff < 0) {
-      handleNext();
-    } else {
-      handlePrev();
-    }
-  };
   return {
     isLoading,
     data,
@@ -50,6 +41,6 @@ export const useSleepDashBoard = () => {
     handlePrev,
     date: selectedDate,
     setSelectedDate,
-    handleSwipe,
+    handleTouchEnd,
   };
 };

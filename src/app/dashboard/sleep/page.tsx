@@ -23,7 +23,7 @@ export default function Page() {
     handlePrev,
     date,
     setSelectedDate,
-    handleSwipe,
+    handleTouchEnd,
   } = useSleepDashBoard();
 
   if (isLoading) return <IsLoading />;
@@ -31,7 +31,7 @@ export default function Page() {
     return <div className="text-center">データの取得に失敗しました</div>;
 
   return (
-    <Swiper className="h-full" onTouchEnd={event => handleSwipe(event)}>
+    <Swiper className="h-full" onTouchEnd={handleTouchEnd}>
       <SwiperSlide>
         <Header
           date={date}
