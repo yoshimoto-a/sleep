@@ -31,8 +31,8 @@ export default function Page() {
     return <div className="text-center">データの取得に失敗しました</div>;
 
   return (
-    <Swiper className="h-full relative" onTouchEnd={handleTouchEnd}>
-      <SwiperSlide>
+    <Swiper className="" onTouchEnd={handleTouchEnd}>
+      <SwiperSlide className="!h-screen">
         <Header
           date={date}
           onClickPrev={handlePrev}
