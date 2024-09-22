@@ -20,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" className="h-screen">
       <body
-        className={`max-w-md mx-auto h-screen bg-blue-200 text-gray-800 ${roboto.variable}`}
+        className={`max-w-md mx-auto h-full bg-blue-200 text-gray-800 ${roboto.variable}`}
       >
         {children}
       </body>
