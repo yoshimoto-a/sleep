@@ -61,7 +61,8 @@ export default function Page() {
                   <TotalSleepTime totalSleepTime={data.totalSleepTime} />
                 </div>
               </div>
-              <div className="relative col-span-7 h-full w-full mx-auto mb-[164px]">
+
+              <div className="relative col-span-7 w-full mx-auto mb-[164px]">
                 <ShowData
                   data={data}
                   isLoading={isLoading}
