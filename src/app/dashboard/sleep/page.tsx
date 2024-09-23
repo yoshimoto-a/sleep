@@ -32,7 +32,7 @@ export default function Page() {
 
   return (
     <Swiper className="" onTouchEnd={handleTouchEnd}>
-      <SwiperSlide className="!h-screen">
+      <SwiperSlide className="min-h-dvh">
         <Header
           date={date}
           onClickPrev={handlePrev}
