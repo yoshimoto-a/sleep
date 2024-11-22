@@ -1,15 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation"; // `usePathname` を追加
 import React, { useEffect, Suspense } from "react";
 import { useSupabaseSession } from "../_hooks/useSupabaseSession";
 import { useGetBaby } from "./_hooks/useGetBaby";
 import { useGetWakeWindows } from "./_hooks/useGetWakeWindows";
+
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const router = useRouter();
+  const pathname = usePathname(); // 現在のパスを取得
   const { session, isLoding } = useSupabaseSession();
   const { wakeWindowsData, isLoading: wakeWindowsIsLoading } =
     useGetWakeWindows();
@@ -26,35 +28,45 @@ export default function Layout({
   /*初回更新が未済なら設定画面へリダイレクト
    wakeWindowsがない(status204)場合、登録ページにリダイレクト*/
   useEffect(() => {
-    if (isLoding) return;
+    if (isLoding || wakeWindowsIsLoading || isLoading) return;
+
+    // セッションがない場合
     if (session === null) {
       router.replace("/login");
       return;
     }
-    if (isLoading) return;
-    if (wakeWindowsIsLoading) return;
+
+    // エラーがある場合
     if (error) {
       router.replace("/login");
       return;
     }
-    console.log(data, wakeWindowsData);
-    //dataがundefindeでここまで来る挙動を確認したため「data&&」追加
+
+    // 初回更新が未済の場合
     if (data && data.data.updated === data.data.created) {
-      router.replace("/dashboard/setting");
+      if (pathname !== "/dashboard/setting") {
+        router.replace("/dashboard/setting");
+      }
       return;
-    } else if (wakeWindowsData?.status === 204) {
-      router.replace("/dashboard/wakeWindows");
+    }
+
+    // wakeWindowsがない場合
+    if (wakeWindowsData?.status === 204) {
+      if (pathname !== "/dashboard/wakeWindows") {
+        router.replace("/dashboard/wakeWindows");
+      }
       return;
     }
   }, [
     isLoading,
-    error,
-    router,
-    data,
     wakeWindowsIsLoading,
-    wakeWindowsData,
     isLoding,
+    error,
+    data,
+    wakeWindowsData,
     session,
+    router,
+    pathname,
   ]);
 
   return (
