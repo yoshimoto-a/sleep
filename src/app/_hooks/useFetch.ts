@@ -18,13 +18,20 @@ export const useFetch = <T extends ApiResponse>(path: string) => {
     };
     const resp = await fetch(`/api/${path}`, prams);
     const data: T = await resp.json();
-    if (data.status !== 200) {
-      const errorData = await resp.json();
-      throw new Error(
-        errorData.message || "An error occurred while fetching the data."
-      );
+    switch (data.status) {
+      case 200:
+      case 204:
+        return data;
+      case 400:
+      case 401:
+      case 404:
+      default: {
+        const errorData = await resp.json();
+        throw new Error(
+          errorData.message || "An error occurred while fetching the data."
+        );
+      }
     }
-    return data;
   };
   const results = useSWR(shouldFetchData ? `/api/${path}` : null, fetcher);
   return results;

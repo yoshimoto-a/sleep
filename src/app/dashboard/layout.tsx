@@ -14,6 +14,7 @@ export default function Layout({
   const { wakeWindowsData, isLoading: wakeWindowsIsLoading } =
     useGetWakeWindows();
   const { data, isLoading, error } = useGetBaby();
+
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
     if (!isLoding && session == null) {
@@ -36,6 +37,7 @@ export default function Layout({
       router.replace("/login");
       return;
     }
+    console.log(data, wakeWindowsData);
     //dataがundefindeでここまで来る挙動を確認したため「data&&」追加
     if (data && data.data.updated === data.data.created) {
       router.replace("/dashboard/setting");
