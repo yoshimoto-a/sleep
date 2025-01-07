@@ -1,5 +1,5 @@
+import dayjs from "dayjs";
 import { type NextRequest } from "next/server";
-import { dayjs } from "../../../../../utils/dayjs";
 import { buildPrisma } from "@/utils/prisema";
 export const dynamic = "force-dynamic";
 export const GET = async (request: NextRequest) => {
