@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server";
 import { dayjs } from "../../../../../utils/dayjs";
 import { buildPrisma } from "@/utils/prisema";
 
-export const POST = async (request: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   const prisma = await buildPrisma();
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
