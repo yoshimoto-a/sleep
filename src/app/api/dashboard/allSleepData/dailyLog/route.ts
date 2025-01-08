@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { type NextRequest } from "next/server";
+import { dayjs } from "@/utils/dayjs";
 import { buildPrisma } from "@/utils/prisema";
 export const dynamic = "force-dynamic";
 export const GET = async (request: NextRequest) => {
@@ -14,11 +14,12 @@ export const GET = async (request: NextRequest) => {
     const babyId = parseInt(process.env.BABY_ID as string);
     const userId = parseInt(process.env.USER_ID as string);
     const sleep = dayjs()
+      .tz()
       .subtract(1, "day")
       .set("hour", 19)
       .set("minute", 30)
       .toDate();
-    const wakeup = dayjs().set("hour", 6).set("minute", 30).toDate();
+    const wakeup = dayjs().tz().set("hour", 6).set("minute", 30).toDate();
     const resp = await prisma.sleepingSituation.create({
       data: {
         babyId,
