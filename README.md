@@ -1,36 +1,18 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Sleep　アプリについて
+このアプリは月齢18か月頃までの乳幼児の睡眠を整えるサポートするためのものです。
 
-First, run the development server:
+具体的には、発達(寝返りなど)、直近の睡眠時間、活動時間等を入力することで、次回の睡眠推奨時刻を算出します。
 
+その時刻に寝かしつけることで、夜泣きや寝愚図り等の睡眠トラブルを予防することを目的として開発しました。
+専門家監修です。
+
+技術面含め詳しくは下記リンクよりご確認ください。
+
+https://shiftb.dev/works/cf635e4f-604d-4d94-9728-4705219d91da
+
+
+## 開発サーバーの起動
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
