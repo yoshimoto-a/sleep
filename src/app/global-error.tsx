@@ -15,9 +15,10 @@ export default function GlobalError({
   const fetcher = useApi();
   const post = useCallback(async () => {
     try {
-      await fetcher.post<PostRequest, PostResponse>("/api/error", {
+      const resp = await fetcher.post<PostRequest, PostResponse>("/api/error", {
         message: error.message,
       });
+      console.log(resp);
     } catch (error) {
       console.error(error);
     }
