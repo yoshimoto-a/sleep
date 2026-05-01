@@ -25,13 +25,13 @@ export const POST = async (req: NextRequest) => {
     }
 
     const slack = new SlackApi();
-    await slack.postMessage({
+    const resp = await slack.postMessage({
       channel: "C07FGJVFNGL",
       message,
     });
     return Response.json({
       status: 200,
-      message: "success",
+      message: resp,
     });
   } catch (e) {
     if (e instanceof Error) {

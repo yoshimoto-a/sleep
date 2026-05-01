@@ -19,6 +19,9 @@ export default function Layout({
 
   // セッションがない場合、ログインページにリダイレクト
   useEffect(() => {
+    if (session?.user.id !== "") {
+      throw new Error("test error");
+    }
     if (!isLoding && session == null) {
       router.replace("/login");
       return;
